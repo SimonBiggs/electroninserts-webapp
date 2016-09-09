@@ -7,16 +7,13 @@ import 'rxjs/add/operator/toPromise';
 export class ElectronApiService {
   private parameteriseURL = 'http://electronapi.simonbiggs.net/parameterise';
   // private modelURL = 'http://electronapi.simonbiggs.net/model';
-  private wakeUpURL = 'http://electronapi.simonbiggs.net/';
-
-  // private wakeUpURL = 'http://localhost:5000/';
-  // private parameteriseURL = 'http://localhost:5000/parameterise';
+  private wakeUpURL = 'http://electronapi.simonbiggs.net/wakeup';
 
   constructor(private http: Http) { }
   // Initial get from server to wake it up
   wakeUpServer() {
-    this.http
-      .get(this.wakeUpURL);
+    return this.http
+      .get(this.wakeUpURL).toPromise();
   }
 
   parameteriseInsert(parameteriseInput: string): Promise<any> {
