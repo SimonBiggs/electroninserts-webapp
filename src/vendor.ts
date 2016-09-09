@@ -11,8 +11,3 @@ import 'rxjs';
 
 // Angular2 Material Design Lite
 import 'angular2-mdl';
-
-// Phosphor
-import 'phosphor-dockpanel';
-import 'phosphor-messaging';
-import 'phosphor-widget';
