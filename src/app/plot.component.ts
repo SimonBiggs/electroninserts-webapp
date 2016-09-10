@@ -10,8 +10,13 @@ declare var Bokeh: any;
 export class PlotComponent implements OnChanges, AfterViewInit {
   @Input()
   parameteriseInput: string;
+  @Input()
+  circle: any;
+  @Input()
+  ellipse: any;
 
   parsedJSON: any;
+  tempSource: any;
   jsonValid: boolean = true;
   jsonErrorMessage: string;
 
@@ -32,12 +37,18 @@ export class PlotComponent implements OnChanges, AfterViewInit {
 
   ngOnChanges() {
     this.jsonValid = false;
+    this.tempSource = {
+      "xs": [[0], [0], [0]],
+      "ys": [[0], [0], [0]],
+      "colour": ["navy", "firebrick", "green"]
+    }
     try {
       let json_test = JSON.parse(this.parameteriseInput);
       if ('x' in json_test && 'y' in json_test) {
         this.parsedJSON = json_test;
         if (this.parsedJSON.x.length === this.parsedJSON.y.length) {
-          this.source.data = this.parsedJSON;
+          this.tempSource.xs[0] = this.parsedJSON.x
+          this.tempSource.ys[0] = this.parsedJSON.y
           this.jsonValid = true;
         }
         else {
@@ -54,15 +65,25 @@ export class PlotComponent implements OnChanges, AfterViewInit {
     finally {
 
     }
+    if ('x' in this.circle && 'y' in this.circle) {
+      this.tempSource.xs[1] = this.circle.x
+      this.tempSource.ys[1] = this.circle.y
+    }
+    if ('x' in this.ellipse && 'y' in this.ellipse) {
+      this.tempSource.xs[2] = this.ellipse.x
+      this.tempSource.ys[2] = this.ellipse.y
+    }
 
+    this.source.data = this.tempSource;
   }
 
   ngAfterViewInit() {
-    this.source.data = JSON.parse(this.parameteriseInput);
+    this.ngOnChanges();
 
-    this.fig.line({ field: 'x' }, { field: 'y' }, {
-        source: this.source,
-        line_width: 3
+    this.fig.multi_line({ field: 'xs' }, { field: 'ys' }, {
+      source: this.source,
+      line_width: 2,
+      color: { field: 'colour' }
     });
     
     this.doc.add_root(this.fig);

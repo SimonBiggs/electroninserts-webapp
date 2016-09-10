@@ -1,3 +1,5 @@
+<!--
+  
 <mdl-layout mdl-layout-fixed-header mdl-layout-tab-active-index="1">
       <mdl-layout-header>
          <mdl-layout-header-row>
@@ -54,4 +56,52 @@
 </mdl-layout>
 
 
+-->
 
+<mdl-tabs mdl-ripple mdl-tab-active-index="1">
+
+    <mdl-tab-panel mdl-tab-panel-title="Dicom">
+    </mdl-tab-panel>
+
+    <mdl-tab-panel mdl-tab-panel-title="Parameterise">
+      <div class="row">
+        <div class="col-xs-12 col-sm-6">
+
+          <mdl-textfield 
+            label="Parameterisation input" 
+            [(ngModel)]="parameteriseInput" 
+            rows="13" maxrows="13" 
+            floating-label style="width:100%">
+          </mdl-textfield>
+
+          <button style="float: right;"
+            mdl-button mdl-button-type="raised" 
+            mdl-colored="primary" 
+            mdl-ripple
+            [disabled]="dataInFlight"
+            (click)="onSubmit()">Submit            
+          </button>
+
+          <mdl-table mdl-shadow="2"
+              [table-model]="tableModel">
+          </mdl-table>
+
+        </div>
+        <div class="col-xs-12 col-sm-6">
+          <div class="bk-root" style="height:300px">
+          <my-plot 
+            [parameteriseInput]="parameteriseInput"
+            [circle]="circle"
+            [ellipse]="ellipse">
+          </my-plot>
+          </div>
+
+        </div>
+
+      </div>
+    </mdl-tab-panel>
+
+    <mdl-tab-panel mdl-tab-panel-title="Model">
+    </mdl-tab-panel>
+
+ </mdl-tabs>
