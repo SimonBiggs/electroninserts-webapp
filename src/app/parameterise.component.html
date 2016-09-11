@@ -1,0 +1,40 @@
+<div class="mdl-grid">
+    Explanation text
+</div>
+<div class="mdl-grid">
+    <div class="mdl-cell mdl-cell--6-col">
+    
+    <mdl-textfield 
+        label="Parameterisation input" 
+        [(ngModel)]="parameterisation.insert" 
+        rows="13" maxrows="13" 
+        floating-label style="width:100%">
+    </mdl-textfield>
+
+    <div class="mdl-grid">
+        <div class="mdl-cell mdl-cell--6-col">
+        <button
+            mdl-button mdl-button-type="raised" 
+            mdl-colored="primary" 
+            mdl-ripple
+            [disabled]="dataInFlight"
+            (click)="onSubmit()">Submit            
+        </button>
+        </div>
+        <div class="mdl-cell mdl-cell--6-col">
+        <mdl-table mdl-shadow="2"
+            [table-model]="tableModel">
+        </mdl-table>
+        </div>
+    </div>
+
+    </div>
+    <div class="mdl-cell mdl-cell--6-col">
+    <my-plot 
+        [parameteriseInput]="parameterisation.insert"
+        [circle]="circle"
+        [ellipse]="ellipse">
+    </my-plot>
+
+    </div>
+</div>

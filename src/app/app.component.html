@@ -1,63 +1,29 @@
-<!--
-  
-<mdl-layout mdl-layout-fixed-header mdl-layout-tab-active-index="1">
-      <mdl-layout-header>
-         <mdl-layout-header-row>
-            <mdl-layout-title>Title</mdl-layout-title>
-         </mdl-layout-header-row>
-      </mdl-layout-header>
-      <mdl-layout-drawer>
-         <mdl-layout-title>Title</mdl-layout-title>
-      </mdl-layout-drawer>
-
-
-
+<mdl-layout mdl-layout-fixed-drawer mdl-layout-fixed-header>
+  <mdl-layout-header>
+    <mdl-layout-header-row>
+      <mdl-layout-title>Parameterise Inserts</mdl-layout-title>
+    </mdl-layout-header-row>
+  </mdl-layout-header>
+  <mdl-layout-drawer>
+    <mdl-layout-title>Electron Factors</mdl-layout-title>
+    <nav class="mdl-navigation">
+      <a class="mdl-navigation__link" routerLink="/home" routerLinkActive="active" href>Home</a>
+      <a class="mdl-navigation__link" routerLink="/load-save" routerLinkActive="active" href>Load / Save</a>
+      <a class="mdl-navigation__link" routerLink="/specifications" routerLinkActive="active" href>Machine specifications</a>
+      <a class="mdl-navigation__link" routerLink="/dicom" routerLinkActive="active" href>Dicom shape extraction</a>
+      <a class="mdl-navigation__link" routerLink="/parameterise" routerLinkActive="active" href>Parameterise inserts</a>
+      <a class="mdl-navigation__link" routerLink="/model" routerLinkActive="active" href>Model insert factors</a>
+    </nav>
+  </mdl-layout-drawer>
   <mdl-layout-content>
-    <mdl-layout-tab-panel mdl-layout-tab-panel-title="Dicom">
-
-    </mdl-layout-tab-panel>
-    <mdl-layout-tab-panel mdl-layout-tab-panel-title="Parameterise">
-      <div class="row">
-        <div class="col-xs-12 col-md-6">
-
-          <mdl-textfield 
-            label="Parameterisation input" 
-            [(ngModel)]="parameteriseInput" 
-            rows="13" maxrows="13" 
-            floating-label style="width:100%">
-          </mdl-textfield>
-
-          <button mdl-button mdl-button-type="raised" mdl-colored="primary" mdl-ripple (click)="onSubmit()">
-            Submit
-          </button>
-
-          <div *ngIf="parameterisationResult">
-            <p>Width: {{parameterisationResult.width}}</p>
-            <p>Length: {{parameterisationResult.length}}</p>
-          </div>
-
-        </div>
-        <div class="col-xs-12 col-md-6">
-          <div class="bk-root" style="height:300px">
-          <my-plot 
-            [parameteriseInput]="parameteriseInput">
-          </my-plot>
-          </div>
-
-        </div>
-
-      </div>
-    </mdl-layout-tab-panel>
-    <mdl-layout-tab-panel mdl-layout-tab-panel-title="Model">
-
-    </mdl-layout-tab-panel>
-
+    <router-outlet></router-outlet>
   </mdl-layout-content>
 </mdl-layout>
 
 
--->
 
+
+<!--
 <mdl-tabs mdl-ripple mdl-tab-active-index="1">
 
     <mdl-tab-panel mdl-tab-panel-title="Dicom">
@@ -66,7 +32,6 @@
     <mdl-tab-panel mdl-tab-panel-title="Parameterise">
       <div class="row">
         <div class="col-xs-12 col-sm-6">
-
           <mdl-textfield 
             label="Parameterisation input" 
             [(ngModel)]="parameteriseInput" 
@@ -74,7 +39,7 @@
             floating-label style="width:100%">
           </mdl-textfield>
 
-          <button style="float: right;"
+          <button
             mdl-button mdl-button-type="raised" 
             mdl-colored="primary" 
             mdl-ripple
@@ -88,13 +53,11 @@
 
         </div>
         <div class="col-xs-12 col-sm-6">
-          <div class="bk-root" style="height:300px">
           <my-plot 
             [parameteriseInput]="parameteriseInput"
             [circle]="circle"
             [ellipse]="ellipse">
           </my-plot>
-          </div>
 
         </div>
 
@@ -104,4 +67,4 @@
     <mdl-tab-panel mdl-tab-panel-title="Model">
     </mdl-tab-panel>
 
- </mdl-tabs>
+ </mdl-tabs>-->
