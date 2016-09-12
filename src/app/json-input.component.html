@@ -1,8 +1,9 @@
 <mdl-textfield 
   [value]="insert | myJson"
   (input)="onInput($event.target.value)"
-  rows="13" maxrows="13" 
-  style="width:100%">
+  rows="7" 
+  style="width:100%"
+  [disabled]=jsonDisabled>
 </mdl-textfield>
 <div [hidden]="jsonValid">
   {{jsonErrorMessage}}

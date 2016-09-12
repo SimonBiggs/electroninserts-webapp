@@ -11,6 +11,8 @@ export class WidthLengthTableComponent implements OnInit {
   width: number;
   @Input()
   length: number;
+  @Input()
+  enabled: boolean;
 
   tableData:[any] = [
       {width:null, length:null}
@@ -22,8 +24,15 @@ export class WidthLengthTableComponent implements OnInit {
       ]);
 
   ngOnChanges() {
-    this.tableData[0].width = this.width;
-    this.tableData[0].length = this.length;
+    if (this.enabled) {
+      this.tableData[0].width = this.width;
+      this.tableData[0].length = this.length;
+    }
+    else {
+      this.tableData[0].width = null;
+      this.tableData[0].length = null;
+    }
+
   }
 
   ngOnInit() {

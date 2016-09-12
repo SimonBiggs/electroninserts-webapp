@@ -1,16 +1,14 @@
 <div class="mdl-grid">
-    Explanation text
+  Parameterisations are cached within your browser's cookies.
 </div>
 <div class="mdl-grid">
     <div class="mdl-cell mdl-cell--6-col">
     <my-json-input
       [insert]="parameterisation.insert"
-      (insertUpdated)="parameterisation.insert=$event">
+      [jsonDisabled]="dataInFlight"
+      (insertUpdated)="insertUpdated($event)"
+      (jsonStatus)="onJsonStatusChange($event)">
     </my-json-input>
-
-    <div [hidden]="jsonValid" class="alert alert-danger">
-      {{jsonErrorMessage}}
-    </div>
 
     <div class="mdl-grid">
       <div class="mdl-cell mdl-cell--6-col">
@@ -18,20 +16,25 @@
           mdl-button mdl-button-type="raised" 
           mdl-colored="primary" 
           mdl-ripple
+          [disabled]="dataInFlight"
           (click)="loadDemoData()">Load Demo Data            
         </button>
         <button
           mdl-button mdl-button-type="raised" 
           mdl-colored="primary" 
           mdl-ripple
-          [disabled]="dataInFlight"
+          [disabled]="submitDisabled"
           (click)="onSubmit()">Submit            
         </button>
+        <div [hidden]="serverResponseValid">
+          {{serverErrorMessage}}
+        </div>
       </div>
       <div class="mdl-cell mdl-cell--6-col">
         <my-width-length-table
           [width]="parameterisation.width"
-          [length]="parameterisation.length">
+          [length]="parameterisation.length"
+          [enabled]="jsonValid">
         </my-width-length-table>
       </div>
     </div>
@@ -41,7 +44,8 @@
       <my-plot 
         [insert]="parameterisation.insert"
         [circle]="parameterisation.circle"
-        [ellipse]="parameterisation.ellipse">
+        [ellipse]="parameterisation.ellipse"
+        [enabled]="jsonValid">
       </my-plot>
 
     </div>

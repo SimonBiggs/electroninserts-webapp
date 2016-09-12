@@ -9,8 +9,12 @@ import { Coordinates } from './coordinates';
 export class JsonInputComponent {
   @Input()
   insert: Coordinates;
+  @Input()
+  jsonDisabled: boolean;
   @Output()
   insertUpdated = new EventEmitter();
+  @Output()
+  jsonStatus = new EventEmitter();
 
   jsonValid: boolean = true;
   jsonErrorMessage: string;
@@ -21,6 +25,7 @@ export class JsonInputComponent {
   }
 
   parseAndCheckJSON(jsonInput:string) {
+    let oldJsonValid = this.jsonValid;
     this.jsonValid = false;
     try {
       let parsedJSON = JSON.parse(jsonInput);
@@ -47,7 +52,9 @@ export class JsonInputComponent {
       this.jsonErrorMessage = 'Error in JSON input. ' + err ;
     }
     finally {
-
+      if (this.jsonValid != oldJsonValid) {
+        this.jsonStatus.emit(this.jsonValid)
+      }
     }
   }
 

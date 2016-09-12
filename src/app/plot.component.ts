@@ -16,6 +16,8 @@ export class PlotComponent implements OnChanges, AfterViewInit {
   circle: Coordinates;
   @Input()
   ellipse: Coordinates;
+  @Input()
+  enabled: boolean;
 
   parsedJSON: any;
   tempSource: any;
@@ -44,23 +46,25 @@ export class PlotComponent implements OnChanges, AfterViewInit {
       "ys": [[0], [0], [0]],
       "colour": ["navy", "firebrick", "green"]
     }
-    if (this.insert) {
-      if ('x' in this.insert && 'y' in this.insert) {
-        this.tempSource.xs[0] = this.insert.x
-        this.tempSource.ys[0] = this.insert.y
+    if (this.enabled) {
+      if (this.insert) {
+        if ('x' in this.insert && 'y' in this.insert) {
+          this.tempSource.xs[0] = this.insert.x.concat(this.insert.x[0])
+          this.tempSource.ys[0] = this.insert.y.concat(this.insert.y[0])
+        }
       }
-    }
 
-    if (this.circle) {
-      if ('x' in this.circle && 'y' in this.circle) {
-        this.tempSource.xs[1] = this.circle.x
-        this.tempSource.ys[1] = this.circle.y
+      if (this.circle) {
+        if ('x' in this.circle && 'y' in this.circle) {
+          this.tempSource.xs[1] = this.circle.x
+          this.tempSource.ys[1] = this.circle.y
+        }
       }
-    }
-    if (this.ellipse) {
-      if ('x' in this.ellipse && 'y' in this.ellipse) {
-        this.tempSource.xs[2] = this.ellipse.x
-        this.tempSource.ys[2] = this.ellipse.y
+      if (this.ellipse) {
+        if ('x' in this.ellipse && 'y' in this.ellipse) {
+          this.tempSource.xs[2] = this.ellipse.x
+          this.tempSource.ys[2] = this.ellipse.y
+        }
       }
     }
 
