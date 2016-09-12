@@ -18,6 +18,12 @@
           mdl-button mdl-button-type="raised" 
           mdl-colored="primary" 
           mdl-ripple
+          (click)="loadDemoData()">Load Demo Data            
+        </button>
+        <button
+          mdl-button mdl-button-type="raised" 
+          mdl-colored="primary" 
+          mdl-ripple
           [disabled]="dataInFlight"
           (click)="onSubmit()">Submit            
         </button>

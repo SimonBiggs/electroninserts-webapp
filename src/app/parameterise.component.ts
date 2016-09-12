@@ -6,6 +6,7 @@ import { CookieService } from 'angular2-cookie/core';
 import { ElectronApiService } from './electron-api.service';
 import { DataService } from './data.service';
 
+import { DEMO_PARAMETERISE_INPUT } from './demo-data';
 
 @Component({
   selector: 'my-parameterise',
@@ -44,12 +45,16 @@ export class ParameteriseComponent implements OnInit {
       this.parameterisation.ellipse = cookieParameterisation['ellipse'];
     }
     else {
-      this.dataService.getParameterisationData()
-        .then(parameterisation => {
-          this.parameterisation = parameterisation
-          this.cookieService.putObject("parameterisation", this.parameterisation)
-        });
+      this.loadDemoData();
     }
+  }
+
+  loadDemoData(): void {
+    // this.dataService.getParameterisationData()
+    //   .then(parameterisation => {
+    //     this.parameterisation = parameterisation
+    //   });
+    this.parameterisation = JSON.parse(JSON.stringify(DEMO_PARAMETERISE_INPUT));
   }
 
   onSubmit() {
