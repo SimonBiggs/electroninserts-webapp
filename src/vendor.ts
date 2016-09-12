@@ -11,3 +11,6 @@ import 'rxjs';
 
 // Angular2 Material Design Lite
 import 'angular2-mdl';
+
+// Angular2 Cookie
+import 'angular2-cookie/core';

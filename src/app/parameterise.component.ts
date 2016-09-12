@@ -1,9 +1,8 @@
 import { Component, OnInit, Input } from '@angular/core';
 
-import { MdlDefaultTableModel } from 'angular2-mdl';
+import { Parameterisation } from './parameterisation';
 
-import { Parameterisation } from './parameterisation'
-
+import { CookieService } from 'angular2-cookie/core';
 import { ElectronApiService } from './electron-api.service';
 import { DataService } from './data.service';
 
@@ -13,70 +12,73 @@ import { DataService } from './data.service';
   templateUrl: 'parameterise.component.html',
 })
 export class ParameteriseComponent implements OnInit {
-  parameteriseInput: string;
   parameterisation: Parameterisation = {
-    insert: '',
+    insert: {
+      x: [0],
+      y: [0]
+    },
+    width: null,
+    length: null,
     circle: null,
     ellipse: null
   };
-  parsedJSON: any;
   jsonValid: boolean = true;
   jsonErrorMessage: string;
-  parameterisationResult: any;
-  circle = {};
-  ellipse = {};
+
   dataInFlight: boolean = false;
-
-  tableData:[any] = [
-      {width:NaN, length:NaN}
-  ];
-
-  public tableModel = new MdlDefaultTableModel([
-        {key:'width', name:'Width', sortable:true, numeric:true},
-        {key:'length', name:'Length', sortable:true, numeric:true}
-      ]);
 
   constructor(
     private electronApiService: ElectronApiService,
-    private dataService: DataService
+    private dataService: DataService,
+    private cookieService:CookieService
   ) { }
 
   getData(): void {
-    this.dataService.getParameterisationData()
-      .then(parameterisation => {
-        this.parameterisation = parameterisation
-        this.parameteriseInput = this.parameterisation.insert
-      });
+    let cookieParameterisation = this.cookieService.getObject("parameterisation")
+    // let cookieParameterisation: any = null;
+    if (cookieParameterisation) {
+      this.parameterisation.insert = cookieParameterisation['insert'];
+      this.parameterisation.width = cookieParameterisation['width'];
+      this.parameterisation.length = cookieParameterisation['length'];
+      this.parameterisation.circle = cookieParameterisation['circle'];
+      this.parameterisation.ellipse = cookieParameterisation['ellipse'];
+    }
+    else {
+      this.dataService.getParameterisationData()
+        .then(parameterisation => {
+          this.parameterisation = parameterisation
+          this.cookieService.putObject("parameterisation", this.parameterisation)
+        });
+    }
   }
 
   onSubmit() {
     this.dataInFlight = true;
-    this.electronApiService.parameteriseInsert(this.parameteriseInput)
+    this.electronApiService.parameteriseInsert(JSON.stringify(this.parameterisation.insert))
       .then(parameterisationResult => {
-        this.parameterisationResult = parameterisationResult;
-        this.addResultToTable(parameterisationResult);
-        this.convertResultToDisplayCoords(parameterisationResult);
+        this.parameterisation.circle = parameterisationResult.circle;
+        this.parameterisation.ellipse = parameterisationResult.ellipse;
+        this.parameterisation.width = parameterisationResult.width;
+        this.parameterisation.length = parameterisationResult.length;
         this.dataInFlight = false;
+        this.cookieService.putObject("parameterisation", this.parameterisation)
       });
   }
 
-  addResultToTable(parameterisationResult:any) {
-    this.tableData[0].width = parameterisationResult.width;
-    this.tableData[0].length = parameterisationResult.length;
-  }
 
-  convertResultToDisplayCoords(parameterisationResult:any) {
-    this.circle = parameterisationResult.circle;
-    this.ellipse = parameterisationResult.ellipse;
-  }
-
-  checkJSON() {
+  parseAndCheckJSON(jsonInput:string) {
     this.jsonValid = false;
     try {
-      let json_test = JSON.parse(this.parameteriseInput);
-      if ('x' in json_test && 'y' in json_test) {
-        this.parsedJSON = json_test;
-        if (this.parsedJSON.x.length === this.parsedJSON.y.length) {
+      let parsedJSON = JSON.parse(jsonInput);
+      if ('x' in parsedJSON && 'y' in parsedJSON) {
+        if (parsedJSON.x.length === parsedJSON.y.length) {
+          let x: [number] = parsedJSON.x
+          let y: [number] = parsedJSON.y
+          let insert = {
+            x: x,
+            y: y
+          }
+          this.parameterisation.insert = insert
           this.jsonValid = true;
         }
         else {
@@ -96,8 +98,6 @@ export class ParameteriseComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.electronApiService.wakeUpServer();
-    this.tableModel.addAll(this.tableData);
     this.getData();
   }
 

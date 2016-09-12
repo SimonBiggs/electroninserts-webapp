@@ -1,5 +1,7 @@
 import { Component, Input, OnChanges, ViewChild, AfterViewInit } from '@angular/core';
 
+import { Coordinates } from './coordinates';
+
 declare var Bokeh: any;
 
 @Component({
@@ -9,11 +11,11 @@ declare var Bokeh: any;
 })
 export class PlotComponent implements OnChanges, AfterViewInit {
   @Input()
-  parameteriseInput: string;
+  insert: Coordinates;
   @Input()
-  circle: any;
+  circle: Coordinates;
   @Input()
-  ellipse: any;
+  ellipse: Coordinates;
 
   parsedJSON: any;
   tempSource: any;
@@ -42,36 +44,24 @@ export class PlotComponent implements OnChanges, AfterViewInit {
       "ys": [[0], [0], [0]],
       "colour": ["navy", "firebrick", "green"]
     }
-    try {
-      let json_test = JSON.parse(this.parameteriseInput);
-      if ('x' in json_test && 'y' in json_test) {
-        this.parsedJSON = json_test;
-        if (this.parsedJSON.x.length === this.parsedJSON.y.length) {
-          this.tempSource.xs[0] = this.parsedJSON.x
-          this.tempSource.ys[0] = this.parsedJSON.y
-          this.jsonValid = true;
-        }
-        else {
-          this.jsonErrorMessage = 'The length of x doesn\'t match the length of y.';
-        }
-      }
-      else {
-        this.jsonErrorMessage = 'Either x or y is missing.';
+    if (this.insert) {
+      if ('x' in this.insert && 'y' in this.insert) {
+        this.tempSource.xs[0] = this.insert.x
+        this.tempSource.ys[0] = this.insert.y
       }
     }
-    catch(err) {
-      this.jsonErrorMessage = 'Error in JSON input. ' + err ;
-    }
-    finally {
 
+    if (this.circle) {
+      if ('x' in this.circle && 'y' in this.circle) {
+        this.tempSource.xs[1] = this.circle.x
+        this.tempSource.ys[1] = this.circle.y
+      }
     }
-    if ('x' in this.circle && 'y' in this.circle) {
-      this.tempSource.xs[1] = this.circle.x
-      this.tempSource.ys[1] = this.circle.y
-    }
-    if ('x' in this.ellipse && 'y' in this.ellipse) {
-      this.tempSource.xs[2] = this.ellipse.x
-      this.tempSource.ys[2] = this.ellipse.y
+    if (this.ellipse) {
+      if ('x' in this.ellipse && 'y' in this.ellipse) {
+        this.tempSource.xs[2] = this.ellipse.x
+        this.tempSource.ys[2] = this.ellipse.y
+      }
     }
 
     this.source.data = this.tempSource;

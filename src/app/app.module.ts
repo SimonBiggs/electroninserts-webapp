@@ -12,9 +12,14 @@ import { AppComponent }  from './app.component';
 import { PlotComponent } from './plot.component';
 import { ParameteriseComponent } from './parameterise.component';
 import { PageNotFoundComponent } from './page-not-found.component';
+import { WidthLengthTableComponent } from './width-length-table.component';
+import { JsonInputComponent } from './json-input.component';
+
+import { MyJsonPipe } from './my-json.pipe'
 
 import { ElectronApiService } from './electron-api.service';
 import { DataService } from './data.service';
+import { CookieService } from 'angular2-cookie/core';
 
 @NgModule({
   imports: [
@@ -28,11 +33,15 @@ import { DataService } from './data.service';
     AppComponent,
     ParameteriseComponent,
     PlotComponent,
-    PageNotFoundComponent
+    PageNotFoundComponent,
+    WidthLengthTableComponent,
+    JsonInputComponent,
+    MyJsonPipe
   ],
   providers: [
     ElectronApiService,
-    DataService
+    DataService,
+    CookieService
   ],
   bootstrap: [
     AppComponent
