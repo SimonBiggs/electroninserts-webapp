@@ -3,7 +3,7 @@
 </div>
 <div class="mdl-grid">
     <div class="mdl-cell mdl-cell--6-col">
-    <my-json-input
+    <my-json-input #jsonInput
       [insert]="parameterisation.insert"
       [jsonDisabled]="dataInFlight"
       (insertUpdated)="insertUpdated($event)"

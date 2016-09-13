@@ -1,16 +1,21 @@
-import { Component, Input, Output, OnChanges, EventEmitter } from '@angular/core';
+import { Component, Input, Output, OnChanges, EventEmitter, ViewChild } from '@angular/core';
+
+import { MyJsonPipe } from './my-json.pipe'
 
 import { Coordinates } from './coordinates';
+
 
 @Component({
   selector: 'my-json-input',
   templateUrl: 'json-input.component.html',
 })
-export class JsonInputComponent {
+export class JsonInputComponent implements OnChanges {
   @Input()
   insert: Coordinates;
   @Input()
   jsonDisabled: boolean;
+  @Input()
+  refresh: boolean;
   @Output()
   insertUpdated = new EventEmitter();
   @Output()
@@ -19,9 +24,19 @@ export class JsonInputComponent {
   jsonValid: boolean = true;
   jsonErrorMessage: string;
 
+  @ViewChild('jsonInput') jsonInputDir: any;
+
   onInput(jsonInput: string) {
     this.parseAndCheckJSON(jsonInput) 
     this.insertUpdated.emit(this.insert);
+  }
+
+  ngOnChanges() {
+    if (this.refresh) {
+      this.jsonInputDir.value = new MyJsonPipe().transform(this.insert);      
+      this.parseAndCheckJSON(this.jsonInputDir.value);
+      this.refresh = false;
+    }
   }
 
   parseAndCheckJSON(jsonInput:string) {

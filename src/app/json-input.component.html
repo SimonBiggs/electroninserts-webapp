@@ -1,10 +1,10 @@
-<mdl-textfield 
+<mdl-textfield #jsonInput
   [value]="insert | myJson"
   (input)="onInput($event.target.value)"
-  rows="7" 
+  rows="8" 
   style="width:100%"
   [disabled]=jsonDisabled>
 </mdl-textfield>
-<div [hidden]="jsonValid">
+<div *ngIf="!jsonValid">
   {{jsonErrorMessage}}
 </div>

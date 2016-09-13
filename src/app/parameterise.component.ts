@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ViewChild } from '@angular/core';
 
 import { Parameterisation } from './parameterisation';
 
@@ -23,8 +23,8 @@ export class ParameteriseComponent implements OnInit {
     circle: null,
     ellipse: null
   };
-  // jsonValid: boolean = true;
-  // jsonErrorMessage: string;
+
+  @ViewChild('jsonInput') jsonInputComponent: any;
 
   jsonValid: boolean = true;
 
@@ -34,6 +34,8 @@ export class ParameteriseComponent implements OnInit {
   dataInFlight: boolean = false;
 
   submitDisabled: boolean = false;
+
+  refreshJsonInput: boolean = false;
 
   constructor(
     private electronApiService: ElectronApiService,
@@ -53,12 +55,9 @@ export class ParameteriseComponent implements OnInit {
   }
 
   loadDemoData(): void {
-    // this.dataService.getParameterisationData()
-    //   .then(parameterisation => {
-    //     this.parameterisation = parameterisation
-    //   });
     let demoData = JSON.parse(JSON.stringify(DEMO_PARAMETERISE_INPUT));
-    this.insertUpdated(demoData.insert);    
+    this.insertUpdated(demoData.insert);
+    this.jsonInputComponent.refresh = true;
   }
 
   onSubmit() {
@@ -92,7 +91,7 @@ export class ParameteriseComponent implements OnInit {
       this.parameterisationFromCookie(cookieParameterisation);
     }
     else {
-      this.parameterisation.insert = insert
+      this.parameterisation.insert = insert;
       this.parameterisation.width = null;
       this.parameterisation.length = null;
       this.parameterisation.circle = null;
@@ -113,47 +112,6 @@ export class ParameteriseComponent implements OnInit {
       this.submitDisabled = false;
     }
   }
-
-  // parseAndCheckJSON(jsonInput:string) {
-  //   this.jsonValid = false;
-  //   try {
-  //     let parsedJSON = JSON.parse(jsonInput);
-  //     if ('x' in parsedJSON && 'y' in parsedJSON) {
-  //       if (parsedJSON.x.length === parsedJSON.y.length) {
-  //         let cookieParameterisation = this.cookieService.getObject(JSON.stringify(parsedJSON))
-  //         if (cookieParameterisation) {
-  //           this.parameterisationFromCookie(cookieParameterisation);
-  //         }
-  //         else {
-  //           let x: [number] = parsedJSON.x
-  //           let y: [number] = parsedJSON.y
-  //           let insert = {
-  //             x: x,
-  //             y: y
-  //           }
-  //           this.parameterisation.insert = insert
-  //           this.parameterisation.width = null;
-  //           this.parameterisation.length = null;
-  //           this.parameterisation.circle = null;
-  //           this.parameterisation.ellipse = null;
-  //         }
-  //         this.jsonValid = true;
-  //       }
-  //       else {
-  //         this.jsonErrorMessage = 'The length of x doesn\'t match the length of y.';
-  //       }
-  //     }
-  //     else {
-  //       this.jsonErrorMessage = 'Either x or y is missing.';
-  //     }
-  //   }
-  //   catch(err) {
-  //     this.jsonErrorMessage = 'Error in JSON input. ' + err ;
-  //   }
-  //   finally {
-
-  //   }
-  // }
 
   ngOnInit() {
     this.getData();
