@@ -14,6 +14,8 @@ import { ParameteriseComponent } from './parameterise.component';
 import { PageNotFoundComponent } from './page-not-found.component';
 import { WidthLengthTableComponent } from './width-length-table.component';
 import { JsonInputComponent } from './json-input.component';
+import { NotYetImplimentedComponent } from './not-yet-implimented.component';
+import { HomeComponent } from './home.component';
 
 import { MyJsonPipe } from './my-json.pipe'
 
@@ -36,7 +38,9 @@ import { CookieService } from 'angular2-cookie/core';
     PageNotFoundComponent,
     WidthLengthTableComponent,
     JsonInputComponent,
-    MyJsonPipe
+    MyJsonPipe,
+    NotYetImplimentedComponent,
+    HomeComponent
   ],
   providers: [
     ElectronApiService,
