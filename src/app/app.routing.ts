@@ -34,8 +34,7 @@ const appRoutes: Routes = [
   },
   {
     path: '',
-    redirectTo: '/home',
-    pathMatch: 'full'
+    component: HomeComponent
   },
   {
       path: '**', component: PageNotFoundComponent
