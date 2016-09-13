@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
+import { Title } from '@angular/platform-browser';
 
 import { routing,
          appRoutingProviders } from './app.routing';
@@ -21,6 +22,7 @@ import { MyJsonPipe } from './my-json.pipe'
 
 import { ElectronApiService } from './electron-api.service';
 import { DataService } from './data.service';
+import { TitleService } from './title.service';
 import { CookieService } from 'angular2-cookie/core';
 
 @NgModule({
@@ -29,7 +31,7 @@ import { CookieService } from 'angular2-cookie/core';
      FormsModule,
      HttpModule,
      MdlModule,
-     routing
+     routing     
   ],
   declarations: [
     AppComponent,
@@ -45,7 +47,9 @@ import { CookieService } from 'angular2-cookie/core';
   providers: [
     ElectronApiService,
     DataService,
-    CookieService
+    CookieService,
+    TitleService,
+    Title
   ],
   bootstrap: [
     AppComponent

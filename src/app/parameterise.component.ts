@@ -5,6 +5,7 @@ import { Parameterisation } from './parameterisation';
 import { CookieService } from 'angular2-cookie/core';
 import { ElectronApiService } from './electron-api.service';
 import { DataService } from './data.service';
+import { TitleService } from './title.service'
 
 import { DEMO_PARAMETERISE_INPUT } from './demo-data';
 
@@ -40,7 +41,8 @@ export class ParameteriseComponent implements OnInit {
   constructor(
     private electronApiService: ElectronApiService,
     private dataService: DataService,
-    private cookieService:CookieService
+    private cookieService: CookieService,
+    private myTitleService: TitleService
   ) { }
 
   getData(): void {
@@ -115,6 +117,7 @@ export class ParameteriseComponent implements OnInit {
 
   ngOnInit() {
     this.getData();
+    this.myTitleService.setTitle('Parameterisation');
   }
 
 }

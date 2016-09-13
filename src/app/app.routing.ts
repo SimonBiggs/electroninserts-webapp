@@ -10,7 +10,10 @@ import { HomeComponent } from './home.component';
 const appRoutes: Routes = [
   {
     path: 'home',
-    component: HomeComponent
+    component: HomeComponent,
+    data: {
+      title: 'Home'
+    }
   },
   {
     path: 'export-import',
@@ -37,7 +40,7 @@ const appRoutes: Routes = [
     component: HomeComponent
   },
   {
-      path: '**', component: PageNotFoundComponent
+    path: '**', component: PageNotFoundComponent
   }
 ];
 
