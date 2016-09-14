@@ -2,6 +2,10 @@
   "name": "electroninserts-webapp",
   "version": "0.1.0",
   "license": "AGPL-3.0",
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/SimonBiggs/electroninserts-webapp.git"
+  },
   "scripts": {
     "clean": "rimraf node_modules doc dist typings && npm cache clean",
     "clean-install": "npm run clean && npm install",

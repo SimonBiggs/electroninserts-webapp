@@ -5,7 +5,8 @@ import { Parameterisation } from './parameterisation';
 import { CookieService } from 'angular2-cookie/core';
 import { ElectronApiService } from './electron-api.service';
 import { DataService } from './data.service';
-import { TitleService } from './title.service'
+import { TitleService } from './title.service';
+// import { LocalStorageService } from './local-storage.service';
 
 import { DEMO_PARAMETERISE_INPUT } from './demo-data';
 
@@ -41,15 +42,13 @@ export class ParameteriseComponent implements OnInit {
   constructor(
     private electronApiService: ElectronApiService,
     private dataService: DataService,
-    private cookieService: CookieService,
     private myTitleService: TitleService
   ) { }
 
   getData(): void {
-    let cookieParameterisation = this.cookieService.getObject("last_parameterisation")
-    // let cookieParameterisation: any = null;
-    if (cookieParameterisation) {
-      this.parameterisationFromCookie(cookieParameterisation);
+    let localStorageParameterisation = localStorage["last_parameterisation"];
+    if (localStorageParameterisation) {
+      this.parameterisationFromLocalStorage(localStorageParameterisation);
     }
     else {
       this.loadDemoData();
@@ -65,7 +64,9 @@ export class ParameteriseComponent implements OnInit {
   onSubmit() {
     this.dataInFlight = true;
     this.checkSubmitButton();
-    this.electronApiService.parameteriseInsert(JSON.stringify(this.parameterisation.insert))
+    this.electronApiService.parameteriseInsert(
+      JSON.stringify(this.parameterisation.insert)
+    )
       .then(parameterisationResult => {
         this.parameterisation.circle = parameterisationResult.circle;
         this.parameterisation.ellipse = parameterisationResult.ellipse;
@@ -74,23 +75,29 @@ export class ParameteriseComponent implements OnInit {
         this.dataInFlight = false;
         this.serverResponseValid = true;
         this.checkSubmitButton()
-        this.cookieService.putObject(JSON.stringify(this.parameterisation.insert), this.parameterisation)
-        this.cookieService.putObject('last_parameterisation', this.parameterisation)        
+        localStorage.setItem(
+          JSON.stringify(this.parameterisation.insert), 
+          JSON.stringify(this.parameterisation)
+        );
+        localStorage.setItem(
+          "last_parameterisation", JSON.stringify(this.parameterisation)
+        );
       })
   }
 
-  parameterisationFromCookie(cookieParameterisation: Object) {
-    this.parameterisation.insert = cookieParameterisation['insert'];
-    this.parameterisation.width = cookieParameterisation['width'];
-    this.parameterisation.length = cookieParameterisation['length'];
-    this.parameterisation.circle = cookieParameterisation['circle'];
-    this.parameterisation.ellipse = cookieParameterisation['ellipse'];
+  parameterisationFromLocalStorage(localStorageParameterisationString: string) {
+    let localStorageParameterisation = JSON.parse(localStorageParameterisationString); 
+    this.parameterisation.insert = localStorageParameterisation['insert'];
+    this.parameterisation.width = localStorageParameterisation['width'];
+    this.parameterisation.length = localStorageParameterisation['length'];
+    this.parameterisation.circle = localStorageParameterisation['circle'];
+    this.parameterisation.ellipse = localStorageParameterisation['ellipse'];
   }
 
   insertUpdated(insert: any) {
-    let cookieParameterisation = this.cookieService.getObject(JSON.stringify(insert))
-    if (cookieParameterisation) {
-      this.parameterisationFromCookie(cookieParameterisation);
+    let localStorageParameterisation = localStorage.getItem(JSON.stringify(insert))
+    if (localStorageParameterisation) {
+      this.parameterisationFromLocalStorage(localStorageParameterisation);
     }
     else {
       this.parameterisation.insert = insert;

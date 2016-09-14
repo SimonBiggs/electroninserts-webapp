@@ -23,6 +23,7 @@ import { ElectronApiService } from './electron-api.service';
 import { DataService } from './data.service';
 import { TitleService } from './title.service';
 import { CookieService } from 'angular2-cookie/core';
+import { LocalStorageService } from './local-storage.service';
 
 @NgModule({
   imports: [
@@ -48,7 +49,8 @@ import { CookieService } from 'angular2-cookie/core';
     DataService,
     CookieService,
     TitleService,
-    Title
+    Title,
+    LocalStorageService
   ],
   bootstrap: [
     AppComponent
