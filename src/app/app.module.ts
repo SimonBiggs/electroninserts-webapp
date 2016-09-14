@@ -4,8 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { Title } from '@angular/platform-browser';
 
-import { routing,
-         appRoutingProviders } from './app.routing';
+import { routing } from './app.routing';
 
 import { MdlModule } from 'angular2-mdl';
 
