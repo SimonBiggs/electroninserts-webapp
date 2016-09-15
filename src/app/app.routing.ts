@@ -5,6 +5,7 @@ import { ParameteriseComponent } from './parameterise.component';
 import { PageNotFoundComponent } from './page-not-found.component';
 import { NotYetImplimentedComponent } from './not-yet-implimented.component';
 import { HomeComponent } from './home.component';
+import { DicomComponent } from './dicom.component';
 
 
 const appRoutes: Routes = [
@@ -25,7 +26,7 @@ const appRoutes: Routes = [
   },
   {
     path: 'dicom',
-    component: NotYetImplimentedComponent
+    component: DicomComponent
   },
   {
     path: 'parameterise',

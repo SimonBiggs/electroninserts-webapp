@@ -1,0 +1,49 @@
+<div class="mdl-grid">
+  <div class="mdl-cell mdl-cell--12-col">
+    <p>This Dicom loader does not send the Dicom file off to a server. The entire reading of the dicom file is done within javascript.
+    You can confirm this yourself by using the chrome web browser, pressing 'Ctrl + Shift + I'
+    and then clicking on the network tab. When the file is chosen, then the block data is pulled and sent to parameterisation,
+    at no point in this interaction is there network traffic.</p>
+
+    <p>The only data that will be sent to the server will be on either the paremeterisation tab or the model tab, and this data will
+      just consist of x and y coordinates or widths, lengths, and factors.
+    </p>
+  <div>
+</div>
+<div class="mdl-grid">
+  <div class="mdl-cell mdl-cell--6-col">
+    <div>At this current point in time only one shape can be loaded from a Dicom file.</div>
+    <input type='file' accept='*.dcm' (change)='openFile($event)'>
+    <div *ngIf="dicomWarning">{{dicomWarning}}</div>
+  </div>
+
+  <div class="mdl-cell mdl-cell--6-col">
+    <button #getBlockDataButton
+      mdl-button mdl-button-type="raised" 
+      mdl-colored="primary" 
+      mdl-ripple
+      [disabled]="true"
+      (click)="getBlockData()">Get Dicom Block Data            
+    </button>
+
+    
+  </div>
+
+  <div class="mdl-cell mdl-cell--6-col">
+    <div>{{rawBlockData}}</div>
+    <!--<div *ngIf="parseDataString">{{parseDataString}}</div>-->
+    <div *ngIf="dicomInsert">{{dicomInsert | json}}
+
+      <button
+        mdl-button mdl-button-type="raised" 
+        mdl-colored="primary" 
+        mdl-ripple
+        (click)="sendToParameterisation()">Send to parameterisation           
+      </button>
+    </div>
+  </div>
+
+
+
+
+</div>

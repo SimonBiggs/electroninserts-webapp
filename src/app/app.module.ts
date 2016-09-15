@@ -3,6 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { Title } from '@angular/platform-browser';
+import { NgZone } from '@angular/core';
 
 import { routing } from './app.routing';
 
@@ -16,6 +17,7 @@ import { WidthLengthTableComponent } from './width-length-table.component';
 import { JsonInputComponent } from './json-input.component';
 import { NotYetImplimentedComponent } from './not-yet-implimented.component';
 import { HomeComponent } from './home.component';
+import { DicomComponent } from './dicom.component';
 
 import { MyJsonPipe } from './my-json.pipe'
 
@@ -43,7 +45,8 @@ import { LocalStorageService } from './local-storage.service';
     JsonInputComponent,
     MyJsonPipe,
     NotYetImplimentedComponent,
-    HomeComponent
+    HomeComponent,
+    DicomComponent
   ],
   providers: [
     ElectronApiService,

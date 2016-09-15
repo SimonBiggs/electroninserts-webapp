@@ -13,6 +13,7 @@ export class HomeComponent implements OnInit {
   usedLocalStorageSpace: number;
   remainingLocalStorageSpace: number;
 
+
   constructor(
     private myTitleService: TitleService,
     private myLocalStorageService: LocalStorageService

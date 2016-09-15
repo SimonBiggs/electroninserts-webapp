@@ -67,7 +67,7 @@ export class ParameteriseComponent implements OnInit {
     this.electronApiService.parameteriseInsert(
       JSON.stringify(this.parameterisation.insert)
     )
-      .then(parameterisationResult => {
+      .then((parameterisationResult: any) => {
         this.parameterisation.circle = parameterisationResult.circle;
         this.parameterisation.ellipse = parameterisationResult.ellipse;
         this.parameterisation.width = parameterisationResult.width;
