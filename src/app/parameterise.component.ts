@@ -2,7 +2,7 @@ import { Component, OnInit, Input, ViewChild } from '@angular/core';
 
 import { Parameterisation } from './parameterisation';
 
-import { CookieService } from 'angular2-cookie/core';
+// import { CookieService } from 'angular2-cookie/core';
 import { ElectronApiService } from './electron-api.service';
 import { DataService } from './data.service';
 import { TitleService } from './title.service';

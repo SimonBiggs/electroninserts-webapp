@@ -13,4 +13,7 @@ import 'rxjs';
 import 'angular2-mdl';
 
 // Angular2 Cookie
-import 'angular2-cookie/core';
+// import 'angular2-cookie/core';
+
+// h5webstorage
+// import 'h5webstorage';

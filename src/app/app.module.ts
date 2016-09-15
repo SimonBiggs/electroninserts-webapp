@@ -22,8 +22,9 @@ import { MyJsonPipe } from './my-json.pipe'
 import { ElectronApiService } from './electron-api.service';
 import { DataService } from './data.service';
 import { TitleService } from './title.service';
-import { CookieService } from 'angular2-cookie/core';
+// import { CookieService } from 'angular2-cookie/core';
 import { LocalStorageService } from './local-storage.service';
+// import {WEB_STORAGE_PROVIDERS} from "h5webstorage";
 
 @NgModule({
   imports: [
@@ -47,10 +48,10 @@ import { LocalStorageService } from './local-storage.service';
   providers: [
     ElectronApiService,
     DataService,
-    CookieService,
     TitleService,
     Title,
-    LocalStorageService
+    LocalStorageService,
+    // WEB_STORAGE_PROVIDERS
   ],
   bootstrap: [
     AppComponent
