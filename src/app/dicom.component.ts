@@ -7,6 +7,7 @@ import { TitleService } from './title.service';
 
 declare var Module: any;
 declare var FS: any;
+// declare var pypyjs: any;
 
 @Component({
   selector: 'my-dicom',
@@ -30,12 +31,16 @@ export class DicomComponent implements OnInit {
   parseDataString: string = '';
 
   dicomWarning: string;
+  dicomExitCode = 1;
 
   dicomX: number[];
   dicomY: number[];
   dicomInsert: Coordinates;
 
   header: string = '';
+
+  reader = new FileReader();
+  firstLoad = true;
 
   constructor(
     private myTitleService: TitleService
@@ -44,71 +49,78 @@ export class DicomComponent implements OnInit {
   @ViewChild('dicomOutput') dicomOutputDir: any;
   @ViewChild('getBlockDataButton') getBlockDataButton: any;
 
-  execute(prog: any, args:any) {
-    let exit_orig = Module.exit;
-    let exitCode: any;
-    Module.exit = function(status: any) {
-      exitCode = status;
-      exit_orig(status);
-    }
-    Module.callMain([prog].concat(args));
-    Module.exit = exit_orig;
-    return exitCode;
-  }
-  
-  dcmdump(reader: any, file: any) {
-    let fileName = '/uploadedfile.dcm';
-    // console.log("Writing...");
-    let content = new Int8Array(reader.result);
-    FS.writeFile(fileName, content, {encoding: "binary"});
-    // console.log("Dumping...");
 
-    let prog = 'dcmdump';
-    let args = [
-      fileName, '--print-all', '--search', '300a,0106']; // http://support.dcmtk.org/docs/dcmdump.html
+  ngOnInit() {
+    this.reader.onload = () => this.onceFileIsLoaded();
 
-    let exit_orig = Module.exit;
-    let exitCode: any;
-    Module.exit = function(status: any) {
-      exitCode = status;
-      exit_orig(status);
-    }
-    Module.callMain([prog].concat(args));
-    Module.exit = exit_orig;
-    return exitCode;
+    localStorage.removeItem('dicomPrint');
+    Module.print = this.sendDicomDumpToLocalStorage;
+    // Module.printErr = this.sendDicomDumpToLocalStorage;
+    this.myTitleService.setTitle('Dicom');
+
+    // pypyjs.exec("import json; print json.dumps({'hello': 'world'})")
+    // pypyjs.exec("import dicom; print json.dumps({'hello': 'world'})")
   }
 
-  readFile(file: any, processor: any) {
-    let reader = new FileReader();
-
-    reader.onload = (function(file) {
-      return function(e: any) { processor(reader, file) };
-    })(file);
-
-    reader.readAsArrayBuffer(file);
+  sendDicomDumpToLocalStorage(print: any) {
+    let priorDicomPrint = localStorage.getItem('dicomPrint');
+    localStorage.setItem('dicomPrint', priorDicomPrint + print);
   }
 
-  openFile(event: any) {
-    // console.log('start opening');
-    let file = event.srcElement.files[0];
-    console.log(file.type);
-
-    if (file.type === 'application/dicom') {
+  updateDicomWarning() {
+    let status = Number(localStorage.getItem('dicomLoadStatus'));
+    if (status == 0) {
       this.getBlockDataButton.disabled = false;
       this.dicomWarning = null;
-
-      localStorage.removeItem('dicomPrint');
-      localStorage.setItem('dicomPrint', '')
-
-      this.readFile(file, this.dcmdump);
     }
     else {
       this.getBlockDataButton.disabled = true;
-      this.dicomWarning = "The file you are loading must have a '.dcm' extension. Please confirm that the file you loaded has the relevant extension."
+      this.dicomWarning = 'An error occured while trying to find the block data within the provided Dicom file.';
     }
+  }
 
+  onceFileIsLoaded() {
+    let content = new Int8Array(this.reader.result);
+    console.log(content.length);
+    // let fileName = Math.random().toString(36).substr(2, 5);
+    // console.log(fileName);
+    let fileName = 'dicomfile';
 
+    if (FS.isFile(fileName)) {
+      FS.unlink(fileName);
+    }
+    FS.writeFile(fileName, content, {encoding: "binary"});
 
+    let exit_orig = Module.exit;    
+    Module.exit = (status: any) => {
+      localStorage.setItem('dicomLoadStatus', status);
+      exit_orig(status);
+    }
+    // if (Module.calledRun) {
+    //   Module.callMain(['dcmdump', fileName, '--print-all']);
+    // }
+    // else {
+      Module.callMain(
+        ['dcmdump', fileName, '--print-all', '--search', '300a,0106'] // http://support.dcmtk.org/docs/dcmdump.html
+      );
+    // }
+
+    Module.exit = exit_orig;
+
+    console.log(Module)
+
+    this.updateDicomWarning()
+    FS.unlink(fileName);
+  }
+
+  openFile(event: any) {
+    console.log(event.srcElement.files);
+    let file = event.srcElement.files[0];
+
+    localStorage.removeItem('dicomPrint');
+    localStorage.setItem('dicomPrint', ' ');
+
+    this.reader.readAsArrayBuffer(file);
   }
 
   getBlockData() {
@@ -143,17 +155,6 @@ export class DicomComponent implements OnInit {
     localStorage.setItem(
       "last_parameterisation", JSON.stringify(this.parameterisation)
     );
-  }
-
-  sendDicomDumpToLocalStorage(print: any) {
-    let priorDicomPrint = localStorage.getItem('dicomPrint');
-    localStorage.setItem('dicomPrint', priorDicomPrint + print);
-  }
-  
-  ngOnInit() {
-    localStorage.removeItem('dicomPrint');
-    Module.print = this.sendDicomDumpToLocalStorage;
-    this.myTitleService.setTitle('Dicom');
   }
 
   parameterisationFromLocalStorage(localStorageParameterisationString: string) {

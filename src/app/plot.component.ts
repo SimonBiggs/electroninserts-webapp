@@ -28,8 +28,13 @@ export class PlotComponent implements OnChanges, AfterViewInit {
 
   plt = Bokeh.Plotting;
   tools = 'pan,crosshair,wheel_zoom,box_zoom,reset,save';
+
+  xrange = Bokeh.Range1d(-6, 6);
+  yrange = Bokeh.Range1d(-6, 6);
+  
   fig = this.plt.figure({
     title: 'Electron Insert Plot', tools: this.tools,
+    x_range: this.xrange, y_range: this.yrange,
     plot_width: 300, plot_height: 300
   });
 
@@ -85,19 +90,16 @@ export class PlotComponent implements OnChanges, AfterViewInit {
     let sqYMax = (yMax + yMin) / 2 + range / 2
     let sqYMin = (yMax + yMin) / 2 - range / 2
 
-    
-    let xrange = Bokeh.Range1d(sqXMin, sqXMax);
-    let yrange = Bokeh.Range1d(sqYMin, sqYMax);
 
 
-    // Need to do something here to fix up aspect ratio
+    this.fig.attributes.x_range.start = sqXMin;
+    this.fig.attributes.x_range.end = sqXMax;
+    this.fig.attributes.y_range.start = sqYMin;
+    this.fig.attributes.y_range.end = sqYMax;
+    // this.fig.update_range();
+    // console.log(this.fig);
 
     this.source.data = this.tempSource;
-
-
-
-
-
 
     
     

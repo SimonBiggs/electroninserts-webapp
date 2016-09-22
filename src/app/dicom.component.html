@@ -13,7 +13,7 @@
 <div class="mdl-grid">
   <div class="mdl-cell mdl-cell--6-col">
     <div>At this current point in time only one shape can be loaded from a Dicom file.</div>
-    <input type='file' accept='*.dcm' (change)='openFile($event)'>
+    <input type='file' (change)='openFile($event)'>
     <div *ngIf="dicomWarning">{{dicomWarning}}</div>
   </div>
 
