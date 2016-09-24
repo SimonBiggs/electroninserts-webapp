@@ -96,13 +96,14 @@ export class DicomComponent implements OnInit {
       localStorage.setItem('dicomLoadStatus', status);
       exit_orig(status);
     }
+    Module.callMain(['dcmdump', fileName, '--print-all']);
     // if (Module.calledRun) {
     //   Module.callMain(['dcmdump', fileName, '--print-all']);
     // }
     // else {
-      Module.callMain(
-        ['dcmdump', fileName, '--print-all', '--search', '300a,0106'] // http://support.dcmtk.org/docs/dcmdump.html
-      );
+      // Module.callMain(
+      //   ['dcmdump', fileName, '--print-all', '--search', '300a,0106'] // http://support.dcmtk.org/docs/dcmdump.html
+      // );
     // }
 
     Module.exit = exit_orig;
@@ -125,8 +126,8 @@ export class DicomComponent implements OnInit {
 
   getBlockData() {
     let dicomPrint = localStorage.getItem('dicomPrint');
-    this.rawBlockData = dicomPrint;
-    this.parseDataString = /\[[\\\d\.-]*\]/.exec(dicomPrint).toString();
+    this.rawBlockData = /\(300a,0106\) DS \[[\\\d\.-]*\]/.exec(dicomPrint).toString();
+    this.parseDataString = /\[[\\\d\.-]*\]/.exec(this.rawBlockData).toString();
     this.parseDataString = this.parseDataString.replace(/\\/g, ', ')
     console.log(this.parseDataString)
     let parsedData = JSON.parse('{ "data": ' + this.parseDataString + '}');
