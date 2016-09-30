@@ -1,48 +1,129 @@
 <div class="mdl-grid">
-  <div class="mdl-cell mdl-cell--12-col">
+  <div class="mdl-cell mdl-cell--6-col">
     <h4>Currently implemented</h4>
-    Currently the loading of shapes from Dicom and parameterising them have been implemented. 
-    They are still a work in progress however they do have basic functionality.
-    Please navigate to these sections using the navigation menu. 
+    Currently the loading of shapes from Dicom and parameterising them have been implemented. They are still a work in progress
+    however they do have basic functionality. Please navigate to these sections using the navigation menu.
 
     <h4>Local storage tests</h4>
     <p></p>
-    
+
     <div *ngIf="testLocalStorage">
-      <p>Your browser supports local storage. 
-        You currently have {{usedLocalStorageSpace}} B of used space. Most browsers support 5 MB.
+      <p>Your browser supports local storage. You currently have {{usedLocalStorageSpace}} B of used space. Most browsers support
+        5 MB.
       </p>
 
       <p>To check your remaining storage press the button below. Warning, this might be slow.</p>
-      <button
-        mdl-button mdl-button-type="raised" 
-        mdl-colored="primary" 
-        mdl-ripple
-        (click)="testRemainingStorage()">Test remaining local storage           
+      <button mdl-button mdl-button-type="raised" mdl-colored="primary" mdl-ripple (click)="testRemainingStorage()">Test remaining local storage           
       </button>
       <div *ngIf="remainingLocalStorageSpace">
-        <p>You have {{remainingLocalStorageSpace}} B of local storage remaining 
-        which is available for use by this webapp.</p>
+        <p>You have {{remainingLocalStorageSpace}} B of local storage remaining which is available for use by this webapp.</p>
       </div>
     </div>
     <div *ngIf="!testLocalStorage">
       <p>
-        This webapp relies upon local storage working within your browser.
-        Your browser does not support local storage.
-        Please download and use a modern standards complient browser such as 
-        <a href="https://www.google.com.au/chrome/browser/desktop/">Chrome</a> or 
+        This webapp relies upon local storage working within your browser. Your browser does not support local storage. Please download
+        and use a modern standards compliant browser such as
+        <a href="https://www.google.com.au/chrome/browser/desktop/">Chrome</a> or
         <a href="https://www.mozilla.org/en-GB/firefox/new/">Firefox</a> to use this webapp.
       </p>
     </div>
-    
+
 
     <h4>Brief overview</h4>
 
     <h4>Paper(s?)</h4>
 
-    <h4>Source code</h4>
 
     <h4>Detailed instructions</h4>
 
   </div>
+  <div class="mdl-cell mdl-cell--6-col">
+
+    <h4>Source code</h4>
+    <p>
+      For the purpose of coding transparency and to enable the user to take responsibility for the code themselves any redistribution
+      or derivative works of this web app need to include the source code of any additions made and need to include a way
+      for users to easily access the source code of each of the components used or linked to.
+    </p>
+
+    <h5>Server Code</h5>
+
+    <h6>Base Electron Insert Factor Source Code</h6>
+    <p>
+      The python file which does the shape parameterisation and insert factor modelling which is used by the server is found here:
+      <a href="https://github.com/SimonBiggs/electronfactor-server/blob/master/electroninserts.py">
+              https://github.com/SimonBiggs/electronfactor-server/blob/master/electroninserts.py</a>
+    </p>
+
+    <h6>Tornado REST API</h6>
+    <p>
+      The Tornado REST API is found here:
+      <a href="https://github.com/SimonBiggs/electronfactor-server/blob/master/main.py">
+              https://github.com/SimonBiggs/electronfactor-server/blob/master/main.py</a>
+    </p>
+
+    <h6>Heroku App code</h6>
+    <p>
+      The code to make the heroku app is found here:
+      <a href="https://github.com/SimonBiggs/electronfactor-server">
+              https://github.com/SimonBiggs/electronfactor-server</a>
+    </p>
+
+    <h5>Web App Code</h5>
+    <p>
+      The source code for this web app is found here:
+      <a href="https://github.com/SimonBiggs/electroninserts-webapp">
+            https://github.com/SimonBiggs/electroninserts-webapp</a>
+    </p>
+
+    <h5>Libraries used</h5>
+    <h6>Bokehjs</h6>
+    <p>
+      The bokehjs library is used for plots. Documentation can be found here:
+      <a href="http://bokeh.pydata.org/en/latest/docs/user_guide/bokehjs.html#userguide-bokehjs">
+              http://bokeh.pydata.org/en/latest/docs/user_guide/bokehjs.html#userguide-bokehjs</a>
+    </p>
+    <p>
+      Source code can be found here:
+      <a href="https://github.com/bokeh/bokeh/tree/master/bokehjs">
+              https://github.com/bokeh/bokeh/tree/master/bokehjs</a>
+    </p>
+
+    <h6>dcmjs</h6>
+    <p>
+      The dcmjs library is used for reading dicom files within javascript. Website can be found here:
+      <a href="http://dcmjs.org/">
+              http://dcmjs.org/</a>
+    </p>
+    <p>
+      Source code can be found here:
+      <a href="https://github.com/commontk/dcmjs">
+              https://github.com/commontk/dcmjs</a>
+    </p>
+
+    <h6>Angular2</h6>
+    <p>
+      This interface was built using Angular2. Documentation can be found here:
+      <a href="https://angular.io/docs/ts/latest/">
+              https://angular.io/docs/ts/latest/</a>
+    </p>
+    <p>
+      Source code can be found here:
+      <a href="https://github.com/angular/angular">
+              https://github.com/angular/angular</a>
+    </p>
+    <h6>Remaining libraries</h6>
+    <p>
+      For all remaining libraries used please see the npm package.json file:
+      <a href="https://github.com/SimonBiggs/electroninserts-webapp/blob/master/package.json">
+              https://github.com/SimonBiggs/electroninserts-webapp/blob/master/package.json</a>
+    </p>
+    <p>
+      And the index file for various imports:
+      <a href="https://github.com/SimonBiggs/electroninserts-webapp/blob/master/src/public/index.html">
+              https://github.com/SimonBiggs/electroninserts-webapp/blob/master/src/public/index.html</a>
+    </p>
+  </div>
+
+
 </div>
