@@ -17,6 +17,9 @@ import { WidthLengthTableComponent } from './width-length-table.component';
 import { JsonInputComponent } from './json-input.component';
 import { NotYetImplimentedComponent } from './not-yet-implimented.component';
 import { HomeComponent } from './home.component';
+import { ModelComponent } from './model.component';
+import { ExportImportComponent } from './export-import.component';
+import { SpecificationsComponent } from './specifications.component';
 import { DicomComponent } from './dicom.component';
 
 import { MyJsonPipe } from './my-json.pipe'
@@ -46,6 +49,9 @@ import { LocalStorageService } from './local-storage.service';
     MyJsonPipe,
     NotYetImplimentedComponent,
     HomeComponent,
+    ModelComponent,
+    ExportImportComponent,
+    SpecificationsComponent,
     DicomComponent
   ],
   providers: [

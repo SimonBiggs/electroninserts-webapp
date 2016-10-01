@@ -5,7 +5,7 @@ import 'rxjs/add/operator/toPromise';
 
 @Injectable()
 export class ElectronApiService {
-  private parameteriseURL = 'http://electronapi.simonbiggs.net/parameterise';
+  // private parameteriseURL = 'http://electronapi.simonbiggs.net/parameterise';
   // private modelURL = 'http://electronapi.simonbiggs.net/model';
   private wakeUpURL = 'http://electronapi.simonbiggs.net/wakeup';
 
@@ -16,9 +16,9 @@ export class ElectronApiService {
       .get(this.wakeUpURL).toPromise();
   }
 
-  parameteriseInsert(parameteriseInput: string): Promise<any> {
+  parameteriseInsert(parameteriseURL:string, parameteriseInput: string): Promise<any> {
     return this.http
-            .post(this.parameteriseURL, parameteriseInput)
+            .post(parameteriseURL, parameteriseInput)
             .toPromise()
             .then(res => res.json())
             .catch(this.handleError);

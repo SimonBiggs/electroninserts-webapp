@@ -5,6 +5,9 @@ import { ParameteriseComponent } from './parameterise.component';
 import { PageNotFoundComponent } from './page-not-found.component';
 import { NotYetImplimentedComponent } from './not-yet-implimented.component';
 import { HomeComponent } from './home.component';
+import { ModelComponent } from './model.component';
+import { ExportImportComponent } from './export-import.component';
+import { SpecificationsComponent } from './specifications.component';
 import { DicomComponent } from './dicom.component';
 
 
@@ -18,11 +21,11 @@ const appRoutes: Routes = [
   },
   {
     path: 'export-import',
-    component: NotYetImplimentedComponent
+    component: ExportImportComponent
   },
   {
     path: 'specifications',
-    component: NotYetImplimentedComponent
+    component: SpecificationsComponent
   },
   {
     path: 'dicom',
@@ -34,7 +37,7 @@ const appRoutes: Routes = [
   },
   {
     path: 'model',
-    component: NotYetImplimentedComponent
+    component: ModelComponent
   },
   {
     path: '',

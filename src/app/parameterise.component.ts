@@ -39,6 +39,8 @@ export class ParameteriseComponent implements OnInit {
 
   refreshJsonInput: boolean = false;
 
+  parameteriseURL = 'http://electronapi.simonbiggs.net/parameterise';
+
   constructor(
     private electronApiService: ElectronApiService,
     private dataService: DataService,
@@ -65,6 +67,7 @@ export class ParameteriseComponent implements OnInit {
     this.dataInFlight = true;
     this.checkSubmitButton();
     this.electronApiService.parameteriseInsert(
+      this.parameteriseURL,
       JSON.stringify(this.parameterisation.insert)
     )
       .then((parameterisationResult: any) => {

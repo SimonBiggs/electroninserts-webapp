@@ -2,53 +2,52 @@
   <div class="mdl-cell mdl-cell--12-col">
     <p>Parameterisations are saved within your browser's local storage.</p>
   </div>
-</div>
-<div class="mdl-grid">
-    <div class="mdl-cell mdl-cell--6-col">
-    <my-json-input #jsonInput
-      [insert]="parameterisation.insert"
-      [jsonDisabled]="dataInFlight"
-      (insertUpdated)="insertUpdated($event)"
-      (jsonStatus)="onJsonStatusChange($event)">
-    </my-json-input>
 
-    <div class="mdl-grid">
-      <div class="mdl-cell mdl-cell--6-col">
-        <button
-          mdl-button mdl-button-type="raised" 
-          mdl-colored="primary" 
-          mdl-ripple
-          [disabled]="dataInFlight"
-          (click)="loadDemoData()">Load Demo Data            
-        </button>
-        <button
-          mdl-button mdl-button-type="raised" 
-          mdl-colored="primary" 
-          mdl-ripple
-          [disabled]="submitDisabled"
-          (click)="onSubmit()">Submit            
-        </button>
-        <div [hidden]="serverResponseValid">
-          {{serverErrorMessage}}
-        </div>
-      </div>
-      <div class="mdl-cell mdl-cell--6-col">
-        <my-width-length-table
-          [width]="parameterisation.width"
-          [length]="parameterisation.length"
-          [enabled]="jsonValid">
-        </my-width-length-table>
+  <div class="mdl-cell mdl-cell--6-col">
+  <my-json-input #jsonInput
+    [insert]="parameterisation.insert"
+    [jsonDisabled]="dataInFlight"
+    (insertUpdated)="insertUpdated($event)"
+    (jsonStatus)="onJsonStatusChange($event)">
+  </my-json-input>
+
+  <div class="mdl-grid">
+    <div class="mdl-cell mdl-cell--6-col">
+      <button
+        mdl-button mdl-button-type="raised" 
+        mdl-colored="primary" 
+        mdl-ripple
+        [disabled]="dataInFlight"
+        (click)="loadDemoData()">Load Demo Data            
+      </button>
+      <button
+        mdl-button mdl-button-type="raised" 
+        mdl-colored="primary" 
+        mdl-ripple
+        [disabled]="submitDisabled"
+        (click)="onSubmit()">Submit            
+      </button>
+      <div [hidden]="serverResponseValid">
+        {{serverErrorMessage}}
       </div>
     </div>
-
-    </div>
     <div class="mdl-cell mdl-cell--6-col">
-      <my-plot 
-        [insert]="parameterisation.insert"
-        [circle]="parameterisation.circle"
-        [ellipse]="parameterisation.ellipse"
+      <my-width-length-table
+        [width]="parameterisation.width"
+        [length]="parameterisation.length"
         [enabled]="jsonValid">
-      </my-plot>
-
+      </my-width-length-table>
     </div>
+  </div>
+
+  </div>
+  <div class="mdl-cell mdl-cell--6-col">
+    <my-plot 
+      [insert]="parameterisation.insert"
+      [circle]="parameterisation.circle"
+      [ellipse]="parameterisation.ellipse"
+      [enabled]="jsonValid">
+    </my-plot>
+
+  </div>
 </div>
