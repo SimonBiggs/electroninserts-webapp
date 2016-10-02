@@ -1,5 +1,7 @@
 import { Component, OnInit, ApplicationRef, ViewChild } from '@angular/core';
 
+import { Router } from '@angular/router';
+
 import { Coordinates } from './coordinates'
 import { Parameterisation } from './parameterisation';
 
@@ -48,7 +50,8 @@ export class DicomComponent implements OnInit {
   firstLoad = true;
 
   constructor(
-    private myTitleService: TitleService
+    private myTitleService: TitleService,
+    private router: Router
   ) { }
 
   @ViewChild('dicomOutput') dicomOutputDir: any;
@@ -227,6 +230,7 @@ export class DicomComponent implements OnInit {
     localStorage.setItem(
       "last_parameterisation", JSON.stringify(this.parameterisation)
     );
+    this.router.navigate(["/parameterise"])
   }
 
   parameterisationFromLocalStorage(localStorageParameterisationString: string) {

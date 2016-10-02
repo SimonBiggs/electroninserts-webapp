@@ -12,7 +12,6 @@
 </div>
 <div class="mdl-grid">
   <div class="mdl-cell mdl-cell--6-col">
-    <div>At this current point in time only one shape can be loaded from a Dicom file.</div>
     <input type='file' (change)='openFile($event)'>
     <div *ngIf="dicomWarning">{{dicomWarning}}</div>
   </div>
@@ -38,7 +37,7 @@
       (click)="sendToParameterisation(insert.coordinates)">Send to parameterisation           
     </button>
 
-    {{insert | json}}
+    <p>{{insert | json}}</p>
   </div>
 
 
