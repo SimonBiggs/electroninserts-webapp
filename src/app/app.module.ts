@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { Title } from '@angular/platform-browser';
 import { NgZone } from '@angular/core';
+// import {MaterialModule} from '@angular/material';
 
 import { routing } from './app.routing';
 
@@ -37,6 +38,7 @@ import { LocalStorageService } from './local-storage.service';
      FormsModule,
      HttpModule,
      MdlModule,
+    //  MaterialModule.forRoot(),
      routing     
   ],
   declarations: [

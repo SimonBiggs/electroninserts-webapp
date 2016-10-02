@@ -23,26 +23,23 @@
       mdl-colored="primary" 
       mdl-ripple
       [disabled]="true"
-      (click)="getBlockData()">Get Dicom Block Data            
+      (click)="getBlockData()">Get Dicom Block Data
     </button>
 
     
   </div>
 
-  <div class="mdl-cell mdl-cell--6-col">
-    <div>{{rawBlockData}}</div>
-    <!--<div *ngIf="parseDataString">{{parseDataString}}</div>-->
-    <div *ngIf="dicomInsert">{{dicomInsert | json}}
+  <div *ngFor="let insert of insertList" class="mdl-cell mdl-cell--6-col">
+    
+    <button
+      mdl-button mdl-button-type="raised" 
+      mdl-colored="primary" 
+      mdl-ripple
+      (click)="sendToParameterisation(insert.coordinates)">Send to parameterisation           
+    </button>
 
-      <button
-        mdl-button mdl-button-type="raised" 
-        mdl-colored="primary" 
-        mdl-ripple
-        (click)="sendToParameterisation()">Send to parameterisation           
-      </button>
-    </div>
+    {{insert | json}}
   </div>
-
 
 
 

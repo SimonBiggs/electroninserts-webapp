@@ -17,3 +17,9 @@ import 'angular2-mdl';
 
 // h5webstorage
 // import 'h5webstorage';
+
+// import '@angular/material';
+
+// import '@angular/material/core/theming/prebuilt/deeppurple-amber.css';
+
+import 'js-yaml';

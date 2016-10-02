@@ -5,8 +5,11 @@ import { Parameterisation } from './parameterisation';
 
 import { TitleService } from './title.service';
 
+import { safeLoad } from 'js-yaml';
+
 declare var Module: any;
 declare var FS: any;
+// declare var yaml: any;
 // declare var pypyjs: any;
 
 @Component({
@@ -37,6 +40,8 @@ export class DicomComponent implements OnInit {
   dicomY: number[];
   dicomInsert: Coordinates;
 
+  insertList: any[];
+
   header: string = '';
 
   reader = new FileReader();
@@ -64,7 +69,7 @@ export class DicomComponent implements OnInit {
 
   sendDicomDumpToLocalStorage(print: any) {
     let priorDicomPrint = localStorage.getItem('dicomPrint');
-    localStorage.setItem('dicomPrint', priorDicomPrint + print);
+    localStorage.setItem('dicomPrint', priorDicomPrint + '\n' + print);
   }
 
   updateDicomWarning() {
@@ -124,13 +129,39 @@ export class DicomComponent implements OnInit {
     this.reader.readAsArrayBuffer(file);
   }
 
-  getBlockData() {
-    let dicomPrint = localStorage.getItem('dicomPrint');
-    this.rawBlockData = /\(300a,0106\) DS \[[\\\d\.-]*\]/.exec(dicomPrint).toString();
-    this.parseDataString = /\[[\\\d\.-]*\]/.exec(this.rawBlockData).toString();
-    this.parseDataString = this.parseDataString.replace(/\\/g, ', ')
-    console.log(this.parseDataString)
-    let parsedData = JSON.parse('{ "data": ' + this.parseDataString + '}');
+  convertDicomDumpToDict(dump: string) {
+    let yamlConvert = dump.replace(/\s*#[^#\n]*\n/g,'\n');
+    yamlConvert = yamlConvert.replace(/\s*#[^#\n]*$/g,'');
+    yamlConvert = yamlConvert.replace(/^\n*/,'');
+    yamlConvert = yamlConvert.replace(/(\([0-9a-f][0-9a-f][0-9a-f][0-9a-f],[0-9a-f][0-9a-f][0-9a-f][0-9a-f]\))/g,'$1:')
+    yamlConvert = yamlConvert.replace(
+      /(\([0-9a-f][0-9a-f][0-9a-f][0-9a-f],[0-9a-f][0-9a-f][0-9a-f][0-9a-f]\):) SQ \(Sequence with undefined length #=\d+\)/g,
+      '$1')
+    yamlConvert = yamlConvert.replace(
+      /(\([0-9a-f][0-9a-f][0-9a-f][0-9a-f],[0-9a-f][0-9a-f][0-9a-f][0-9a-f]\):) na \(Item with undefined length #=\d+\)/g,
+      '$1')
+    yamlConvert = yamlConvert.replace(
+      / *\(fffe,e00d\): na \(ItemDelimitationItem\) *\n/g,
+      '')
+    yamlConvert = yamlConvert.replace(
+      / *\(fffe,e0dd\): na \(SequenceDelimitationItem\)\n/g,
+      '')
+    yamlConvert = yamlConvert.replace(
+      /(\([0-9a-f][0-9a-f][0-9a-f][0-9a-f],[0-9a-f][0-9a-f][0-9a-f][0-9a-f]\):) (.*)/g,
+      '$1 "$2"')
+    yamlConvert = yamlConvert.replace(/\\/g, ', ')
+    yamlConvert = yamlConvert.replace(/\(fffe,e000\):/g, ' - ')
+
+    yamlConvert = safeLoad(yamlConvert);
+
+    return yamlConvert;
+  }
+
+  convertBlockDataToCoords(blockData: string): Coordinates {
+    let listString = /\[[, \d\.-]*\]/.exec(blockData).toString();
+    // console.log(listString);
+    let parsedData = JSON.parse('{ "data": ' + listString + '}');
+
     let x: number[] = [];
     let y: number[] = [];
     let i = 0;
@@ -143,16 +174,56 @@ export class DicomComponent implements OnInit {
       }
       i++;
     }
-    this.dicomX = x;
-    this.dicomY = y;
-    this.dicomInsert = {
-      "x": this.dicomX,
-      "y": this.dicomY
-    }
+    let insert = {
+      "x": x,
+      "y": y
+    };
+
+    return insert;
   }
 
-  sendToParameterisation() {
-    this.insertUpdated(this.dicomInsert);
+  dicomPullFloat(input: string): number {
+    return Number(input.replace(/.*\[([\d\.-]*)\].*/, "$1"));
+  }
+
+  dicomPullString(input: string): string {
+    return input.replace(/.*\[(\w*)\].*/, "$1");
+  }
+
+  getBlockData() {
+    let dicomPrint = localStorage.getItem('dicomPrint');
+    let dicomDict = this.convertDicomDumpToDict(dicomPrint);
+
+    this.insertList = [];  // Later on update this to be an object that includes all insert details
+
+    let beamSequence = dicomDict["(300a,00b0)"];
+    for (let beam of beamSequence) {
+      let blockData = beam["(300a,00f4)"][0]["(300a,0106)"];
+      let coordinates = this.convertBlockDataToCoords(blockData);
+
+      let applicator = this.dicomPullString(
+        beam["(300a,0107)"][0]["(300a,0108)"]);
+      let energy = this.dicomPullFloat(
+        beam["(300a,0111)"][0]["(300a,0114)"]);
+      let ssd = this.dicomPullFloat(
+        beam["(300a,0111)"][0]["(300a,0130)"]) / 10;
+
+      let insert = {
+        "coordinates": coordinates,
+        "applicator": applicator,
+        "energy": energy,
+        "ssd": ssd
+      }
+      this.insertList.push(insert)
+    }
+
+    console.log(this.insertList);
+
+    this.dicomInsert = this.insertList[0]["coordinates"];
+  }
+
+  sendToParameterisation(insert: any) {
+    this.insertUpdated(insert);
     localStorage.setItem(
       "last_parameterisation", JSON.stringify(this.parameterisation)
     );
