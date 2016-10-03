@@ -1,62 +1,9 @@
 <div class="mdl-grid">
-  <div class="mdl-cell mdl-cell--12-col">
-    <p>Parameterisations are saved within your browser's local storage.</p>
-  </div>
-
   <div class="mdl-cell mdl-cell--6-col">
-  <my-json-input #jsonInput
-    [insert]="parameterisation.insert"
-    [jsonDisabled]="dataInFlight"
-    (insertUpdated)="insertUpdated($event)"
-    (jsonStatus)="onJsonStatusChange($event)">
-  </my-json-input>
-
-  <div class="mdl-grid">
-    <div class="mdl-cell mdl-cell--6-col">
-      <button
-        mdl-button mdl-button-type="raised" 
-        mdl-colored="primary" 
-        mdl-ripple
-        [disabled]="dataInFlight"
-        (click)="loadDemoData()">Load Demo Data            
-      </button>
-
-      <button
-        mdl-button mdl-button-type="raised" 
-        mdl-colored="primary" 
-        mdl-ripple
-        [disabled]="submitDisabled"
-        (click)="onSubmit()">Submit            
-      </button>
-
-
-      <div [hidden]="serverResponseValid">
-        {{serverErrorMessage}}
-      </div>
-    </div>
-    <div class="mdl-cell mdl-cell--6-col">
-      <my-width-length-table
-        [width]="parameterisation.width"
-        [length]="parameterisation.length"
-        [enabled]="jsonValid">
-      </my-width-length-table>
-    </div>
-    <div class="mdl-cell mdl-cell--12-col">
-      <p>Change the following address to use your own
-        parameterisation server. The default is: <br>
-        <a>http://electronapi.simonbiggs.net/parameterise</a>       
-      </p>
-      <mdl-textfield
-        type="text"
-        label="Parameterisation Server Address"
-        (input)="parameterisationServerChange($event.target.value)"
-        floating-label
-        [(ngModel)]="parameteriseURL"
-        style="width:100%"></mdl-textfield>
-    </div>
+    <h4>Equivalent ellipse parameterisation</h4>
+    <p>Provide basic instructions here.</p>
   </div>
 
-  </div>
   <div class="mdl-cell mdl-cell--6-col">
     <my-plot 
       [insert]="parameterisation.insert"
@@ -64,6 +11,83 @@
       [ellipse]="parameterisation.ellipse"
       [enabled]="jsonValid">
     </my-plot>
+  </div>
 
+  <div class="mdl-cell mdl-cell--3-col">
+    <my-width-length-table
+      [width]="parameterisation.width"
+      [length]="parameterisation.length"
+      [enabled]="jsonValid">
+    </my-width-length-table>
+  </div>
+
+  <div class="mdl-cell mdl-cell--3-col">
+    <mdl-textfield
+      type="text"
+      label="Energy (MeV)"
+      (input)="insertDataChange()"
+      floating-label
+      [(ngModel)]="insertData.energy"
+      style="width:100%"></mdl-textfield>
+    <mdl-textfield
+      type="text"
+      label="Applicator (ID)"
+      (input)="insertDataChange()"
+      floating-label
+      [(ngModel)]="insertData.applicator"
+      style="width:100%"></mdl-textfield>
+    <mdl-textfield
+      type="text"
+      label="SSD (cm)"
+      (input)="insertDataChange()"
+      floating-label
+      [(ngModel)]="insertData.ssd"
+      style="width:100%"></mdl-textfield>
+  </div>
+
+  <div class="mdl-cell mdl-cell--6-col" style="text-align: right;">
+    <button
+      mdl-button mdl-button-type="raised" 
+      mdl-colored="primary" 
+      mdl-ripple
+      [disabled]="dataInFlight"
+      (click)="loadDemoData()">Load Demo Data            
+    </button>
+
+    <button
+      mdl-button mdl-button-type="raised" 
+      mdl-colored="primary" 
+      mdl-ripple
+      [disabled]="submitDisabled"
+      (click)="onSubmit()">Submit            
+    </button>
+
+    <div [hidden]="serverResponseValid">
+      {{serverErrorMessage}}
+    </div>
+  </div>
+
+
+  <div class="mdl-cell mdl-cell--6-col">
+    <my-json-input #jsonInput
+      [insert]="parameterisation.insert"
+      [jsonDisabled]="dataInFlight"
+      (insertUpdated)="insertUpdated($event)"
+      (jsonStatus)="onJsonStatusChange($event)">
+    </my-json-input>
+  </div>
+
+  <div class="mdl-cell mdl-cell--6-col">
+    <p>Change the following address to use your own
+      parameterisation server. The default is: <br>
+      <a>http://electronapi.simonbiggs.net/parameterise</a>       
+    </p>
+    <mdl-textfield
+      type="text"
+      label="Parameterisation Server Address"
+      (input)="parameterisationServerChange($event.target.value)"
+      floating-label
+      [(ngModel)]="parameteriseURL"
+      style="width:100%"></mdl-textfield>
   </div>
 </div>

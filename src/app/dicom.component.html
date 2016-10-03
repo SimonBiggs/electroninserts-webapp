@@ -22,7 +22,7 @@
       mdl-colored="primary" 
       mdl-ripple
       [disabled]="true"
-      (click)="getBlockData()">Get Dicom Block Data
+      (click)="getBlockData()">Get Dicom Insert Data
     </button>
 
     
@@ -34,7 +34,7 @@
       mdl-button mdl-button-type="raised" 
       mdl-colored="primary" 
       mdl-ripple
-      (click)="sendToParameterisation(insert.coordinates)">Send to parameterisation           
+      (click)="sendToParameterisation(insert)">Send to parameterisation           
     </button>
 
     <p>{{insert | json}}</p>

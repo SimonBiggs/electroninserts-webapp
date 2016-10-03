@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, ViewChild } from '@angular/core';
 
 import { Parameterisation } from './parameterisation';
+import { InsertData } from './insert-data';
 
 // import { CookieService } from 'angular2-cookie/core';
 import { ElectronApiService } from './electron-api.service';
@@ -41,6 +42,13 @@ export class ParameteriseComponent implements OnInit {
 
   parameteriseURL: string;
 
+  insertData: InsertData = {
+    parameterisation: this.parameterisation,
+    energy: null,
+    applicator: null,
+    ssd: null
+  }
+
   constructor(
     private electronApiService: ElectronApiService,
     private dataService: DataService,
@@ -48,9 +56,13 @@ export class ParameteriseComponent implements OnInit {
   ) { }
 
   getData(): void {
-    let localStorageParameterisation = localStorage["last_parameterisation"];
-    if (localStorageParameterisation) {
-      this.parameterisationFromLocalStorage(localStorageParameterisation);
+    let localStorageInsertDataString = localStorage['last_insertData'];
+    
+    if (localStorageInsertDataString) {
+      this.insertData = JSON.parse(localStorageInsertDataString);
+      let insert = this.insertData['parameterisation']['insert']
+      this.insertUpdated(insert);
+      this.insertData['parameterisation'] = this.parameterisation;
     }
     else {
       this.loadDemoData();
@@ -61,6 +73,12 @@ export class ParameteriseComponent implements OnInit {
     let demoData = JSON.parse(JSON.stringify(DEMO_PARAMETERISE_INPUT));
     this.insertUpdated(demoData.insert);
     this.jsonInputComponent.refresh = true;
+    this.insertData =  {
+      parameterisation: this.parameterisation,
+      energy: null,
+      applicator: null,
+      ssd: null
+    }
   }
 
   sleep(time: number) {
@@ -86,8 +104,9 @@ export class ParameteriseComponent implements OnInit {
             JSON.stringify(this.parameterisation.insert), 
             JSON.stringify(this.parameterisation)
           );
+          this.insertData['parameterisation'] = this.parameterisation
           localStorage.setItem(
-            "last_parameterisation", JSON.stringify(this.parameterisation)
+            "last_insertData", JSON.stringify(this.insertData)
           );
         }
         else {
@@ -96,10 +115,20 @@ export class ParameteriseComponent implements OnInit {
       })
   }
 
+  insertDataChange() {
+    localStorage.setItem(
+      "last_insertData", JSON.stringify(this.insertData)
+    );
+  }
+
   onSubmit() {
     this.dataInFlight = true;
     this.checkSubmitButton();
     this.recursiveServerSubmit();
+  }
+
+  insertDataFromLocalStorage(localStorageInsertData: string) {
+
   }
 
   parameterisationFromLocalStorage(localStorageParameterisationString: string) {

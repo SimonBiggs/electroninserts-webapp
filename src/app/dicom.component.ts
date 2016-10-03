@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 
 import { Coordinates } from './coordinates'
 import { Parameterisation } from './parameterisation';
+import { InsertData } from './insert-data';
 
 import { TitleService } from './title.service';
 
@@ -11,6 +12,7 @@ import { safeLoad } from 'js-yaml';
 
 declare var Module: any;
 declare var FS: any;
+
 // declare var yaml: any;
 // declare var pypyjs: any;
 
@@ -31,23 +33,19 @@ export class DicomComponent implements OnInit {
     ellipse: null
   };
 
-  rawBlockData: string = '';
-  vectorData: string = '';
-  parseDataString: string = '';
+  insertData: InsertData = {
+    parameterisation: this.parameterisation,
+    energy: null,
+    applicator: null,
+    ssd: null
+  }
 
   dicomWarning: string;
   dicomExitCode = 1;
 
-  dicomX: number[];
-  dicomY: number[];
-  dicomInsert: Coordinates;
-
   insertList: any[];
 
-  header: string = '';
-
   reader = new FileReader();
-  firstLoad = true;
 
   constructor(
     private myTitleService: TitleService,
@@ -59,10 +57,17 @@ export class DicomComponent implements OnInit {
 
 
   ngOnInit() {
-    this.reader.onload = () => this.onceFileIsLoaded();
+    window['dicomData'] = ' ';
 
-    localStorage.removeItem('dicomPrint');
-    Module.print = this.sendDicomDumpToLocalStorage;
+    this.reader.onload = () => this.onceFileIsLoaded();
+    
+    let insertListString = localStorage.getItem('dicom_insertList')
+    if (insertListString) {
+      this.insertList = JSON.parse(insertListString);
+    }
+
+    // localStorage.removeItem('dicomPrint');
+    Module.print = this.sendDicomDumpToGlobalVariable;
     // Module.printErr = this.sendDicomDumpToLocalStorage;
     this.myTitleService.setTitle('Dicom');
 
@@ -70,9 +75,8 @@ export class DicomComponent implements OnInit {
     // pypyjs.exec("import dicom; print json.dumps({'hello': 'world'})")
   }
 
-  sendDicomDumpToLocalStorage(print: any) {
-    let priorDicomPrint = localStorage.getItem('dicomPrint');
-    localStorage.setItem('dicomPrint', priorDicomPrint + '\n' + print);
+  sendDicomDumpToGlobalVariable(print: any) {
+    window['dicomData'] = window['dicomData'] + '\n' + print
   }
 
   updateDicomWarning() {
@@ -90,8 +94,6 @@ export class DicomComponent implements OnInit {
   onceFileIsLoaded() {
     let content = new Int8Array(this.reader.result);
     console.log(content.length);
-    // let fileName = Math.random().toString(36).substr(2, 5);
-    // console.log(fileName);
     let fileName = 'dicomfile';
 
     if (FS.isFile(fileName)) {
@@ -105,14 +107,6 @@ export class DicomComponent implements OnInit {
       exit_orig(status);
     }
     Module.callMain(['dcmdump', fileName, '--print-all']);
-    // if (Module.calledRun) {
-    //   Module.callMain(['dcmdump', fileName, '--print-all']);
-    // }
-    // else {
-      // Module.callMain(
-      //   ['dcmdump', fileName, '--print-all', '--search', '300a,0106'] // http://support.dcmtk.org/docs/dcmdump.html
-      // );
-    // }
 
     Module.exit = exit_orig;
 
@@ -126,8 +120,7 @@ export class DicomComponent implements OnInit {
     console.log(event.srcElement.files);
     let file = event.srcElement.files[0];
 
-    localStorage.removeItem('dicomPrint');
-    localStorage.setItem('dicomPrint', ' ');
+    window['dicomData'] = ' '
 
     this.reader.readAsArrayBuffer(file);
   }
@@ -162,7 +155,7 @@ export class DicomComponent implements OnInit {
 
   convertBlockDataToCoords(blockData: string): Coordinates {
     let listString = /\[[, \d\.-]*\]/.exec(blockData).toString();
-    // console.log(listString);
+
     let parsedData = JSON.parse('{ "data": ' + listString + '}');
 
     let x: number[] = [];
@@ -194,10 +187,10 @@ export class DicomComponent implements OnInit {
   }
 
   getBlockData() {
-    let dicomPrint = localStorage.getItem('dicomPrint');
+    let dicomPrint = window['dicomData'];
     let dicomDict = this.convertDicomDumpToDict(dicomPrint);
 
-    this.insertList = [];  // Later on update this to be an object that includes all insert details
+    this.insertList = [];
 
     let beamSequence = dicomDict["(300a,00b0)"];
     for (let beam of beamSequence) {
@@ -219,17 +212,21 @@ export class DicomComponent implements OnInit {
       }
       this.insertList.push(insert)
     }
-
-    console.log(this.insertList);
-
-    this.dicomInsert = this.insertList[0]["coordinates"];
+    localStorage.setItem('dicom_insertList', JSON.stringify(this.insertList));
   }
 
   sendToParameterisation(insert: any) {
-    this.insertUpdated(insert);
+    this.insertUpdated(insert['coordinates']);    
+
+    this.insertData['parameterisation'] = this.parameterisation
+    this.insertData['energy'] = insert['energy'];
+    this.insertData['applicator'] = insert['applicator'];
+    this.insertData['ssd'] = insert['ssd'];
+
     localStorage.setItem(
-      "last_parameterisation", JSON.stringify(this.parameterisation)
+      "last_insertData", JSON.stringify(this.insertData)
     );
+
     this.router.navigate(["/parameterise"])
   }
 
@@ -255,6 +252,4 @@ export class DicomComponent implements OnInit {
       this.parameterisation.ellipse = null;
     }
   }
-
-
 }
