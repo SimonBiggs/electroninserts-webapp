@@ -11,13 +11,13 @@ declare var Bokeh: any;
 })
 export class PlotComponent implements OnChanges, AfterViewInit {
   @Input()
-  insert: Coordinates;
+  insert: Coordinates = null;
   @Input()
-  circle: Coordinates;
+  circle: Coordinates = null;
   @Input()
-  ellipse: Coordinates;
+  ellipse: Coordinates = null;
   @Input()
-  enabled: boolean;
+  enabled: boolean = true;
 
   parsedJSON: any;
   tempSource: any;

@@ -22,6 +22,7 @@ import { ModelComponent } from './model.component';
 import { ExportImportComponent } from './export-import.component';
 import { SpecificationsComponent } from './specifications.component';
 import { DicomComponent } from './dicom.component';
+import { SendToParameterisationComponent } from './send-to-parameterisation.component';
 
 import { MyJsonPipe } from './my-json.pipe'
 
@@ -54,7 +55,8 @@ import { LocalStorageService } from './local-storage.service';
     ModelComponent,
     ExportImportComponent,
     SpecificationsComponent,
-    DicomComponent
+    DicomComponent,
+    SendToParameterisationComponent
   ],
   providers: [
     ElectronApiService,

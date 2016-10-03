@@ -29,15 +29,28 @@
   </div>
 
   <div *ngFor="let insert of insertList" class="mdl-cell mdl-cell--6-col">
-    
-    <button
-      mdl-button mdl-button-type="raised" 
-      mdl-colored="primary" 
-      mdl-ripple
-      (click)="sendToParameterisation(insert)">Send to parameterisation           
-    </button>
+    <mdl-card mdl-shadow="6">
 
-    <p>{{insert | json}}</p>
+
+      <my-send-to-parameterisation
+        [coordinates]=insert.coordinates
+        [applicator]=insert.applicator
+        [ssd]=insert.ssd
+        [energy]=insert.energy>
+      </my-send-to-parameterisation>
+
+      <mdl-card-actions mdl-card-border>
+        <button
+          mdl-button 
+          mdl-ripple
+          (click)="sendToParameterisation(insert)">Send to parameterisation           
+        </button>
+      </mdl-card-actions>
+    </mdl-card>
+    
+
+
+    <!--<p>{{insert | json}}</p>-->
   </div>
 
 
