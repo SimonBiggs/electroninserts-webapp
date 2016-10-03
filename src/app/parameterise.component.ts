@@ -39,7 +39,7 @@ export class ParameteriseComponent implements OnInit {
 
   refreshJsonInput: boolean = false;
 
-  parameteriseURL = 'http://electronapi.simonbiggs.net/parameterise';
+  parameteriseURL: string;
 
   constructor(
     private electronApiService: ElectronApiService,
@@ -63,9 +63,11 @@ export class ParameteriseComponent implements OnInit {
     this.jsonInputComponent.refresh = true;
   }
 
-  onSubmit() {
-    this.dataInFlight = true;
-    this.checkSubmitButton();
+  sleep(time: number) {
+    return new Promise((resolve) => setTimeout(resolve, time));
+  }
+
+  recursiveServerSubmit() {
     this.electronApiService.parameteriseInsert(
       this.parameteriseURL,
       JSON.stringify(this.parameterisation.insert)
@@ -75,17 +77,29 @@ export class ParameteriseComponent implements OnInit {
         this.parameterisation.ellipse = parameterisationResult.ellipse;
         this.parameterisation.width = parameterisationResult.width;
         this.parameterisation.length = parameterisationResult.length;
-        this.dataInFlight = false;
-        this.serverResponseValid = true;
-        this.checkSubmitButton()
-        localStorage.setItem(
-          JSON.stringify(this.parameterisation.insert), 
-          JSON.stringify(this.parameterisation)
-        );
-        localStorage.setItem(
-          "last_parameterisation", JSON.stringify(this.parameterisation)
-        );
+        let complete = parameterisationResult.complete;
+        if (complete) {
+          this.dataInFlight = false;
+          this.serverResponseValid = true;
+          this.checkSubmitButton()
+          localStorage.setItem(
+            JSON.stringify(this.parameterisation.insert), 
+            JSON.stringify(this.parameterisation)
+          );
+          localStorage.setItem(
+            "last_parameterisation", JSON.stringify(this.parameterisation)
+          );
+        }
+        else {
+          this.sleep(500).then(() => this.recursiveServerSubmit());
+        }
       })
+  }
+
+  onSubmit() {
+    this.dataInFlight = true;
+    this.checkSubmitButton();
+    this.recursiveServerSubmit();
   }
 
   parameterisationFromLocalStorage(localStorageParameterisationString: string) {
@@ -125,9 +139,18 @@ export class ParameteriseComponent implements OnInit {
     }
   }
 
+  parameterisationServerChange(serverUrl: string) {
+    localStorage.setItem("parameteriseURL", serverUrl);
+  }
+
   ngOnInit() {
     this.getData();
     this.myTitleService.setTitle('Parameterisation');
+
+    this.parameteriseURL = localStorage.getItem("parameteriseURL")
+    if (this.parameteriseURL == null) {
+      this.parameteriseURL = 'http://electronapi.simonbiggs.net/parameterise';
+    }
   }
 
 }

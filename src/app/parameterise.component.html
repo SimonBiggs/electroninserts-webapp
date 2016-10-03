@@ -20,6 +20,7 @@
         [disabled]="dataInFlight"
         (click)="loadDemoData()">Load Demo Data            
       </button>
+
       <button
         mdl-button mdl-button-type="raised" 
         mdl-colored="primary" 
@@ -27,6 +28,8 @@
         [disabled]="submitDisabled"
         (click)="onSubmit()">Submit            
       </button>
+
+
       <div [hidden]="serverResponseValid">
         {{serverErrorMessage}}
       </div>
@@ -37,6 +40,19 @@
         [length]="parameterisation.length"
         [enabled]="jsonValid">
       </my-width-length-table>
+    </div>
+    <div class="mdl-cell mdl-cell--12-col">
+      <p>Change the following address to use your own
+        parameterisation server. The default is: <br>
+        <a>http://electronapi.simonbiggs.net/parameterise</a>       
+      </p>
+      <mdl-textfield
+        type="text"
+        label="Parameterisation Server Address"
+        (input)="parameterisationServerChange($event.target.value)"
+        floating-label
+        [(ngModel)]="parameteriseURL"
+        style="width:100%"></mdl-textfield>
     </div>
   </div>
 
