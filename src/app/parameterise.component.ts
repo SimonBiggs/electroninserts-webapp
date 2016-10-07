@@ -43,6 +43,7 @@ export class ParameteriseComponent implements OnInit {
   parameteriseURL: string;
 
   insertData: InsertData = {
+    machine: null,
     parameterisation: this.parameterisation,
     energy: null,
     applicator: null,
@@ -74,6 +75,7 @@ export class ParameteriseComponent implements OnInit {
     this.insertUpdated(demoData.insert);
     this.jsonInputComponent.refresh = true;
     this.insertData =  {
+      machine: null,
       parameterisation: this.parameterisation,
       energy: null,
       applicator: null,

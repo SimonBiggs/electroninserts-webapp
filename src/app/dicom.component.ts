@@ -34,6 +34,7 @@ export class DicomComponent implements OnInit {
   };
 
   insertData: InsertData = {
+    machine: null,
     parameterisation: this.parameterisation,
     energy: null,
     applicator: null,
@@ -185,12 +186,12 @@ export class DicomComponent implements OnInit {
     return insert;
   }
 
-  dicomPullFloat(input: string): number {
+  dicomPullNumber(input: string): number {
     return Number(input.replace(/.*\[([\d\.-]*)\].*/, "$1"));
   }
 
   dicomPullString(input: string): string {
-    return input.replace(/.*\[(\w*)\].*/, "$1");
+    return input.replace(/.*\[(.*)\].*/, "$1");
   }
 
   getBlockData() {
@@ -206,12 +207,15 @@ export class DicomComponent implements OnInit {
 
       let applicator = this.dicomPullString(
         beam["(300a,0107)"][0]["(300a,0108)"]);
-      let energy = this.dicomPullFloat(
+      let energy = this.dicomPullNumber(
         beam["(300a,0111)"][0]["(300a,0114)"]);
-      let ssd = this.dicomPullFloat(
+      let ssd = this.dicomPullNumber(
         beam["(300a,0111)"][0]["(300a,0130)"]) / 10;
+      let machine = this.dicomPullString(
+        beam["(300a,00b2)"]);
 
       let insert = {
+        "machine": machine,
         "coordinates": coordinates,
         "applicator": applicator,
         "energy": energy,
@@ -225,6 +229,7 @@ export class DicomComponent implements OnInit {
   sendToParameterisation(insert: any) {
     this.insertUpdated(insert['coordinates']);    
 
+    this.insertData['machine'] = insert['machine'];
     this.insertData['parameterisation'] = this.parameterisation
     this.insertData['energy'] = insert['energy'];
     this.insertData['applicator'] = insert['applicator'];
