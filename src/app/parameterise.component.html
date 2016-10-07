@@ -53,6 +53,12 @@
       style="width:100%"></mdl-textfield>
     <mdl-textfield
       type="text"
+      label="R50 Beam Quality (cm)"
+      floating-label
+      [disabled]="true"
+      style="width:100%"></mdl-textfield>
+    <mdl-textfield
+      type="text"
       label="Applicator (ID)"
       (input)="insertDataChange()"
       floating-label
@@ -82,14 +88,13 @@
       label="Predicted Factor"
       floating-label
       [disabled]=true
-      [(ngModel)]="insertData.factor"
       style="width:100%"></mdl-textfield>
 
 
     <div style="width:100%; height:20px"></div>
 
     <button
-      mdl-button mdl-button-type="raised" 
+      mdl-button mdl-button-type="raised"
       mdl-colored="primary" 
       mdl-ripple
       [disabled]="true"
