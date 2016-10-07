@@ -117,12 +117,19 @@ export class DicomComponent implements OnInit {
   }
 
   openFile(event: any) {
-    console.log(event.srcElement.files);
-    let file = event.srcElement.files[0];
 
-    window['dicomData'] = ' '
+    if (typeof event.target !== 'undefined') {
+      console.log(event.target.files);
+      let file = event.target.files[0];
 
-    this.reader.readAsArrayBuffer(file);
+      window['dicomData'] = ' '
+
+      this.reader.readAsArrayBuffer(file);
+    }
+    else {
+      console.log(event);
+    }
+
   }
 
   convertDicomDumpToDict(dump: string) {
