@@ -77,6 +77,14 @@
       [(ngModel)]="insertData.factor"
       style="width:100%"></mdl-textfield>
 
+    <mdl-textfield
+      type="text"
+      label="Predicted Factor"
+      floating-label
+      [disabled]=true
+      [(ngModel)]="insertData.factor"
+      style="width:100%"></mdl-textfield>
+
 
     <div style="width:100%; height:20px"></div>
 
@@ -85,7 +93,7 @@
       mdl-colored="primary" 
       mdl-ripple
       [disabled]="true"
-      (click)="null">Determine Factor           
+      (click)="null">Predict Factor with Model        
     </button>
 
     <div style="height:20px; width:20px;"></div>
@@ -95,7 +103,7 @@
       mdl-colored="primary" 
       mdl-ripple
       [disabled]="true"
-      (click)="null">Add Insert to Model            
+      (click)="null">Add Measured Factor to Model            
     </button>
   </div>
 
