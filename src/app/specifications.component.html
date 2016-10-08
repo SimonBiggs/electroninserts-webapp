@@ -12,15 +12,39 @@
         
         <mdl-list-item *ngFor="let machine of machines" lines="3">
           <mdl-list-item-primary-content>
-            <span style="width:100%"><button
-              mdl-button
-              mdl-button-type="raised"
-              mdl-ripple
-              [disabled]="machine==currentMachine"
-              (click)="changeCurrentMachine(machine)">{{machine}}         
-            </button></span>
+            <span>{{machine}}</span>
             <mdl-list-item-text-body>{{specifications[machine].model}}</mdl-list-item-text-body>
           </mdl-list-item-primary-content>
+          <mdl-list-item-secondary-action>
+            <button
+              mdl-button
+              mdl-button-type="icon"
+              mdl-ripple
+              [disabled]="machine==currentMachine"
+              (click)="changeCurrentMachine(machine)"><mdl-icon>dashboard</mdl-icon>       
+            </button>
+            <button
+              mdl-button
+              mdl-button-type="icon"
+              mdl-ripple
+              [disabled]="true"
+              (click)="null"><mdl-icon>done</mdl-icon>       
+            </button>
+            <button
+              mdl-button
+              mdl-button-type="icon"
+              mdl-ripple
+              [disabled]="true"
+              (click)="null"><mdl-icon>edit</mdl-icon>       
+            </button>
+            <button
+              mdl-button
+              mdl-button-type="icon"
+              mdl-ripple
+              [disabled]="true"
+              (click)="null"><mdl-icon>delete</mdl-icon>       
+            </button>
+          </mdl-list-item-secondary-action>
         </mdl-list-item>
       </mdl-list>
       <mdl-card-actions mdl-card-border>
@@ -55,6 +79,29 @@
               <span>{{energy}} MeV</span>
               <mdl-list-item-text-body>R50: {{specifications[currentMachine].R50[energy]}} cm</mdl-list-item-text-body>
             </mdl-list-item-primary-content>
+            <mdl-list-item-secondary-action>
+              <button
+                mdl-button
+                mdl-button-type="icon"
+                mdl-ripple
+                [disabled]="true"
+                (click)="null"><mdl-icon>done</mdl-icon>       
+              </button>
+              <button
+                mdl-button
+                mdl-button-type="icon"
+                mdl-ripple
+                [disabled]="true"
+                (click)="null"><mdl-icon>edit</mdl-icon>       
+              </button>
+              <button
+                mdl-button
+                mdl-button-type="icon"
+                mdl-ripple
+                [disabled]="true"
+                (click)="null"><mdl-icon>delete</mdl-icon>       
+              </button>
+            </mdl-list-item-secondary-action>
           </mdl-list-item>
         </mdl-list>
 
@@ -88,6 +135,29 @@
             <mdl-list-item-primary-content>
               <mdl-list-item-text-body>{{applicator}}</mdl-list-item-text-body>
             </mdl-list-item-primary-content>
+            <mdl-list-item-secondary-action>
+              <button
+                mdl-button
+                mdl-button-type="icon"
+                mdl-ripple
+                [disabled]="true"
+                (click)="null"><mdl-icon>done</mdl-icon>       
+              </button>
+              <button
+                mdl-button
+                mdl-button-type="icon"
+                mdl-ripple
+                [disabled]="true"
+                (click)="null"><mdl-icon>edit</mdl-icon>       
+              </button>
+              <button
+                mdl-button
+                mdl-button-type="icon"
+                mdl-ripple
+                [disabled]="true"
+                (click)="null"><mdl-icon>delete</mdl-icon>       
+              </button>
+            </mdl-list-item-secondary-action>
           </mdl-list-item>
         </mdl-list>
 
@@ -115,6 +185,29 @@
             <mdl-list-item-primary-content>
               <mdl-list-item-text-body>{{ssd}} cm</mdl-list-item-text-body>
             </mdl-list-item-primary-content>
+            <mdl-list-item-secondary-action>
+              <button
+                mdl-button
+                mdl-button-type="icon"
+                mdl-ripple
+                [disabled]="true"
+                (click)="null"><mdl-icon>done</mdl-icon>       
+              </button>
+              <button
+                mdl-button
+                mdl-button-type="icon"
+                mdl-ripple
+                [disabled]="true"
+                (click)="null"><mdl-icon>edit</mdl-icon>       
+              </button>
+              <button
+                mdl-button
+                mdl-button-type="icon"
+                mdl-ripple
+                [disabled]="true"
+                (click)="null"><mdl-icon>delete</mdl-icon>       
+              </button>
+            </mdl-list-item-secondary-action>
           </mdl-list-item>
         </mdl-list>
 
