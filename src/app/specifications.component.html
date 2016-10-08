@@ -1,5 +1,137 @@
 <div class="mdl-grid">
-  <div class="mdl-cell mdl-cell--12-col">
-    <p>Specifications component.</p>
+  <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--6-col-phone">
+    <p>Make all items editable and deletable. Enable adding of new items. Link up to local storage.</p>
   </div>
+  <div class="mdl-cell mdl-cell--4-col mdl-cell--4-col-tablet mdl-cell--6-col-phone">
+    <mdl-card mdl-shadow="6" style="width:100%">
+      <mdl-card-title>
+        <h2 mdl-card-title-text>Machine IDs</h2>
+      </mdl-card-title>
+
+      <mdl-list>
+        
+        <mdl-list-item *ngFor="let machine of machines" lines="3">
+          <mdl-list-item-primary-content>
+            <span style="width:100%"><button
+              mdl-button
+              mdl-button-type="raised"
+              mdl-ripple
+              [disabled]="machine==currentMachine"
+              (click)="changeCurrentMachine(machine)">{{machine}}         
+            </button></span>
+            <mdl-list-item-text-body>{{specifications[machine].model}}</mdl-list-item-text-body>
+          </mdl-list-item-primary-content>
+        </mdl-list-item>
+      </mdl-list>
+      <mdl-card-actions mdl-card-border>
+        <mdl-textfield
+          type="text"
+          label="New Machine ID"
+          (input)="null"
+          floating-label
+          style="width:100%"></mdl-textfield>
+        <mdl-textfield
+          type="text"
+          label="Machine Make and Model"
+          (input)="null"
+          floating-label
+          style="width:70%"></mdl-textfield>
+        <button disabled=true mdl-button mdl-button-type="mini-fab">
+          <mdl-icon>add</mdl-icon>
+        </button>
+      </mdl-card-actions>
+
+    </mdl-card>
+  </div>
+
+  <div *ngIf="currentMachine" class="mdl-cell mdl-cell--4-col mdl-cell--4-col-tablet mdl-cell--6-col-phone">
+    <mdl-card mdl-shadow="6"  style="width:100%">
+      <mdl-card-title>
+        <h2 mdl-card-title-text>Energies for {{currentMachine}}</h2>
+      </mdl-card-title>
+        <mdl-list>
+          <mdl-list-item *ngFor="let energy of specifications[currentMachine].energy" lines="3">
+            <mdl-list-item-primary-content>
+              <span>{{energy}} MeV</span>
+              <mdl-list-item-text-body>R50: {{specifications[currentMachine].R50[energy]}} cm</mdl-list-item-text-body>
+            </mdl-list-item-primary-content>
+          </mdl-list-item>
+        </mdl-list>
+
+      <mdl-card-actions mdl-card-border>
+        <mdl-textfield
+          type="text"
+          label="New Energy (MeV)"
+          (input)="null"
+          floating-label
+          style="width:100%"></mdl-textfield>
+        <mdl-textfield
+          type="text"
+          label="R50 for New Energy (cm)"
+          (input)="null"
+          floating-label
+          style="width:70%"></mdl-textfield>
+        <button disabled=true mdl-button mdl-button-type="mini-fab">
+          <mdl-icon>add</mdl-icon>
+        </button>
+      </mdl-card-actions>
+    </mdl-card>
+  </div>
+
+  <div *ngIf="currentMachine" class="mdl-cell mdl-cell--4-col mdl-cell--4-col-tablet mdl-cell--6-col-phone">
+    <mdl-card mdl-shadow="6"  style="width:100%">
+      <mdl-card-title>
+        <h2 mdl-card-title-text>Applicators for {{currentMachine}}</h2>
+      </mdl-card-title>
+        <mdl-list>
+          <mdl-list-item *ngFor="let applicator of specifications[currentMachine].applicator">
+            <mdl-list-item-primary-content>
+              <mdl-list-item-text-body>{{applicator}}</mdl-list-item-text-body>
+            </mdl-list-item-primary-content>
+          </mdl-list-item>
+        </mdl-list>
+
+      <mdl-card-actions mdl-card-border>
+        <mdl-textfield
+          type="text"
+          label="New Applicator"
+          (input)="null"
+          floating-label
+          style="width:70%"></mdl-textfield>
+        <button disabled=true mdl-button mdl-button-type="mini-fab">
+          <mdl-icon>add</mdl-icon>
+        </button>
+      </mdl-card-actions>
+    </mdl-card>
+  </div>
+
+  <div *ngIf="currentMachine" class="mdl-cell mdl-cell--4-col mdl-cell--4-col-tablet mdl-cell--6-col-phone">
+    <mdl-card mdl-shadow="6"  style="width:100%">
+      <mdl-card-title>
+        <h2 mdl-card-title-text>SSDs for {{currentMachine}}</h2>
+      </mdl-card-title>
+        <mdl-list>
+          <mdl-list-item *ngFor="let ssd of specifications[currentMachine].ssd">
+            <mdl-list-item-primary-content>
+              <mdl-list-item-text-body>{{ssd}} cm</mdl-list-item-text-body>
+            </mdl-list-item-primary-content>
+          </mdl-list-item>
+        </mdl-list>
+
+      <mdl-card-actions mdl-card-border>
+        <mdl-textfield
+          type="text"
+          label="New SSD (cm)"
+          (input)="null"
+          floating-label
+          style="width:70%"></mdl-textfield>
+        <button disabled=true mdl-button mdl-button-type="mini-fab">
+          <mdl-icon>add</mdl-icon>
+        </button>
+      </mdl-card-actions>
+    </mdl-card>
+  </div>
+
+
 </div>
+
