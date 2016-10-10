@@ -51,16 +51,23 @@
         <mdl-textfield
           type="text"
           label="New Machine ID"
-          (input)="null"
+          [(ngModel)]="newMachineID"
+          (input)="checkNewMachineIDInput()"
           floating-label
           style="width:100%"></mdl-textfield>
         <mdl-textfield
           type="text"
           label="Machine Make and Model"
-          (input)="null"
+          [(ngModel)]="newModel"
+          (input)="checkNewModelInput()"
           floating-label
           style="width:70%"></mdl-textfield>
-        <button disabled=true mdl-button mdl-button-type="mini-fab">
+        <button 
+          [disabled]="!newMachineValid"
+          mdl-button 
+          mdl-button-type="mini-fab"
+          mdl-ripple
+          (click)="addMachineID()">
           <mdl-icon>add</mdl-icon>
         </button>
       </mdl-card-actions>

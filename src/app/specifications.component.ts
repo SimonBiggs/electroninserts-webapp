@@ -11,12 +11,55 @@ export class SpecificationsComponent implements OnInit {
   specifications = {};
   currentMachine: string;
 
+  newMachineID: string;
+  newMachineIDValid: boolean = false;
+  newModel: string;
+  newModelValid: boolean = false;
+  newMachineValid: boolean = false;
+
   constructor(
     private myTitleService: TitleService
   ) {}
 
   changeCurrentMachine(machine: string) {
     this.currentMachine = machine;
+  }
+
+  checkNewMachineIDInput() {
+    if (this.specifications[this.newMachineID] == null && this.newMachineID != null && this.newMachineID != "") {
+      this.newMachineIDValid = true;
+    }
+    else {
+      this.newMachineIDValid = false;
+    }
+
+    this.checkNewMachineValid()
+  }
+
+  checkNewModelInput() {
+    if (this.newModel != null && this.newModel != "") {
+      this.newModelValid = true;
+    }
+    else {
+      this.newModelValid = false;
+    }
+
+    this.checkNewMachineValid()
+  }
+
+  checkNewMachineValid() {
+    this.newMachineValid = (this.newMachineIDValid && this.newModelValid);
+  }
+
+  addMachineID() {
+    this.machines.push(this.newMachineID);
+    this.specifications[this.newMachineID] = {};
+    this.specifications[this.newMachineID]["model"] = this.newModel;
+
+    this.newMachineID = "";
+    this.checkNewMachineIDInput();
+    this.newModel = "";
+    this.checkNewModelInput();
   }
   
   ngOnInit() {
