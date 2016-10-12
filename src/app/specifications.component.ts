@@ -223,7 +223,7 @@ export class SpecificationsComponent implements OnInit {
       this.machines = Object.keys(this.specifications).sort();
 
       this.currentMachine = JSON.parse(localStorage.getItem("current_machine"));
-      if (this.currentMachine == null) {
+      if (this.currentMachine == null || this.specifications[this.currentMachine] === undefined) {
         this.currentMachine = this.machines[0];
       }
     }
