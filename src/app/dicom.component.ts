@@ -217,7 +217,7 @@ export class DicomComponent implements OnInit {
       let insert = {
         "machine": machine,
         "coordinates": coordinates,
-        "applicator": applicator,
+        "applicator": applicator.toLowerCase(),
         "energy": energy,
         "ssd": ssd
       }

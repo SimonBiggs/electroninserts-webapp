@@ -1,6 +1,7 @@
 <div class="mdl-grid">
+
   <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--6-col-phone">
-    <p>Make all items editable and deletable. Enable adding of new items. Link up to local storage.</p>
+    <p>Make energy, applicator, and SSD editable and deletable.</p>
   </div>
   <div class="mdl-cell mdl-cell--4-col mdl-cell--4-col-tablet mdl-cell--6-col-phone">
     <mdl-card mdl-shadow="6" style="width:100%">
@@ -10,42 +11,84 @@
 
       <mdl-list>
         
-        <mdl-list-item *ngFor="let machine of machines" lines="3">
-          <mdl-list-item-primary-content>
-            <span>{{machine}}</span>
-            <mdl-list-item-text-body>{{specifications[machine].model}}</mdl-list-item-text-body>
-          </mdl-list-item-primary-content>
-          <mdl-list-item-secondary-action>
-            <button
-              mdl-button
-              mdl-button-type="icon"
-              mdl-ripple
-              [disabled]="machine==currentMachine"
-              (click)="changeCurrentMachine(machine)"><mdl-icon>dashboard</mdl-icon>       
-            </button>
-            <button
-              mdl-button
-              mdl-button-type="icon"
-              mdl-ripple
-              [disabled]="true"
-              (click)="null"><mdl-icon>done</mdl-icon>       
-            </button>
-            <button
-              mdl-button
-              mdl-button-type="icon"
-              mdl-ripple
-              [disabled]="true"
-              (click)="null"><mdl-icon>edit</mdl-icon>       
-            </button>
-            <button
-              mdl-button
-              mdl-button-type="icon"
-              mdl-ripple
-              [disabled]="true"
-              (click)="null"><mdl-icon>delete</mdl-icon>       
-            </button>
-          </mdl-list-item-secondary-action>
-        </mdl-list-item>
+        <div *ngFor="let machine of machines">
+        
+          <div *ngIf="machine!=edittingMachine">
+            <mdl-list-item lines="3">
+              <mdl-list-item-primary-content>
+                <div (click)="editMachine(machine)">
+                  <span>{{machine}}</span>
+                  <mdl-list-item-text-body>{{specifications[machine].model}}</mdl-list-item-text-body>
+                </div>
+              </mdl-list-item-primary-content>
+              <mdl-list-item-secondary-action>
+                <button
+                  mdl-button
+                  mdl-button-type="icon"
+                  mdl-ripple
+                  [disabled]="machine==currentMachine || edittingMachine!=null"
+                  (click)="changeCurrentMachine(machine)"><mdl-icon>dashboard</mdl-icon>       
+                </button>
+                <button
+                  mdl-button *ngIf="machine!=edittingMachine"
+                  mdl-button-type="icon"
+                  mdl-ripple
+                  [disabled]="false"
+                  (click)="editMachine(machine)"><mdl-icon>edit</mdl-icon>       
+                </button>
+              </mdl-list-item-secondary-action>
+            </mdl-list-item>
+
+          </div>
+
+          <div *ngIf="machine==edittingMachine">
+            <mdl-list-item lines="3">
+              <mdl-list-item-primary-content>
+                <mdl-textfield #machineIDTextField
+                  type="text"
+                  label="Machine ID"
+                  [value]="machine"
+                  (keyup.enter)="finishMachineEdit(machine, machineIDTextField.value, modelTextField.value)"
+                  floating-label
+                  style="display:inline;"></mdl-textfield>
+                <mdl-textfield #modelTextField
+                  type="text"
+                  label="Model"
+                  [value]="specifications[machine].model"
+                  (keyup.enter)="finishMachineEdit(machine, machineIDTextField.value, modelTextField.value)"
+                  floating-label
+                  style="display:inline;"></mdl-textfield>
+              </mdl-list-item-primary-content>
+
+              <mdl-list-item-secondary-action>
+                <button
+                  mdl-button
+                  mdl-button-type="icon"
+                  mdl-ripple
+                  [disabled]="machine!=edittingMachine"
+                  (click)="deleteMachine(machine)"><mdl-icon>delete</mdl-icon>       
+                </button>
+                <button
+                  mdl-button
+                  mdl-button-type="icon"
+                  mdl-ripple
+                  [disabled]="machine==currentMachine || edittingMachine!=null"
+                  (click)="changeCurrentMachine(machine)"><mdl-icon>dashboard</mdl-icon>       
+                </button>
+                <button
+                  mdl-button
+                  mdl-button-type="icon"
+                  mdl-ripple
+                  [disabled]="false"
+                  (click)="finishMachineEdit(machine, machineIDTextField.value, modelTextField.value)"><mdl-icon>done</mdl-icon>       
+                </button>
+              </mdl-list-item-secondary-action>
+            </mdl-list-item>
+
+          </div>
+        </div>
+
+
       </mdl-list>
       <mdl-card-actions mdl-card-border>
         <mdl-textfield
@@ -53,6 +96,7 @@
           label="New Machine ID"
           [(ngModel)]="newMachineID"
           (input)="checkNewMachineIDInput()"
+          (keyup.enter)="addMachineID()"
           floating-label
           style="width:100%"></mdl-textfield>
         <mdl-textfield
@@ -60,6 +104,7 @@
           label="Machine Make and Model"
           [(ngModel)]="newModel"
           (input)="checkNewModelInput()"
+          (keyup.enter)="addMachineID()"
           floating-label
           style="width:70%"></mdl-textfield>
         <button 
@@ -116,16 +161,24 @@
         <mdl-textfield
           type="text"
           label="New Energy (MeV)"
-          (input)="null"
+          [(ngModel)]="newEnergy"
+          (input)="checkNewEnergyInput()"
+          (keyup.enter)="addEnergy()"
           floating-label
           style="width:100%"></mdl-textfield>
         <mdl-textfield
           type="text"
           label="R50 for New Energy (cm)"
-          (input)="null"
+          [(ngModel)]="newR50"
+          (input)="checkNewR50Input()"
+          (keyup.enter)="addEnergy()"
           floating-label
           style="width:70%"></mdl-textfield>
-        <button disabled=true mdl-button mdl-button-type="mini-fab">
+        <button 
+          [disabled]="!newEnergySetValid" 
+          mdl-button 
+          mdl-button-type="mini-fab"
+          (click)="addEnergy()">
           <mdl-icon>add</mdl-icon>
         </button>
       </mdl-card-actions>
@@ -172,10 +225,16 @@
         <mdl-textfield
           type="text"
           label="New Applicator"
-          (input)="null"
+          [(ngModel)]="newApplicator"
+          (input)="checkNewApplicatorInput()"
+          (keyup.enter)="addApplicator()"
           floating-label
           style="width:70%"></mdl-textfield>
-        <button disabled=true mdl-button mdl-button-type="mini-fab">
+        <button 
+          [disabled]="!newApplicatorValid" 
+          mdl-button 
+          mdl-button-type="mini-fab"
+          (click)="addApplicator()">
           <mdl-icon>add</mdl-icon>
         </button>
       </mdl-card-actions>
@@ -222,10 +281,16 @@
         <mdl-textfield
           type="text"
           label="New SSD (cm)"
-          (input)="null"
+          [(ngModel)]="newSSD"
+          (input)="checkNewSSDInput()"
+          (keyup.enter)="addSSD()"
           floating-label
           style="width:70%"></mdl-textfield>
-        <button disabled=true mdl-button mdl-button-type="mini-fab">
+        <button 
+          [disabled]="!newSSDValid" 
+          mdl-button 
+          mdl-button-type="mini-fab"
+          (click)="addSSD()">
           <mdl-icon>add</mdl-icon>
         </button>
       </mdl-card-actions>
