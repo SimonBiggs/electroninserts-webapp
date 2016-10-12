@@ -79,11 +79,13 @@ export class SpecificationsComponent implements OnInit {
       this.specifications[this.newMachineID]["applicator"] = [];
       this.specifications[this.newMachineID]["ssd"] = [];
 
+      this.changeCurrentMachine(this.newMachineID);
+
       this.newMachineID = null;
       this.newModel = null;
       this.newMachineIDValid = false;
       this.newModelValid = false;
-      this.newMachineValid = false;
+      this.newMachineValid = false;      
 
       this.updateSpecifications();
     }
