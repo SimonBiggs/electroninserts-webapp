@@ -154,7 +154,7 @@ export class SpecificationsComponent implements OnInit {
   }
 
   checkNewSSDInput() {
-    if (this.specifications[this.currentMachine]["ssd"].indexOf(this.newSSD) < 0 && this.newSSD != null && !isNaN(Number(this.newSSD))) {
+    if (this.specifications[this.currentMachine]["ssd"].indexOf(Number(this.newSSD)) < 0 && this.newSSD != null && !isNaN(Number(this.newSSD))) {
       this.newSSDValid = true;
     }
     else {
@@ -209,12 +209,9 @@ export class SpecificationsComponent implements OnInit {
 
     this.updateSpecifications();
   }
-  
-  ngOnInit() {
-    this.myTitleService.setTitle('Specifications');
-    
 
-    this.specifications = JSON.parse(localStorage.getItem("specifications"));
+  changeSpecifications(newSpecifications: {}) {
+    this.specifications = newSpecifications;
     if (this.specifications == null) {
       this.specifications = {};
       this.machines = [];
@@ -227,6 +224,12 @@ export class SpecificationsComponent implements OnInit {
         this.currentMachine = this.machines[0];
       }
     }
+  }
+  
+  ngOnInit() {
+    this.myTitleService.setTitle('Specifications');
+    
+    this.changeSpecifications(JSON.parse(localStorage.getItem("specifications")));
     
 
     // this.specifications = {

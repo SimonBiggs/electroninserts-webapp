@@ -26,6 +26,7 @@ export class ParameteriseComponent implements OnInit {
     circle: null,
     ellipse: null
   };
+  machineSpecifications: {};
 
   @ViewChild('jsonInput') jsonInputComponent: any;
 
@@ -117,10 +118,44 @@ export class ParameteriseComponent implements OnInit {
       })
   }
 
+  machineExists: boolean = false;
+  machineSettingsExist: boolean = false;
+  modelExists: boolean = false;
+
+  R50: number;
+
+  checkMachineSettings() {
+    this.R50 = null;
+    let machine = this.insertData['machine'];
+    let energy = this.insertData['energy'];
+    let applicator = this.insertData['applicator'];
+    let ssd = this.insertData['ssd'];
+    if (this.machineSpecifications[machine]) {
+      let specifications = this.machineSpecifications[machine];
+      this.R50 = specifications['R50'][energy];
+      if (
+        specifications['energy'].indexOf(Number(energy)) > -1 && 
+        specifications['applicator'].indexOf(String(applicator)) > -1 && 
+        specifications['ssd'].indexOf(Number(ssd)) > -1) {
+          this.machineSettingsExist = true;
+      }
+      else {
+        this.machineSettingsExist = false;
+      }
+      this.machineExists = true;
+    }
+    else {
+      this.machineExists = false;
+      this.machineSettingsExist = false;
+      this.modelExists = false;
+    }
+  }
+
   insertDataChange() {
     localStorage.setItem(
       "last_insertData", JSON.stringify(this.insertData)
     );
+    this.checkMachineSettings()
   }
 
   onSubmit() {
@@ -182,6 +217,8 @@ export class ParameteriseComponent implements OnInit {
     if (this.parameteriseURL == null) {
       this.parameteriseURL = 'http://electronapi.simonbiggs.net/parameterise';
     }
+    this.machineSpecifications = JSON.parse(localStorage.getItem("specifications"));
+    this.checkMachineSettings()
   }
 
 }

@@ -4,8 +4,8 @@ import { Coordinates } from './coordinates';
 
 @Pipe({name: 'myJson', pure: false})
 export class MyJsonPipe implements PipeTransform {
-  transform(insert: Coordinates): string {
-    let jsonText = JSON.stringify(insert)
+  transform(input: {}): string {
+    let jsonText = JSON.stringify(input)
     jsonText = jsonText.replace(/,/g, ", ");
     return jsonText
   }

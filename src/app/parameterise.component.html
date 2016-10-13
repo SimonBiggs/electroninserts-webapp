@@ -23,7 +23,7 @@
       (click)="onSubmit()">Parameterise Insert          
     </button>
 
-    <span style="width:20px;"></span>
+    <div style="height:20px; width:20px;"></div>
 
     <my-width-length-table
       [width]="parameterisation.width"
@@ -34,6 +34,34 @@
     <div [hidden]="serverResponseValid">
       {{serverErrorMessage}}
     </div>
+  </div>
+  <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--6-col-phone">
+
+    <button
+      mdl-button mdl-button-type="raised"
+      mdl-colored="primary" 
+      mdl-ripple
+      [disabled]="true"
+      (click)="null">Predict Factor with Model        
+    </button>
+
+    <div style="height:20px; width:20px;"></div>
+
+    <button
+      mdl-button mdl-button-type="raised" 
+      mdl-colored="primary" 
+      mdl-ripple
+      [disabled]="!machineSettingsExist || measuredFactor.value==null || measuredFactor.value==''"
+      (click)="null">Add Measured Factor to Model            
+    </button>
+
+    <p *ngIf="!machineExists">
+      This machine ID does not exist within your provided machine specifications.
+    </p>
+
+    <p *ngIf="!machineSettingsExist">
+      These specific machine settings do not exist within your provided machine specifications.
+    </p>
   </div>
 
   <div class="mdl-cell mdl-cell--3-col mdl-cell--4-col-tablet mdl-cell--6-col-phone">
@@ -55,6 +83,7 @@
       type="text"
       label="R50 Beam Quality (cm)"
       floating-label
+      [value]="R50"
       [disabled]="true"
       style="width:100%"></mdl-textfield>
     <mdl-textfield
@@ -75,7 +104,7 @@
   </div>
 
   <div class="mdl-cell mdl-cell--3-col mdl-cell--4-col-tablet mdl-cell--6-col-phone">
-    <mdl-textfield
+    <mdl-textfield #measuredFactor
       type="text"
       label="Measured Factor"
       (input)="insertDataChange()"
@@ -90,26 +119,6 @@
       [disabled]=true
       style="width:100%"></mdl-textfield>
 
-
-    <div style="width:100%; height:20px"></div>
-
-    <button
-      mdl-button mdl-button-type="raised"
-      mdl-colored="primary" 
-      mdl-ripple
-      [disabled]="true"
-      (click)="null">Predict Factor with Model        
-    </button>
-
-    <div style="height:20px; width:20px;"></div>
-
-    <button
-      mdl-button mdl-button-type="raised" 
-      mdl-colored="primary" 
-      mdl-ripple
-      [disabled]="true"
-      (click)="null">Add Measured Factor to Model            
-    </button>
   </div>
 
   <div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet">

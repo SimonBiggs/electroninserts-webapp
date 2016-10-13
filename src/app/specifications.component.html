@@ -1,7 +1,12 @@
 <div class="mdl-grid">
 
   <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--6-col-phone">
-    <p>Make energy, applicator, and SSD editable and deletable.</p>
+    
+  </div>
+
+  <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--6-col-phone">
+    <h5>Machine specifications editing</h5>
+    <p>Currently the editing and deleting of energy, applicator, and SSD entries is not yet implimented.</p>
   </div>
   <div class="mdl-cell mdl-cell--4-col mdl-cell--4-col-tablet mdl-cell--6-col-phone">
     <mdl-card mdl-shadow="6" style="width:100%">
@@ -72,6 +77,7 @@
                   mdl-button
                   mdl-button-type="icon"
                   mdl-ripple
+                  mdl-colored="primary" 
                   [disabled]="machine==currentMachine || edittingMachine!=null"
                   (click)="changeCurrentMachine(machine)"><mdl-icon>dashboard</mdl-icon>       
                 </button>
@@ -297,6 +303,19 @@
     </mdl-card>
   </div>
 
+
+  <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--6-col-phone">
+    <h5>Raw specification data editing</h5>
+    <p>
+      Edit the raw machine specifications data below. 
+      Currently error checking on this raw input is not implemented.
+      Incorrectly editing the data below may cause the web app not to function.
+      Input data above to determine the data structure required.</p>
+    <my-json-specifications #jsonInput
+      [specifications]="specifications"
+      (specificationsUpdated)="changeSpecifications($event)">
+    </my-json-specifications>
+  </div>
 
 </div>
 
