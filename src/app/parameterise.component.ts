@@ -51,11 +51,29 @@ export class ParameteriseComponent implements OnInit {
     ssd: null
   }
 
+  machineExists: boolean = false;
+  machineSettingsExist: boolean = false;
+  modelExists: boolean = false;
+
+  R50: number;
+
   constructor(
     private electronApiService: ElectronApiService,
     private dataService: DataService,
     private myTitleService: TitleService
   ) { }
+
+  ngOnInit() {
+    this.getData();
+    this.myTitleService.setTitle('Parameterisation');
+
+    this.parameteriseURL = localStorage.getItem("parameteriseURL")
+    if (this.parameteriseURL == null) {
+      this.parameteriseURL = 'http://electronapi.simonbiggs.net/parameterise';
+    }
+    this.machineSpecifications = JSON.parse(localStorage.getItem("specifications"));
+    this.checkMachineSettings()
+  }
 
   getData(): void {
     let localStorageInsertDataString = localStorage['last_insertData'];
@@ -89,7 +107,7 @@ export class ParameteriseComponent implements OnInit {
   }
 
   recursiveServerSubmit() {
-    this.electronApiService.parameteriseInsert(
+    this.electronApiService.sendToServer(
       this.parameteriseURL,
       JSON.stringify(this.parameterisation.insert)
     )
@@ -117,12 +135,6 @@ export class ParameteriseComponent implements OnInit {
         }
       })
   }
-
-  machineExists: boolean = false;
-  machineSettingsExist: boolean = false;
-  modelExists: boolean = false;
-
-  R50: number;
 
   checkMachineSettings() {
     this.R50 = null;
@@ -207,18 +219,6 @@ export class ParameteriseComponent implements OnInit {
 
   parameterisationServerChange(serverUrl: string) {
     localStorage.setItem("parameteriseURL", serverUrl);
-  }
-
-  ngOnInit() {
-    this.getData();
-    this.myTitleService.setTitle('Parameterisation');
-
-    this.parameteriseURL = localStorage.getItem("parameteriseURL")
-    if (this.parameteriseURL == null) {
-      this.parameteriseURL = 'http://electronapi.simonbiggs.net/parameterise';
-    }
-    this.machineSpecifications = JSON.parse(localStorage.getItem("specifications"));
-    this.checkMachineSettings()
   }
 
 }

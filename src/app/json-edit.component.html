@@ -1,0 +1,22 @@
+<button
+  mdl-button mdl-button-type="raised" 
+  mdl-colored="primary" 
+  mdl-ripple
+  [disabled]="!jsonValid || input==editedInput"
+  (click)="updateInput()">{{buttonText}} 
+</button>
+<div *ngIf="!jsonValid">
+  {{jsonErrorMessage}}
+</div>
+<mdl-textfield *ngIf="!useMyJsonPipe" #jsonInput
+  [value]="input | json"
+  (input)="onInput($event.target.value)"
+  [rows]="lines" 
+  style="width:100%">
+</mdl-textfield>
+<mdl-textfield *ngIf="useMyJsonPipe" #jsonInput
+  [value]="input | myJson"
+  (input)="onInput($event.target.value)"
+  [rows]="lines" 
+  style="width:100%">
+</mdl-textfield>

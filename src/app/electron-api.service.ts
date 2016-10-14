@@ -16,11 +16,13 @@ export class ElectronApiService {
       .get(this.wakeUpURL).toPromise();
   }
 
-  parameteriseInsert(parameteriseURL:string, parameteriseInput: string): Promise<any> {
+  sendToServer(URL:string, input: string): Promise<any> {
     return this.http
-            .post(parameteriseURL, parameteriseInput)
+            .post(URL, input)
             .toPromise()
-            .then(res => res.json())
+            .then((res) => {
+              let nan: number = null;
+              return res.json()})
             .catch(this.handleError);
   }
 

@@ -1,5 +1,37 @@
 <div class="mdl-grid">
   <div class="mdl-cell mdl-cell--12-col">
-    <p>Model component.</p>
+    <button
+      mdl-button mdl-button-type="raised" 
+      mdl-colored="primary" 
+      mdl-ripple
+      [disabled]="false"
+      (click)="basicServerSubmit()">Run Spline Model          
+    </button>
   </div>
+
+  <div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet">
+    <p>Change the following address to use your own
+      spline modelling server. The default is: <br>
+      <a (click)="defaultServer()">http://electronapi.simonbiggs.net/model</a>        
+    </p>
+    <mdl-textfield
+      type="text"
+      label="Spline model server address"
+      (input)="modelServerChange($event.target.value)"
+      floating-label
+      [(ngModel)]="modelURL"
+      style="width:100%"></mdl-textfield>
+  </div>
+
+  <div class="mdl-cell mdl-cell--12-col">
+    <h5>Edit raw model data</h5>
+    <my-json-edit
+      [input]="modelData"
+      (inputUpdated)="jsonInputUpdated($event)"
+      buttonText="Update Model Data"
+      useMyJsonPipe="true">
+    </my-json-edit>
+  </div>
+
+
 </div>

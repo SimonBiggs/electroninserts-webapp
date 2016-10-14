@@ -311,10 +311,11 @@
       Currently error checking on this raw input is not implemented.
       Incorrectly editing the data below may cause the web app not to function.
       Input data above to determine the data structure required.</p>
-    <my-json-specifications #jsonInput
-      [specifications]="specifications"
-      (specificationsUpdated)="changeSpecifications($event)">
-    </my-json-specifications>
+    <my-json-edit
+      [input]="specifications"
+      (inputUpdated)="changeSpecifications($event)"
+      buttonText="Update Specifications">
+    </my-json-edit>
   </div>
 
 </div>

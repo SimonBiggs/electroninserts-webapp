@@ -121,17 +121,6 @@
 
   </div>
 
-  <div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet">
-    <h5>Edit raw coordinates</h5>
-    <my-json-input #jsonInput
-      [insert]="parameterisation.insert"
-      [jsonDisabled]="dataInFlight"
-      (insertUpdated)="insertUpdated($event)"
-      (jsonStatus)="onJsonStatusChange($event)">
-    </my-json-input>
-  </div>
-
-  <div class="mdl-cell mdl-cell--6-col"></div>
 
   <div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet">
     <p>Change the following address to use your own
@@ -146,4 +135,15 @@
       [(ngModel)]="parameteriseURL"
       style="width:100%"></mdl-textfield>
   </div>
+
+  <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet">
+    <h5>Edit raw coordinates</h5>
+    <my-json-input #jsonInput
+      [insert]="parameterisation.insert"
+      [jsonDisabled]="dataInFlight"
+      (insertUpdated)="insertUpdated($event)"
+      (jsonStatus)="onJsonStatusChange($event)">
+    </my-json-input>
+  </div>
+
 </div>

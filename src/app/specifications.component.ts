@@ -224,6 +224,7 @@ export class SpecificationsComponent implements OnInit {
         this.currentMachine = this.machines[0];
       }
     }
+    this.updateSpecifications()
   }
   
   ngOnInit() {
