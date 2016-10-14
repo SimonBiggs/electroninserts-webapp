@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, NgZone, ViewChild } from '@angular/core';
 
 import { TitleService } from './title.service'
 import { ElectronApiService } from './electron-api.service';
@@ -38,11 +38,22 @@ export class ModelComponent implements OnInit {
   };
 
   modelURL: string;
+  plot_width = 600;
+
+  @ViewChild('plotContainer') plotContainer: any;
 
   constructor(
     private myTitleService: TitleService,
-    private electronApiService: ElectronApiService
-  ) {}
+    private electronApiService: ElectronApiService,
+    ngZone: NgZone
+  ) {
+    window.onresize = (e) =>
+    {
+        ngZone.run(() => {
+            this.plot_width = this.plotContainer.nativeElement.clientWidth;
+        });
+    };
+  }
   
   ngOnInit() {
     this.myTitleService.setTitle('Model');
@@ -51,6 +62,7 @@ export class ModelComponent implements OnInit {
     if (this.modelURL == null) {
       this.modelURL = 'http://electronapi.simonbiggs.net/model';
     }
+    this.plot_width = this.plotContainer.nativeElement.clientWidth;
   }
 
   basicServerSubmit() {

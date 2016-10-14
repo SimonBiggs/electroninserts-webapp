@@ -37,6 +37,7 @@ export class BokehPcolourComponent implements OnChanges, AfterViewInit, OnInit {
   plt = Bokeh.Plotting;
   tools = 'pan,crosshair,wheel_zoom,box_zoom,reset,save';  
   fig: any;
+  colour: any[] = [];
 
   source = new Bokeh.ColumnDataSource();
   doc = new Bokeh.Document();
@@ -53,6 +54,7 @@ export class BokehPcolourComponent implements OnChanges, AfterViewInit, OnInit {
     this.tempSource = {
       "x": [0],
       "y": [0],
+      "fill_colour": this.colour
     }
     if (this.enabled) {
       if (this.scatter_x && this.scatter_y) {
@@ -62,14 +64,20 @@ export class BokehPcolourComponent implements OnChanges, AfterViewInit, OnInit {
     }
 
     this.source.data = this.tempSource;
-    // console.log(this.source.data)   
+    // console.log(this.source.data)
+
+    if (this.fig != null) {
+      this.fig.width = this.plot_width;
+      this.fig.height = this.plot_height;
+    }
+
+
   }
 
   ngAfterViewInit() {
     let vmin = Math.min(...this.scatter_z)
     let vmax = Math.max(...this.scatter_z)
     let colour_scale = <number[]> []
-    let colour: any[] = [];
     if (vmin == vmax) {
       colour_scale = [0.5]
     }
@@ -80,21 +88,23 @@ export class BokehPcolourComponent implements OnChanges, AfterViewInit, OnInit {
       }
     }
     for (let item of colour_scale) {
-      colour.push(this.viridis(item));
+      this.colour.push(this.viridis(item));
     }
-    this.fig.circle({ field: 'x' }, { field: 'y' }, {
-      source: this.source,
-      size: 15,
-      line_color: 'black',
-      fill_color: colour,
-      line_width: 2
+    this.source["fill_colour"] = this.colour;
+    this.fig.circle(
+      { field: 'x' }, { field: 'y' }, {
+        source: this.source,
+        size: 15,
+        line_color: 'black',
+        fill_color:  { field: 'fill_colour' },
+        line_width: 2
     });
 
     // console.log(Bokeh)
 
     this.doc.add_root(this.fig);
     Bokeh.embed.add_document_standalone(
-      this.doc, this.bokehplot.nativeElement);   
+      this.doc, this.bokehplot.nativeElement); 
   }
 
 
