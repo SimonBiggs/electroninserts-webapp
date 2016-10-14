@@ -7,7 +7,7 @@ The source code for web app is found in two parts:
  * Server -- https://github.com/SimonBiggs/electronfactor-server
  * Client -- https://github.com/SimonBiggs/electroninserts-webapp
  
-The fundamental code from which all paremeterisation and modelling is done is found within the followign python file:
+The fundamental code from which all paremeterisation and modelling is done is found within the following python file:
 
  * https://github.com/SimonBiggs/electronfactor-server/blob/master/electroninserts.py
 
