@@ -6,7 +6,7 @@ The online web app is available at http://electrons.simonbiggs.net
 
 This online web app is for the modelling of the portion of the electron output factor that is dependent on the shape of the shielding insert mounted within the applicator. This allows modelling insert factors using only the measured factors already available at a centre. Should all outliers be removed from the data set the user might expect as low as 0.5% standard uncertainty for factor prediction with as little as 8 data points.
 
-The source code for web app is found in two parts:
+The source code for this web app is found in two parts:
 
  * Server -- https://github.com/SimonBiggs/electronfactor-server
  * Client -- https://github.com/SimonBiggs/electroninserts-webapp
