@@ -11,12 +11,12 @@
 <mdl-textfield *ngIf="!useMyJsonPipe" #jsonInput
   [value]="input | json"
   (input)="onInput($event.target.value)"
-  [rows]="lines" 
+  [rows]="20" 
   style="width:100%">
 </mdl-textfield>
 <mdl-textfield *ngIf="useMyJsonPipe" #jsonInput
   [value]="input | myJson"
   (input)="onInput($event.target.value)"
-  [rows]="lines" 
+  [rows]="20" 
   style="width:100%">
 </mdl-textfield>
