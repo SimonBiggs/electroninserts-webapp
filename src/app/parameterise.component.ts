@@ -72,6 +72,9 @@ export class ParameteriseComponent implements OnInit {
       this.parameteriseURL = 'http://electronapi.simonbiggs.net/parameterise';
     }
     this.machineSpecifications = JSON.parse(localStorage.getItem("specifications"));
+    if (this.machineSpecifications == null) {
+      this.machineSpecifications = {};
+    }
     this.checkMachineSettings()
   }
 
