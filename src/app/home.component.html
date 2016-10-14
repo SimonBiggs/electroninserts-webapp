@@ -1,44 +1,29 @@
 <div class="mdl-grid">
   <div class="mdl-cell mdl-cell--6-col">
-    <h4>Currently implemented</h4>
-    Currently the loading of shapes from Dicom and parameterising them have been implemented. They are still a work in progress
-    however they do have basic functionality. Please navigate to these sections using the navigation menu.
-
-    <h4>Local storage tests</h4>
-    <p></p>
-
-    <div *ngIf="testLocalStorage">
-      <p>Your browser supports local storage. You currently have {{usedLocalStorageSpace}} B of used space. Most browsers support
-        5 MB.
-      </p>
-
-      <p>To check your remaining storage press the button below. Warning, this might be slow.</p>
-      <button mdl-button mdl-button-type="raised" mdl-colored="primary" mdl-ripple (click)="testRemainingStorage()">Test remaining local storage           
-      </button>
-      <div *ngIf="remainingLocalStorageSpace">
-        <p>You have {{remainingLocalStorageSpace}} B of local storage remaining which is available for use by this webapp.</p>
-      </div>
-    </div>
-    <div *ngIf="!testLocalStorage">
-      <p>
-        This webapp relies upon local storage working within your browser. Your browser does not support local storage. Please download
-        and use a modern standards compliant browser such as
-        <a href="https://www.google.com.au/chrome/browser/desktop/">Chrome</a> or
-        <a href="https://www.mozilla.org/en-GB/firefox/new/">Firefox</a> to use this webapp.
-      </p>
-    </div>
+    <h4>Description</h4>
+    <p>
+      This online web app is for the modelling of the portion of the electron output factor that is dependent on the shape of the shielding insert mounted within the applicator. This allows modelling insert factors using only the measured factors already available at a centre. Should all outliers be removed from the data set the user might expect as low as 0.5% standard uncertainty for factor prediction with as little as 8 data points.
+    </p>
 
 
-    <h4>Brief overview</h4>
+    <p>If you have any issues or feedback please contact me at <a href="mailto:mail@simonbiggs.net">mail@simonbiggs.net</a>.</p>
 
-    <h4>Paper(s?)</h4>
+    <h4>Disclaimer</h4>
+    <p>
+      Any use of this web app or any of its code has you accepting the AGPL3+ license which includes no warranty that this code is fit for a particular purpose. Attempts have been made to make the code transparent and it is recommended that an experienced python programmer and physicist who understands the procedure outlined in the paper and the requirements of your centre identifies whether or not this method and code is fit for your use.</p>
 
+    <h4>Paper</h4>
+    <p>The paper outlining this method:</p>
+    <p>
+      S. Biggs, M. Sobolewski, R. Murry, J. Kenny, Spline modelling electron insert factors using routine measurements. Physica Medica (2015), <a href="http://dx.doi.org/10.1016/j.ejmp.2015.11.002">doi:10.1016/j.ejmp.2015.11.002</a>.
+    </p>
 
     <h4>Detailed instructions</h4>
+    <p>Yet to be written</p>
 
     <h4>Steps required to freeze your own version of this web app</h4>
       As I make improvements to this web app I will be updating this online version. 
-      However, understandably, you may desire to not have the web app you are using day to day change on you.
+      You may desire to not have the web app you are using day to day change on you.
       To achieve this you can create your own version of the server and your own version of the web app.
       
       For now this will require a bit of your own working out until I provide further instructions.
@@ -85,7 +70,7 @@
 
     <h5>Libraries used</h5>
     <h6>Bokehjs</h6>
-    <p>.
+    <p>
       The bokehjs library is used for plots. Documentation can be found here:
       <a href="http://bokeh.pydata.org/en/latest/docs/user_guide/bokehjs.html#userguide-bokehjs">
               http://bokeh.pydata.org/en/latest/docs/user_guide/bokehjs.html#userguide-bokehjs</a>

@@ -24,6 +24,7 @@ import { SpecificationsComponent } from './specifications.component';
 import { DicomComponent } from './dicom.component';
 import { JsonEditComponent } from './json-edit.component';
 import { SendToParameterisationComponent } from './send-to-parameterisation.component';
+import { BokehPcolourComponent } from './bokeh-pcolour.component';
 
 import { MyJsonPipe } from './my-json.pipe'
 
@@ -58,7 +59,8 @@ import { LocalStorageService } from './local-storage.service';
     SpecificationsComponent,
     DicomComponent,
     SendToParameterisationComponent,
-    JsonEditComponent
+    JsonEditComponent,
+    BokehPcolourComponent
   ],
   providers: [
     ElectronApiService,

@@ -1,5 +1,14 @@
 <div class="mdl-grid">
   <div class="mdl-cell mdl-cell--12-col">
+    <my-bokeh-pcolour
+      [title]="'Model Plot'"
+      [scatter_x]="modelData.measurement.width"
+      [scatter_y]="modelData.measurement.length"
+      [scatter_z]="modelData.measurement.factor"
+      [plot_width]="600"
+      [plot_height]="400">
+
+    </my-bokeh-pcolour>
     <button
       mdl-button mdl-button-type="raised" 
       mdl-colored="primary" 
