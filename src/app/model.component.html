@@ -9,16 +9,8 @@
       [pcolour_y]="modelData.model.length"
       [pcolour_z]="modelData.model.factor"
       [plot_width]="plot_width"
-      [numDummyVals]="numDummyVals"
       [plot_height]="380">
     </my-bokeh-pcolour>
-
-    <mdl-textfield
-      type="text"
-      label="Number of dummy values"
-      (input)="updateDummyVals()"
-      floating-label
-      [(ngModel)]="numDummyVals"></mdl-textfield>
       
     <button
       mdl-button mdl-button-type="raised" 

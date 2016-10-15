@@ -10,8 +10,6 @@ declare var Bokeh: any;
 })
 export class BokehPcolourComponent implements OnChanges, AfterViewInit, OnInit {
   @Input()
-  numDummyVals: number = 10000;
-  @Input()
   title: string = "Figure Title";
   @Input()
   plot_width: number = 300;
@@ -32,8 +30,6 @@ export class BokehPcolourComponent implements OnChanges, AfterViewInit, OnInit {
   @Input()
   enabled: boolean = true;
 
-  tempSource: any;
-
   @ViewChild('bokehplot') bokehplot: any;
 
   plt = Bokeh.Plotting;
@@ -47,111 +43,57 @@ export class BokehPcolourComponent implements OnChanges, AfterViewInit, OnInit {
   old_scatter_z: number[] = [];
   old_pcolour_z: number[] = [];
 
-  source = new Bokeh.ColumnDataSource();
+  scatter_source = new Bokeh.ColumnDataSource();
+  scatter_data = {
+    x: <number[]> [],
+    y: <number[]> [],
+    c: <string[]> []
+  }
+  pcolour_source = new Bokeh.ColumnDataSource();
+  pcolour_data = {
+    x: <number[]> [],
+    y: <number[]> [],
+    c: <string[]> []
+  }
   doc = new Bokeh.Document();
-
-  dummyVals: number[] = [];
-
-  allZ: number[] = [];
-  vmin: number;
-  vmax: number;
-  vrange: number;
-
 
   ngOnInit() {
     this.fig = this.plt.figure({
         title: this.title, tools: this.tools,
         plot_width: this.plot_width, plot_height: this.plot_height
       });
-
-    for (let i = 0; i <= this.numDummyVals; i++) {
-      this.dummyVals.push(6);
-    }
   }
 
   ngOnChanges() {
-    this.tempSource = {
-      "dummy_vals": this.dummyVals,
-      "scatter_x": [],
-      "scatter_y": [],
-      "scatter_fill_colour": this.scatter_fill_colour,
-      "pcolour_x": [],
-      "pcolour_y": [],
-      "pcolour_fill_colour": this.pcolour_fill_colour
+    if (this.scatter_data.x != this.scatter_x) {
+      this.scatter_data.x = this.scatter_x;
     }
-    if (this.enabled) {
-      if (this.scatter_x && this.scatter_y && this.scatter_z) {
-        this.tempSource.scatter_x = this.scatter_x;
-        this.tempSource.scatter_y = this.scatter_y;
-        
-        if (this.scatter_z != this.old_scatter_z) {
-          this.scatter_fill_colour = [];
-          this.scatter_colour_scale = [];
-
-          if (this.pcolour_z) {
-            this.allZ = this.scatter_z.concat(this.pcolour_z)
-          }
-          else {
-            this.allZ = this.scatter_z
-          }
-          this.vmin = Math.min(...this.allZ);
-          this.vmax = Math.max(...this.allZ);
-          this.vrange = this.vmax - this.vmin;
-
-          if (this.vmin == this.vmax) {
-            this.scatter_colour_scale = [0.5]
-          }
-          else {
-            for (let item of this.scatter_z) {
-              this.scatter_colour_scale.push((item - this.vmin) / this.vrange);
-            }
-          }
-          for (let item of this.scatter_colour_scale) {
-            this.scatter_fill_colour.push(this.viridis(item));
-          }
-          this.tempSource["scatter_fill_colour"] = this.scatter_fill_colour;
-          this.old_scatter_z = this.scatter_z;
-        }
-      }
-      if (this.pcolour_x && this.pcolour_y) {
-        this.pcolour_fill_colour = [];
-        this.pcolour_colour_scale = [];
-
-        this.tempSource.pcolour_x = this.pcolour_x;
-        this.tempSource.pcolour_y = this.pcolour_y;
-        if (this.pcolour_z != this.old_pcolour_z) {
-          if (this.scatter_z) {
-            this.allZ = this.scatter_z.concat(this.pcolour_z)
-          }
-          else {
-            this.allZ = this.pcolour_z
-          }
-
-          this.vmin = Math.min(...this.allZ);
-          this.vmax = Math.max(...this.allZ);
-          this.vrange = this.vmax - this.vmin;
-
-          if (this.vmin == this.vmax) {
-            this.pcolour_colour_scale = [0.5]
-          }
-          else {
-            for (let item of this.pcolour_z) {
-              this.pcolour_colour_scale.push((item - this.vmin) / this.vrange);
-            }
-          }
-          for (let item of this.pcolour_colour_scale) {
-            this.pcolour_fill_colour.push(this.viridis(item));
-          }
-          this.tempSource["pcolour_fill_colour"] = this.pcolour_fill_colour;
-          this.old_pcolour_z = this.pcolour_z;
-        }
-      }
+    if (this.scatter_data.y != this.scatter_y) {
+      this.scatter_data.y = this.scatter_y;
+    }
+    if (this.old_scatter_z != this.scatter_z) {
+      this.scatter_data.c = this.determineFillColours(this.scatter_z, this.pcolour_z)
+      this.old_scatter_z = this.scatter_z;
     }
 
-    if (this.source.data != this.tempSource) {
-      this.source.data = this.tempSource
+    if (this.pcolour_data.x != this.pcolour_x) {
+      this.pcolour_data.x = this.pcolour_x;
     }
-    // console.log(this.source.data)
+    if (this.pcolour_data.y != this.pcolour_y) {
+      this.pcolour_data.y = this.pcolour_y;
+    }
+    if (this.old_pcolour_z != this.pcolour_z) {
+      this.pcolour_data.c = this.determineFillColours(this.pcolour_z, this.scatter_z)
+      this.old_pcolour_z = this.pcolour_z;
+    }
+
+    if (this.scatter_source.data != this.scatter_data) {
+      this.scatter_source.data = this.scatter_data
+    }
+
+    if (this.pcolour_source.data != this.pcolour_data) {
+      this.pcolour_source.data = this.pcolour_data
+    }
 
     if (this.fig != null) {
       if (this.fig.width != this.plot_width) {
@@ -164,23 +106,17 @@ export class BokehPcolourComponent implements OnChanges, AfterViewInit, OnInit {
   }
 
   ngAfterViewInit() {
-    this.fig.circle(
-      { field: 'dummy_vals' }, { field: 'dummy_vals' }, {
-        source: this.source,
-        size: 0
-      }
-    )
     this.fig.rect(
-      { field: 'pcolour_x' }, { field: 'pcolour_y' }, 0.1, 0.1, {
-        source: this.source,
-        color:  { field: 'pcolour_fill_colour' },
+      { field: 'x' }, { field: 'y' }, 0.1, 0.1, {
+        source: this.pcolour_source,
+        color:  { field: 'c' },
     });
     this.fig.circle(
-      { field: 'scatter_x' }, { field: 'scatter_y' }, {
-        source: this.source,
+      { field: 'x' }, { field: 'y' }, {
+        source: this.scatter_source,
         size: 15,
         line_color: 'black',
-        fill_color:  { field: 'scatter_fill_colour' },
+        fill_color:  { field: 'c' },
         line_width: 2
     });
 
@@ -191,6 +127,29 @@ export class BokehPcolourComponent implements OnChanges, AfterViewInit, OnInit {
     this.doc.add_root(this.fig);
     Bokeh.embed.add_document_standalone(
       this.doc, this.bokehplot.nativeElement); 
+  }
+
+  determineFillColours(z1: number[], z2: number[]) {
+    let allZ = z1.concat(z2)
+    let vmin = Math.min(...allZ)
+    let vmax = Math.max(...allZ)
+    let vrange = vmax - vmin
+    
+    let colour_scale: number[] = []
+    if (vmin == vmax) {
+      colour_scale = [0.5]
+    }
+    else {
+      for (let item of z1) {
+        colour_scale.push((item - vmin) / vrange);
+      }
+    }
+    let fill_colour: string[] = []
+    for (let item of colour_scale) {
+      fill_colour.push(this.viridis(item));
+    }
+
+    return fill_colour
   }
 
 
