@@ -61,13 +61,6 @@ export class BokehPcolourComponent implements OnChanges, AfterViewInit, OnInit {
   });
   doc = new Bokeh.Document();
 
-  ngOnInit() {
-    this.fig = this.plt.figure({
-        title: this.title, tools: this.tools,
-        plot_width: this.plot_width, plot_height: this.plot_height
-      });
-  }
-
   ngOnChanges() {
     this.scatter_data = {
       x: <number[]> this.scatter_x,
@@ -107,6 +100,13 @@ export class BokehPcolourComponent implements OnChanges, AfterViewInit, OnInit {
         this.fig.height = this.plot_height;
       }
     }
+  }
+
+  ngOnInit() {
+    this.fig = this.plt.figure({
+        title: this.title, tools: this.tools,
+        plot_width: this.plot_width, plot_height: this.plot_height
+      });
   }
 
   ngAfterViewInit() {
