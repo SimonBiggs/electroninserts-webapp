@@ -1,14 +1,24 @@
 <div class="mdl-grid">
-  <div class="mdl-cell mdl-cell--12-col" #plotContainer>
+  <div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet mdl-cell--6-col-phone" #plotContainer>
     <my-bokeh-pcolour
       [title]="'Model Plot'"
       [scatter_x]="modelData.measurement.width"
       [scatter_y]="modelData.measurement.length"
       [scatter_z]="modelData.measurement.factor"
+      [pcolour_x]="modelData.model.width"
+      [pcolour_y]="modelData.model.length"
+      [pcolour_z]="modelData.model.factor"
       [plot_width]="plot_width"
+      [numDummyVals]="numDummyVals"
       [plot_height]="380">
-
     </my-bokeh-pcolour>
+
+    <mdl-textfield
+      type="text"
+      label="Number of dummy values"
+      (input)="updateDummyVals()"
+      floating-label
+      [(ngModel)]="numDummyVals"></mdl-textfield>
       
     <button
       mdl-button mdl-button-type="raised" 
@@ -17,6 +27,9 @@
       [disabled]="false"
       (click)="basicServerSubmit()">Run Spline Model          
     </button>
+  </div>
+
+  <div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet">
   </div>
 
   <div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet">

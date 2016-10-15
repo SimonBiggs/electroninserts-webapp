@@ -33,9 +33,11 @@ export class ModelComponent implements OnInit {
       model: {
         width: <number[]> [],
         length: <number[]> [],
-        factor: <number[][]> [[]]
+        factor: <number[]> []
       }
   };
+
+  numDummyVals: number;
 
   modelURL: string;
   plot_width = 600;
@@ -54,6 +56,10 @@ export class ModelComponent implements OnInit {
         });
     };
   }
+
+  updateDummyVals() {
+    localStorage.setItem("numDummyVals", String(this.numDummyVals));
+  }
   
   ngOnInit() {
     this.myTitleService.setTitle('Model');
@@ -63,6 +69,11 @@ export class ModelComponent implements OnInit {
       this.modelURL = 'http://electronapi.simonbiggs.net/model';
     }
     this.plot_width = this.plotContainer.nativeElement.clientWidth;
+
+    this.numDummyVals = Number(localStorage.getItem("numDummyVals"))
+    if (this.numDummyVals == 0) {
+      this.numDummyVals = 10000;
+    }
   }
 
   basicServerSubmit() {
