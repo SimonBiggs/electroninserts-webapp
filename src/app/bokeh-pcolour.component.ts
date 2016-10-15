@@ -35,26 +35,30 @@ export class BokehPcolourComponent implements OnChanges, AfterViewInit, OnInit {
   plt = Bokeh.Plotting;
   tools = 'pan,crosshair,wheel_zoom,box_zoom,reset,save';  
   fig: any;
-  scatter_colour_scale: number[];
-  scatter_fill_colour: any[] = [];
-  pcolour_colour_scale: number[];
-  pcolour_fill_colour: any[] = [];
 
   old_scatter_z: number[] = [];
   old_pcolour_z: number[] = [];
 
-  scatter_source = new Bokeh.ColumnDataSource();
+  old_scatter_c: string[] = [];
+  old_pcolour_c: string[] = [];
+
   scatter_data = {
     x: <number[]> [],
     y: <number[]> [],
     c: <string[]> []
   }
-  pcolour_source = new Bokeh.ColumnDataSource();
+  scatter_source = new Bokeh.ColumnDataSource({
+    data: this.scatter_data
+  });
+
   pcolour_data = {
     x: <number[]> [],
     y: <number[]> [],
     c: <string[]> []
   }
+  pcolour_source = new Bokeh.ColumnDataSource({
+    data: this.pcolour_data
+  });
   doc = new Bokeh.Document();
 
   ngOnInit() {
@@ -65,34 +69,34 @@ export class BokehPcolourComponent implements OnChanges, AfterViewInit, OnInit {
   }
 
   ngOnChanges() {
-    if (this.scatter_data.x != this.scatter_x) {
-      this.scatter_data.x = this.scatter_x;
+    this.scatter_data = {
+      x: <number[]> this.scatter_x,
+      y: <number[]> this.scatter_y,
+      c: <string[]> this.old_scatter_c
     }
-    if (this.scatter_data.y != this.scatter_y) {
-      this.scatter_data.y = this.scatter_y;
-    }
-    if (this.old_scatter_z != this.scatter_z) {
-      this.scatter_data.c = this.determineFillColours(this.scatter_z, this.pcolour_z)
-      this.old_scatter_z = this.scatter_z;
+    this.pcolour_data = {
+      x: <number[]> this.pcolour_x,
+      y: <number[]> this.pcolour_y,
+      c: <string[]> this.old_pcolour_c
     }
 
-    if (this.pcolour_data.x != this.pcolour_x) {
-      this.pcolour_data.x = this.pcolour_x;
-    }
-    if (this.pcolour_data.y != this.pcolour_y) {
-      this.pcolour_data.y = this.pcolour_y;
-    }
-    if (this.old_pcolour_z != this.pcolour_z) {
-      this.pcolour_data.c = this.determineFillColours(this.pcolour_z, this.scatter_z)
+    if (this.old_scatter_z != this.scatter_z || this.old_pcolour_z != this.pcolour_z) {
+      this.scatter_data.c = this.determineFillColours(this.scatter_z, this.pcolour_z);
+      this.pcolour_data.c = this.determineFillColours(this.pcolour_z, this.scatter_z);
+      
+      this.old_scatter_z = this.scatter_z;
       this.old_pcolour_z = this.pcolour_z;
+
+      this.old_scatter_c = this.scatter_data.c;
+      this.old_pcolour_c = this.pcolour_data.c;
     }
 
     if (this.scatter_source.data != this.scatter_data) {
-      this.scatter_source.data = this.scatter_data
+      this.scatter_source.data = this.scatter_data;
     }
 
     if (this.pcolour_source.data != this.pcolour_data) {
-      this.pcolour_source.data = this.pcolour_data
+      this.pcolour_source.data = this.pcolour_data;
     }
 
     if (this.fig != null) {
@@ -109,7 +113,7 @@ export class BokehPcolourComponent implements OnChanges, AfterViewInit, OnInit {
     this.fig.rect(
       { field: 'x' }, { field: 'y' }, 0.1, 0.1, {
         source: this.pcolour_source,
-        color:  { field: 'c' },
+        color:  { field: 'c' }
     });
     this.fig.circle(
       { field: 'x' }, { field: 'y' }, {
@@ -130,14 +134,14 @@ export class BokehPcolourComponent implements OnChanges, AfterViewInit, OnInit {
   }
 
   determineFillColours(z1: number[], z2: number[]) {
-    let allZ = z1.concat(z2)
-    let vmin = Math.min(...allZ)
-    let vmax = Math.max(...allZ)
-    let vrange = vmax - vmin
+    let allZ = z1.concat(z2);
+    let vmin = Math.min(...allZ);
+    let vmax = Math.max(...allZ);
+    let vrange = vmax - vmin;
     
-    let colour_scale: number[] = []
+    let colour_scale: number[] = [];
     if (vmin == vmax) {
-      colour_scale = [0.5]
+      colour_scale = [0.5];
     }
     else {
       for (let item of z1) {
