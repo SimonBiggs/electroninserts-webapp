@@ -37,6 +37,11 @@ export class ModelComponent implements OnInit {
       }
   };
 
+  initialMeasurementWidth: string = "";
+  initialMeasurementLength: string = "";
+  initialMeasurementFactor: string = "";
+
+
   modelURL: string;
   plot_width = 600;
 
@@ -63,6 +68,39 @@ export class ModelComponent implements OnInit {
       this.modelURL = 'http://electronapi.simonbiggs.net/model';
     }
     this.plot_width = this.plotContainer.nativeElement.clientWidth;
+    this.initialMeasurementWidth = String(this.modelData.measurement.width)
+      .replace(/,/g,', ')
+    this.initialMeasurementLength = String(this.modelData.measurement.length)
+      .replace(/,/g,', ')
+    this.initialMeasurementFactor = String(this.modelData.measurement.factor)
+      .replace(/,/g,', ')
+  }
+
+  updateMeasurementWidth(widthInput: string) {
+    try {
+      this.modelData.measurement.width = eval('[' + widthInput + ']')
+    }
+    catch(err) {
+      console.log(err)
+    }  
+  }
+
+  updateMeasurementLength(lengthInput: string) {
+    try {
+      this.modelData.measurement.length = eval('[' + lengthInput + ']')
+    }
+    catch(err) {
+      console.log(err)
+    }  
+  }
+
+  updateMeasurementFactor(factorInput: string) {
+    try {
+      this.modelData.measurement.factor = eval('[' + factorInput + ']')
+    }
+    catch(err) {
+      console.log(err)
+    }  
   }
 
   basicServerSubmit() {

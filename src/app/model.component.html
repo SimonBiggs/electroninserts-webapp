@@ -25,6 +25,34 @@
   </div>
 
   <div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet">
+    <mdl-textfield
+      type="text"
+      label="Measured widths (cm)"
+      [value]="this.initialMeasurementWidth"
+      (input)="updateMeasurementWidth($event.target.value)"
+      rows=4
+      floating-label
+      [style.width]="'100%'"></mdl-textfield>
+    <mdl-textfield
+      type="text"
+      label="Measured lengths (cm)"
+      [value]="this.initialMeasurementLength"
+      (input)="updateMeasurementLength($event.target.value)"
+      rows=4
+      floating-label
+      [style.width]="'100%'"></mdl-textfield>
+    <mdl-textfield
+      type="text"
+      label="Measured factor"
+      [value]="this.initialMeasurementFactor"
+      (input)="updateMeasurementFactor($event.target.value)"
+      rows=4
+      floating-label
+      [style.width]="'100%'"></mdl-textfield>
+  </div>
+
+
+  <div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet">
     <p>Change the following address to use your own
       spline modelling server. The default is: <br>
       <a (click)="defaultServer()">http://electronapi.simonbiggs.net/model</a>        
@@ -38,7 +66,7 @@
       style="width:100%"></mdl-textfield>
   </div>
 
-  <div class="mdl-cell mdl-cell--12-col">
+  <!--<div class="mdl-cell mdl-cell--12-col">
     <h5>Edit raw model data</h5>
     <my-json-edit
       [input]="modelData"
@@ -46,7 +74,7 @@
       buttonText="Update Model Data"
       useMyJsonPipe="true">
     </my-json-edit>
-  </div>
+  </div>-->
 
 
 </div>
