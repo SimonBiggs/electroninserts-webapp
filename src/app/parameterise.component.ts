@@ -99,6 +99,20 @@ export class ParameteriseComponent implements OnInit {
   addMeasuredFactor(factor: number) {
     let key = this.createKey()
     let modelData = JSON.parse(localStorage.getItem(key))
+    if (modelData == null) {
+      modelData = {
+        measurement: {
+          width: <number[]> [],
+          length: <number[]> [],
+          factor: <number[]> [],
+        },
+        model: {
+          width: <number[]> [],
+          length: <number[]> [],
+          factor: <number[]> []
+        }
+      }
+    }
     modelData.model.width = <number[]> []
     modelData.model.length = <number[]> []
     modelData.model.factor = <number[]> []
@@ -110,11 +124,11 @@ export class ParameteriseComponent implements OnInit {
 
     localStorage.setItem(key, JSON.stringify(modelData))
 
-    this.router.navigate(["/model"])
+    this.changeToModel()
 
   }
 
-  predictFactorWithModel() {
+  changeToModel() {
     localStorage.setItem("current_machine", JSON.stringify(Number(
       this.insertData.machine)))
     localStorage.setItem("currentEnergy", JSON.stringify(Number(
