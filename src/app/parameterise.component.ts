@@ -168,7 +168,7 @@ export class ParameteriseComponent implements OnInit {
   inputTextAreaX(xInput: string) {
     try {
       this.parameterisation.insert.x = eval(
-        '[' + xInput.replace(/\n/g,', ')  + ']')
+        '[' + xInput.replace(/[\n\t]/g,', ')  + ']')
       this.insertUpdated(this.parameterisation.insert)
       this.checkIfInsertValid()
       this.saveInsertData()
@@ -182,7 +182,7 @@ export class ParameteriseComponent implements OnInit {
   inputTextAreaY(yInput: string) {
     try {
       this.parameterisation.insert.y = eval(
-        '[' + yInput.replace(/\n/g,', ')  + ']')
+        '[' + yInput.replace(/[\n\t]/g,', ')  + ']')
       this.insertUpdated(this.parameterisation.insert)
       this.checkIfInsertValid()
       this.saveInsertData()

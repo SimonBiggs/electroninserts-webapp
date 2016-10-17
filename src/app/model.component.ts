@@ -198,7 +198,7 @@ export class ModelComponent implements OnInit {
       factor: <number[]> []
     }
     try {
-      this.modelData.measurement.width = eval('[' + widthInput.replace(/\n/g,', ') + ']')
+      this.modelData.measurement.width = eval('[' + widthInput.replace(/[\n\t]/g,', ') + ']')
       this.saveModel()
     }
     catch(err) {
@@ -213,7 +213,7 @@ export class ModelComponent implements OnInit {
       factor: <number[]> []
     }
     try {
-      this.modelData.measurement.length = eval('[' + lengthInput.replace(/\n/g,', ')  + ']')
+      this.modelData.measurement.length = eval('[' + lengthInput.replace(/[\n\t]/g,', ')  + ']')
       this.saveModel()
     }
     catch(err) {
@@ -228,7 +228,7 @@ export class ModelComponent implements OnInit {
       factor: <number[]> []
     }
     try {
-      this.modelData.measurement.factor = eval('[' + factorInput.replace(/\n/g,', ')  + ']')
+      this.modelData.measurement.factor = eval('[' + factorInput.replace(/[\n\t]/g,', ')  + ']')
       this.saveModel()
     }
     catch(err) {
