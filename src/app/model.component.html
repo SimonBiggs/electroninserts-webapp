@@ -136,6 +136,11 @@
       [disabled]="modelData.measurement.width.length == 0 || modelData.measurement.length.length == 0|| modelData.measurement.factor.length == 0"
       (click)="saveModel()">Save model  
     </button>-->
+    <h5>Input widths, lengths, and factors</h5>
+    <p>
+      Measured widths and lengths can be input by separating by commas, \n (new lines), or \t (tabs). 
+      This means you may copy data directly from excel into these text boxes if that is convenient.
+    </p>
 
     <mdl-textfield
       type="text"
@@ -170,12 +175,13 @@
 
   </div>
 
+  <!--<div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet">
+
+  </div>-->
+
+
   <div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet">
-
-  </div>
-
-
-  <div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet">
+    <h5>Model server</h5>
     <p>Change the following address to use your own
       spline modelling server. The default is: <br>
       <a (click)="defaultServer()">http://electronapi.simonbiggs.net/model</a>        
