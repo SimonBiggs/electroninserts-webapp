@@ -53,7 +53,8 @@ export class ParameteriseComponent implements OnInit {
     parameterisation: this.parameterisation,
     energy: null,
     applicator: null,
-    ssd: null
+    ssd: null,
+    factor: null
   }
 
   machineExists: boolean = false;
@@ -167,7 +168,7 @@ export class ParameteriseComponent implements OnInit {
   inputTextAreaX(xInput: string) {
     try {
       this.parameterisation.insert.x = eval(
-        '[' + xInput + ']')
+        '[' + xInput.replace(/\n/g,', ')  + ']')
       this.insertUpdated(this.parameterisation.insert)
       this.checkIfInsertValid()
       this.saveInsertData()
@@ -181,7 +182,7 @@ export class ParameteriseComponent implements OnInit {
   inputTextAreaY(yInput: string) {
     try {
       this.parameterisation.insert.y = eval(
-        '[' + yInput + ']')
+        '[' + yInput.replace(/\n/g,', ')  + ']')
       this.insertUpdated(this.parameterisation.insert)
       this.checkIfInsertValid()
       this.saveInsertData()
