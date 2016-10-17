@@ -11,7 +11,9 @@ declare var Bokeh: any;
 })
 export class PlotComponent implements OnChanges, AfterViewInit {
   @Input()
-  insert: Coordinates = null;
+  insert_x: number[] = null
+  @Input()
+  insert_y: number[] = null
   @Input()
   circle: Coordinates = null;
   @Input()
@@ -52,14 +54,13 @@ export class PlotComponent implements OnChanges, AfterViewInit {
     let xAll: number[] = [];
     let yAll: number[] = [];
     if (this.enabled) {
-      if (this.insert) {
-        if ('x' in this.insert && 'y' in this.insert) {
-          this.tempSource.xs[0] = this.insert.x.concat(this.insert.x[0]);
-          this.tempSource.ys[0] = this.insert.y.concat(this.insert.y[0]);
-          xAll = xAll.concat(this.tempSource.xs[0]);
-          yAll = yAll.concat(this.tempSource.ys[0]);
-        }
+      if (this.insert_x != null && this.insert_y != null) {
+        this.tempSource.xs[0] = this.insert_x.concat(this.insert_x[0]);
+        this.tempSource.ys[0] = this.insert_y.concat(this.insert_y[0]);
+        xAll = xAll.concat(this.tempSource.xs[0]);
+        yAll = yAll.concat(this.tempSource.ys[0]);
       }
+
 
       if (this.circle) {
         if ('x' in this.circle && 'y' in this.circle) {

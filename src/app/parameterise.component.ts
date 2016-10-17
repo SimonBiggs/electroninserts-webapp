@@ -30,6 +30,9 @@ export class ParameteriseComponent implements OnInit {
 
   @ViewChild('jsonInput') jsonInputComponent: any;
 
+  textAreaX: string;
+  textAreaY: string;
+
   jsonValid: boolean = true;
 
   serverResponseValid: boolean = true;
@@ -76,7 +79,60 @@ export class ParameteriseComponent implements OnInit {
       this.machineSpecifications = {};
     }
     this.checkMachineSettings()
+
+    this.updateTextAreaValues()
   }
+
+  updateTextAreaValues() {
+    this.textAreaX = String(this.parameterisation.insert.x)
+      .replace(/,/g,', ')
+    this.textAreaY = String(this.parameterisation.insert.y)
+      .replace(/,/g,', ')
+  }
+
+  checkIfInsertValid() {
+    if (this.parameterisation.insert.x.length == this.parameterisation.insert.y.length) {
+      this.jsonValid = true
+    }
+    else {
+      this.jsonValid = false
+    }
+  }
+
+  saveInsertData() { 
+    this.insertData['parameterisation'] = this.parameterisation
+    localStorage.setItem(
+      "last_insertData", JSON.stringify(this.insertData))
+  }
+
+  inputTextAreaX(xInput: string) {
+    try {
+      this.parameterisation.insert.x = eval(
+        '[' + xInput + ']')
+      this.insertUpdated(this.parameterisation.insert)
+      this.checkIfInsertValid()
+      this.saveInsertData()
+    }
+    catch(err) {
+      console.log(err)
+      this.jsonValid = false
+    }
+  }
+
+  inputTextAreaY(yInput: string) {
+    try {
+      this.parameterisation.insert.y = eval(
+        '[' + yInput + ']')
+      this.insertUpdated(this.parameterisation.insert)
+      this.checkIfInsertValid()
+      this.saveInsertData()
+    }
+    catch(err) {
+      console.log(err)
+      this.jsonValid = false
+    }
+  }
+
 
   getData(): void {
     let localStorageInsertDataString = localStorage['last_insertData'];
@@ -128,10 +184,7 @@ export class ParameteriseComponent implements OnInit {
             JSON.stringify(this.parameterisation.insert), 
             JSON.stringify(this.parameterisation)
           );
-          this.insertData['parameterisation'] = this.parameterisation
-          localStorage.setItem(
-            "last_insertData", JSON.stringify(this.insertData)
-          );
+          this.saveInsertData()
         }
         else {
           this.sleep(500).then(() => this.recursiveServerSubmit());

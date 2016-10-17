@@ -1,23 +1,140 @@
 <div class="mdl-grid">
+  <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--6-col-phone">
+    <h5>Choose machine configuration</h5>
+    <p>
+      To edit the machine configurations available here please head on over to the
+      <a routerLink="/specifications" routerLinkActive="active">
+        machine specifications component.
+      </a>
+    </p> 
+  </div>
+  <div 
+      *ngIf="this.machineList.length == 0"
+      mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--6-col-phone>
+    <p>
+      You do not have any machines defined.
+      To assign models to a specific machine configuration please 
+      <a routerLink="/specifications" routerLinkActive="active">
+        define your machine specifications
+      </a>
+    </p>
+  </div>
+
+    <div 
+        *ngIf="this.machineList.length > 0" 
+        class="mdl-cell mdl-cell--3-col mdl-cell--4-col-tablet mdl-cell--2-col-phone">
+      <h6>Machine ID</h6>
+      <select
+          [(ngModel)]="currentMachine"
+          (input)="updateMachineID($event.target.value)">
+        <option *ngFor="let machine of machineList">{{machine}}</option>
+      </select>
+    </div>
+
+    <div 
+        *ngIf="this.machineList.length > 0 && currentMachine != null" 
+        class="mdl-cell mdl-cell--3-col mdl-cell--4-col-tablet mdl-cell--2-col-phone">
+      <h6>Energy</h6>
+      <select
+          [(ngModel)]="currentEnergy"
+          (input)="updateEnergy($event.target.value)"
+          *ngIf="machineSpecifications[currentMachine].energy.length > 0">
+        <option *ngFor="let energy of machineSpecifications[currentMachine].energy" value="{{energy}}">{{energy}} MeV</option>
+      </select>
+      <p *ngIf="machineSpecifications[currentMachine].energy == 0">
+        This machine doesn't have any energies defined. Please 
+        <a routerLink="/specifications" routerLinkActive="active">
+          define energies.
+        </a>
+      </p>
+    </div>
+
+    <div 
+        *ngIf="this.machineList.length > 0 && currentMachine != null" 
+        class="mdl-cell mdl-cell--3-col mdl-cell--4-col-tablet mdl-cell--2-col-phone">
+      <h6>Applicator</h6>
+      <select 
+          [(ngModel)]="currentApplicator"
+          (input)="updateApplicator($event.target.value)"
+          *ngIf="machineSpecifications[currentMachine].applicator.length > 0">
+        <option *ngFor="let applicator of machineSpecifications[currentMachine].applicator">{{applicator}}</option>
+      </select>
+      <p *ngIf="machineSpecifications[currentMachine].applicator == 0">
+        This machine doesn't have any applicators defined. Please 
+        <a routerLink="/specifications" routerLinkActive="active">
+          define applicators.
+        </a>
+      </p>
+    </div>
+
+    <div 
+        *ngIf="this.machineList.length > 0 && currentMachine != null" 
+        class="mdl-cell mdl-cell--3-col mdl-cell--4-col-tablet mdl-cell--2-col-phone">
+      <h6>SSD</h6>
+      <select  
+          [(ngModel)]="currentSSD"
+          (input)="updateSSD($event.target.value)"
+          *ngIf="machineSpecifications[currentMachine].ssd.length > 0">
+        <option *ngFor="let ssd of machineSpecifications[currentMachine].ssd">{{ssd}}</option>
+      </select>
+      <p *ngIf="machineSpecifications[currentMachine].ssd == 0">
+        This machine doesn't have an ssd defined. Please 
+        <a routerLink="/specifications" routerLinkActive="active">
+          define at least one ssd.
+        </a>
+      </p>
+    </div>
+
+  
+
+  <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--6-col-phone">
+    <h5>The spline model</h5>    
+  </div>
   <div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet mdl-cell--6-col-phone" #plotContainer>
-    <my-bokeh-pcolour
-      [title]="'Model Plot'"
-      [scatter_x]="modelData.measurement.width"
-      [scatter_y]="modelData.measurement.length"
-      [scatter_z]="modelData.measurement.factor"
-      [pcolour_x]="modelData.model.width"
-      [pcolour_y]="modelData.model.length"
-      [pcolour_z]="modelData.model.factor"
-      [plot_width]="plot_width"
-      [plot_height]="380">
-    </my-bokeh-pcolour>
-      
+    <div *ngIf="modelData.measurement.width.length > 0 && modelData.measurement.length.length > 0 && modelData.measurement.factor.length > 0">
+      <my-bokeh-pcolour
+        [title]="'Model Plot'"
+        [scatter_x]="modelData.measurement.width"
+        [scatter_y]="modelData.measurement.length"
+        [scatter_z]="modelData.measurement.factor"
+        [pcolour_x]="modelData.model.width"
+        [pcolour_y]="modelData.model.length"
+        [pcolour_z]="modelData.model.factor"
+        [plot_width]="plot_width"
+        [plot_height]="380">
+      </my-bokeh-pcolour>
+    </div>
+    <div *ngIf="modelData.measurement.width.length == 0 || modelData.measurement.length.length == 0|| modelData.measurement.factor.length == 0">
+      <p>
+        <font color="red">There is currently no data for this combination.</font> If you wish to load some demo data to see the model in action press the "load demo data" button below.
+        If you wish to input your own data you may use the text boxes below or import a shape from the 
+        <a routerLink="/parameterise" routerLinkActive="active">
+          parameterisation component. 
+        </a>
+      </p>
+    </div>
     <button
       mdl-button mdl-button-type="raised" 
       mdl-colored="primary" 
       mdl-ripple
       [disabled]="false"
-      (click)="basicServerSubmit()">Run Spline Model          
+      (click)="loadDemoData()">Load demo data         
+    </button>
+      
+    <button
+      mdl-button mdl-button-type="raised" 
+      mdl-colored="primary" 
+      mdl-ripple
+      [disabled]="modelData.measurement.width.length < 8 || modelData.measurement.length.length < 8 || modelData.measurement.factor.length < 8 || dataInFlight"
+      (click)="basicServerSubmit()">Run Spline Model
+    </button>
+
+    <button
+      mdl-button mdl-button-type="raised" 
+      mdl-colored="primary" 
+      mdl-ripple
+      [disabled]="modelData.model.width.length == 0 || modelData.model.length.length == 0 || modelData.model.factor.length == 0"
+      (click)="saveModel()">Save model  
     </button>
   </div>
 
@@ -28,7 +145,7 @@
     <mdl-textfield
       type="text"
       label="Measured widths (cm)"
-      [value]="this.initialMeasurementWidth"
+      [(ngModel)]="this.initialMeasurementWidth"
       (input)="updateMeasurementWidth($event.target.value)"
       rows=4
       floating-label
@@ -36,7 +153,7 @@
     <mdl-textfield
       type="text"
       label="Measured lengths (cm)"
-      [value]="this.initialMeasurementLength"
+      [(ngModel)]="this.initialMeasurementLength"
       (input)="updateMeasurementLength($event.target.value)"
       rows=4
       floating-label
@@ -44,7 +161,7 @@
     <mdl-textfield
       type="text"
       label="Measured factor"
-      [value]="this.initialMeasurementFactor"
+      [(ngModel)]="this.initialMeasurementFactor"
       (input)="updateMeasurementFactor($event.target.value)"
       rows=4
       floating-label

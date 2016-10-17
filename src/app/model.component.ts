@@ -10,25 +10,9 @@ import { ElectronApiService } from './electron-api.service';
 export class ModelComponent implements OnInit {
   modelData = {
       measurement: {
-        width: [    
-          3.15, 3.16, 3.17, 3.17, 3.17, 3.55, 3.66, 3.71, 4.2, 4.21, 
-          4.21, 4.21, 4.21, 4.38, 4.48, 4.59, 4.59, 4.67, 5.21, 5.25,
-          5.26, 5.26, 5.26, 5.34, 5.43, 5.72, 5.86, 6, 6.04, 6.08, 6.3,
-          6.31, 6.41, 6.53, 6.54, 6.64, 6.78, 6.9, 7.08, 7.18, 7.21, 7.36, 
-          7.56, 7.6, 7.64, 7.82, 8.06, 8.4, 9.45],
-        length: [
-          3.16, 5.25, 13.64, 6.83, 9.43, 7.7, 5.04, 4.36, 4.21, 10.51, 
-          13.65, 6.82, 8.41, 5.47, 7.29, 5.67, 6.54, 6.28, 11.4, 5.26, 
-          10.52, 13.66, 8.41, 9.64, 11.02, 11.6, 8.62, 7.98, 9.22, 6.64, 
-          6.33, 8.24, 8.69, 10.99, 8.41, 9.81, 10.98, 10.25, 10.77, 11.27, 
-          9.03, 7.37, 10.05, 10.26, 8.99, 10.85, 11.85, 8.42, 9.47],
-        factor: [
-          0.9294, 0.9346, 0.9533, 0.9488, 0.9488, 0.9443, 0.9434, 0.9488, 
-          0.956, 0.9709, 0.9756, 0.9606, 0.9709, 0.9634, 0.9606, 0.9588, 0.9681, 
-          0.9737, 0.9881, 0.9709, 0.9881, 0.9872, 0.9833, 0.993, 0.9872, 0.999, 
-          0.9891, 0.9911, 0.999, 0.993, 0.9862, 0.9921, 0.999, 1, 0.993, 0.999, 
-          1.007, 0.999, 1.005, 0.999, 1.0101, 1.003, 1.004, 1.0142, 1.003, 1.002, 
-          1.007, 1.007, 1.0081],
+        width: <number[]> [],
+        length: <number[]> [],
+        factor: <number[]> [],
       },
       model: {
         width: <number[]> [],
@@ -41,9 +25,22 @@ export class ModelComponent implements OnInit {
   initialMeasurementLength: string = "";
   initialMeasurementFactor: string = "";
 
-
+  emptyData = {
+    width: <number[]> [],
+    length: <number[]> [],
+    factor: <number[]> []
+  }
   modelURL: string;
   plot_width = 600;
+
+  machineSpecifications: {}
+  machineList: string[]
+  currentMachine: string
+  currentEnergy: number
+  currentApplicator: string
+  currentSSD: number
+
+  dataInFlight: boolean = false
 
   @ViewChild('plotContainer') plotContainer: any;
 
@@ -68,6 +65,67 @@ export class ModelComponent implements OnInit {
       this.modelURL = 'http://electronapi.simonbiggs.net/model';
     }
     this.plot_width = this.plotContainer.nativeElement.clientWidth;
+    this.updateInitialMeasurementValues()
+
+    this.currentEnergy = JSON.parse(localStorage.getItem("currentEnergy"))
+    this.currentApplicator = JSON.parse(localStorage.getItem("currentApplicator"))
+    this.currentSSD = JSON.parse(localStorage.getItem("currentSSD"))
+
+    this.machineSpecifications = JSON.parse(localStorage.getItem("specifications"));
+    if (this.machineSpecifications == null) {
+      this.machineSpecifications = {};
+      this.machineList = [];
+    }
+    else {
+      this.machineList = Object.keys(this.machineSpecifications).sort();
+      this.currentMachine = JSON.parse(localStorage.getItem("current_machine"));
+      if (
+          this.currentMachine == null || 
+          this.machineSpecifications[this.currentMachine] === undefined) {
+        this.currentMachine = this.machineList[0];
+      }
+    }
+
+    this.loadMeasuredData()
+  }
+
+  createKey() {
+    let key = (
+      '{"machine":' + JSON.stringify(String(this.currentMachine)) + ',' +
+      '"energy":' + JSON.stringify(Number(this.currentEnergy)) + ',' +
+      '"applicator":' + JSON.stringify(String(this.currentApplicator)) + ',' +
+      '"ssd":' + JSON.stringify(Number(this.currentSSD)) +
+      '}')
+    return key
+  }
+
+  loadMeasuredData() {
+    let key = this.createKey()
+    // console.log(JSON.parse(key))
+    this.modelData = JSON.parse(localStorage.getItem(key))
+    if (this.modelData == null) {
+      this.modelData = {
+        measurement: {
+          width: <number[]> [],
+          length: <number[]> [],
+          factor: <number[]> [],
+        },
+        model: {
+          width: <number[]> [],
+          length: <number[]> [],
+          factor: <number[]> []
+        }
+      }
+    }
+    this.updateInitialMeasurementValues()
+  }
+
+  saveModel() {
+    let key = this.createKey()
+    localStorage.setItem(key, JSON.stringify(this.modelData))    
+  }
+
+  updateInitialMeasurementValues() {
     this.initialMeasurementWidth = String(this.modelData.measurement.width)
       .replace(/,/g,', ')
     this.initialMeasurementLength = String(this.modelData.measurement.length)
@@ -76,7 +134,69 @@ export class ModelComponent implements OnInit {
       .replace(/,/g,', ')
   }
 
+  updateMachineID(newCurrentMachine: string) {
+    this.currentMachine = newCurrentMachine
+    localStorage.setItem("current_machine", JSON.stringify(newCurrentMachine))
+    if (newCurrentMachine in this.machineSpecifications) {
+      if (this.machineSpecifications[newCurrentMachine].energy.length > 0) {
+        this.currentEnergy = this.machineSpecifications[newCurrentMachine].energy[0]
+      }
+      else {
+        this.currentEnergy = null
+      }
+      if (this.machineSpecifications[newCurrentMachine].applicator.length > 0) {
+        this.currentApplicator = this.machineSpecifications[newCurrentMachine].applicator[0]
+      }
+      else {
+        this.currentApplicator = null
+      }
+      if (this.machineSpecifications[newCurrentMachine].ssd.length > 0) {
+        this.currentSSD = this.machineSpecifications[newCurrentMachine].ssd[0]
+      }
+      else {
+        this.currentSSD = null
+      }
+    }
+    else {
+      this.currentEnergy = null
+      this.currentApplicator = null
+      this.currentSSD = null
+    }
+
+    localStorage.setItem("currentEnergy", JSON.stringify(Number(this.currentEnergy)))
+    localStorage.setItem("currentApplicator", JSON.stringify(this.currentApplicator))
+    localStorage.setItem("currentSSD", JSON.stringify(Number(this.currentSSD)))
+
+    this.loadMeasuredData()
+  }
+
+  updateEnergy(newCurrentEnergy: number) {
+    this.currentEnergy = Number(newCurrentEnergy)
+    localStorage.setItem("currentEnergy", JSON.stringify(Number(newCurrentEnergy)))
+
+    this.loadMeasuredData()
+  }
+
+  updateApplicator(newCurrentApplicator: string) {
+    this.currentApplicator = newCurrentApplicator
+    localStorage.setItem("currentApplicator", JSON.stringify(newCurrentApplicator))
+
+    this.loadMeasuredData()
+  }
+
+  updateSSD(newCurrentSSD: number) {
+    this.currentSSD = Number(newCurrentSSD)
+    localStorage.setItem("currentSSD", JSON.stringify(Number(newCurrentSSD)))
+
+    this.loadMeasuredData()
+  }
+
   updateMeasurementWidth(widthInput: string) {
+    this.modelData.model = {
+      width: <number[]> [],
+      length: <number[]> [],
+      factor: <number[]> []
+    }
     try {
       this.modelData.measurement.width = eval('[' + widthInput + ']')
     }
@@ -86,6 +206,11 @@ export class ModelComponent implements OnInit {
   }
 
   updateMeasurementLength(lengthInput: string) {
+    this.modelData.model = {
+      width: <number[]> [],
+      length: <number[]> [],
+      factor: <number[]> []
+    }
     try {
       this.modelData.measurement.length = eval('[' + lengthInput + ']')
     }
@@ -95,6 +220,11 @@ export class ModelComponent implements OnInit {
   }
 
   updateMeasurementFactor(factorInput: string) {
+    this.modelData.model = {
+      width: <number[]> [],
+      length: <number[]> [],
+      factor: <number[]> []
+    }
     try {
       this.modelData.measurement.factor = eval('[' + factorInput + ']')
     }
@@ -104,6 +234,7 @@ export class ModelComponent implements OnInit {
   }
 
   basicServerSubmit() {
+    this.dataInFlight = true
     this.electronApiService.sendToServer(
       this.modelURL,
       JSON.stringify(this.modelData.measurement)
@@ -112,6 +243,7 @@ export class ModelComponent implements OnInit {
         this.modelData.model.width = modelResult.model_width;
         this.modelData.model.length = modelResult.model_length;
         this.modelData.model.factor = modelResult.model_factor;
+        this.dataInFlight = false
       })
   }
 
@@ -126,6 +258,42 @@ export class ModelComponent implements OnInit {
   defaultServer() {
     this.modelURL = 'http://electronapi.simonbiggs.net/model';
     localStorage.setItem("modelURL", this.modelURL);
+  }
+
+  loadDemoData() {
+    this.currentMachine = null
+    this.currentEnergy = null
+    this.currentApplicator = null
+    this.currentSSD = null
+
+    this.modelData.model = {
+      width: <number[]> [],
+      length: <number[]> [],
+      factor: <number[]> []
+    }
+
+    this.modelData.measurement.width = [    
+      3.71,  6.78,  6.3 ,  7.56,  5.26,  6.53,  7.08,  4.38,  3.66,
+      4.21,  4.21,  6.54,  5.86,  3.17,  6.  ,  8.06,  6.31,  5.26,
+      4.21,  5.21,  4.59,  5.34,  6.41,  5.26,  5.25,  7.82,  4.2 ,
+      3.16,  7.18,  5.72,  6.08,  6.64,  8.4 ,  4.59,  3.15,  4.67,
+      4.21,  9.45,  7.64,  3.17,  3.17,  7.36]
+    this.modelData.measurement.length = [
+      4.36,  10.97,   6.33,  10.05,  13.66,  10.99,  10.77,   5.47,
+      5.04,   8.41,  13.65,   8.41,   8.62,   9.43,   7.97,  11.85,
+      8.24,  10.52,   6.82,  11.4 ,   5.67,   9.64,   8.69,   8.41,
+      5.26,  10.85,   4.21,   5.25,  11.27,  11.6 ,   6.64,   9.81,
+      8.42,   6.54,   3.16,   6.28,  10.51,   9.47,   8.99,  13.64,
+      6.83,   7.37]
+    this.modelData.measurement.factor = [
+      0.9489,  1.0067,  0.9858,  1.0045,  0.9868,  1.0004,  1.0052,
+      0.9634,  0.9437,  0.9708,  0.9757,  0.9931,  0.9896,  0.9492,
+      0.9911,  1.0067,  0.9923,  0.9879,  0.9609,  0.9884,  0.9587,
+      0.9934,  0.9991,  0.9831,  0.9705,  1.0019,  0.9562,  0.9348,
+      0.9987,  0.9989,  0.9933,  0.9991,  1.0067,  0.9683,  0.9296,
+      0.9735,  0.9709,  1.0084,  1.0028,  0.953 ,  0.9484,  1.0032]
+
+    this.updateInitialMeasurementValues()
   }
 
 }

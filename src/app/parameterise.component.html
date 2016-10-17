@@ -7,11 +7,30 @@
   <div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet"
     style="display: flex; align-items: center; flex-flow: row wrap;">
     <my-plot 
-      [insert]="parameterisation.insert"
+      [insert_x]="parameterisation.insert.x"
+      [insert_y]="parameterisation.insert.y"
       [circle]="parameterisation.circle"
       [ellipse]="parameterisation.ellipse"
       [enabled]="jsonValid">
     </my-plot>
+
+    <mdl-textfield
+      type="text"
+      label="X coordinates"
+      [(ngModel)]="textAreaX"
+      (input)="inputTextAreaX($event.target.value)"
+      rows=4
+      floating-label
+      [style.width]="'100%'"></mdl-textfield>
+
+    <mdl-textfield
+      type="text"
+      label="Y coordinates"
+      [(ngModel)]="textAreaY"
+      (input)="inputTextAreaY($event.target.value)"
+      rows=4
+      floating-label
+      [style.width]="'100%'"></mdl-textfield>
 
     <div style="width:100%; height:30px"></div>
 
@@ -136,7 +155,7 @@
       style="width:100%"></mdl-textfield>
   </div>
 
-  <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet">
+  <!--<div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet">
     <h5>Edit raw coordinates</h5>
     <my-json-input #jsonInput
       [insert]="parameterisation.insert"
@@ -144,6 +163,6 @@
       (insertUpdated)="insertUpdated($event)"
       (jsonStatus)="onJsonStatusChange($event)">
     </my-json-input>
-  </div>
+  </div>-->
 
 </div>

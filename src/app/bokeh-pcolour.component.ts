@@ -122,7 +122,12 @@ export class BokehPcolourComponent implements OnChanges, AfterViewInit, OnInit {
 
     if (this.fig != null) {
       if (this.fig.width != this.plot_width) {
-        this.fig.width = this.plot_width;
+        if (this.plot_width < 200) {
+          this.fig.width = 200
+        }
+        else {
+          this.fig.width = this.plot_width;
+        }        
       }
       if (this.fig.height != this.plot_height) {
         this.fig.height = this.plot_height;
@@ -154,10 +159,10 @@ export class BokehPcolourComponent implements OnChanges, AfterViewInit, OnInit {
 
     this.fig.add_layout(this.colour_bar, 'left')
 
-    console.log(Bokeh)
+    // console.log(Bokeh)
     // console.log(this.fig.add_layout)
     // console.log(this.doc)
-    console.log(this.colour_mapper)
+    // console.log(this.colour_mapper)
 
     this.doc.add_root(this.fig);
     Bokeh.embed.add_document_standalone(

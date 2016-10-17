@@ -38,6 +38,34 @@ export class SpecificationsComponent implements OnInit {
     private myTitleService: TitleService
   ) {}
 
+
+  ngOnInit() {
+    this.myTitleService.setTitle('Specifications');
+    
+    this.changeSpecifications(JSON.parse(localStorage.getItem("specifications")));    
+  }
+
+  changeSpecifications(newSpecifications: {}) {
+    this.specifications = newSpecifications;
+    if (this.specifications == null) {
+      this.specifications = {};
+      this.machines = [];
+    }
+    else {
+      this.machines = Object.keys(this.specifications).sort();
+
+      this.currentMachine = JSON.parse(localStorage.getItem("current_machine"));
+      if (this.currentMachine == null || this.specifications[this.currentMachine] === undefined) {
+        this.currentMachine = this.machines[0];
+      }
+    }
+    this.updateSpecifications()
+  } 
+
+  updateSpecifications() {
+    localStorage.setItem("specifications", JSON.stringify(this.specifications));
+  }
+
   changeCurrentMachine(machine: string) {
     this.currentMachine = machine;
     this.updateCurrentMachine()
@@ -173,10 +201,6 @@ export class SpecificationsComponent implements OnInit {
     }
   }
 
-  updateSpecifications() {
-    localStorage.setItem("specifications", JSON.stringify(this.specifications));
-  }
-
   updateCurrentMachine() {
     localStorage.setItem("current_machine", JSON.stringify(this.currentMachine));
   }
@@ -208,67 +232,6 @@ export class SpecificationsComponent implements OnInit {
     this.edittingMachine = null;
 
     this.updateSpecifications();
-  }
-
-  changeSpecifications(newSpecifications: {}) {
-    this.specifications = newSpecifications;
-    if (this.specifications == null) {
-      this.specifications = {};
-      this.machines = [];
-    }
-    else {
-      this.machines = Object.keys(this.specifications).sort();
-
-      this.currentMachine = JSON.parse(localStorage.getItem("current_machine"));
-      if (this.currentMachine == null || this.specifications[this.currentMachine] === undefined) {
-        this.currentMachine = this.machines[0];
-      }
-    }
-    this.updateSpecifications()
-  }
-  
-  ngOnInit() {
-    this.myTitleService.setTitle('Specifications');
-    
-    this.changeSpecifications(JSON.parse(localStorage.getItem("specifications")));
-    
-
-    // this.specifications = {
-    //   "2619": {
-    //     "model": "Elekta Synergy",
-    //     "energy": [6, 9, 12],
-    //     "R50": {
-    //       6: 0,
-    //       9: 0,
-    //       12: 0
-    //     },
-    //     "applicator": ["10X10", "6X6"],
-    //     "ssd": [100]
-    //   },
-    //   "2694": {
-    //     "model": "Elekta Synergy",
-    //     "energy": [6, 9, 12],
-    //     "R50": {
-    //       6: 0,
-    //       9: 0,
-    //       12: 0
-    //     },
-    //     "applicator": ["14X14", "6X6"],
-    //     "ssd": [100]
-    //   },
-    //   "Another": {
-    //     "model": "Varian True Beam",
-    //     "energy": [6, 8, 10],
-    //     "R50": {
-    //       6: 0,
-    //       8: 0,
-    //       10: 0
-    //     },
-    //     "applicator": ["10X10", "6X6"],
-    //     "ssd": [100]
-    //   }
-    // }
-    
   }
 
 }
