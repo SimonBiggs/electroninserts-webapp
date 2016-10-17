@@ -16,7 +16,7 @@
 
     <mdl-textfield
       type="text"
-      label="X coordinates"
+      label="X coordinates (cm)"
       [(ngModel)]="textAreaX"
       (input)="inputTextAreaX($event.target.value)"
       rows=4
@@ -25,7 +25,7 @@
 
     <mdl-textfield
       type="text"
-      label="Y coordinates"
+      label="Y coordinates (cm)"
       [(ngModel)]="textAreaY"
       (input)="inputTextAreaY($event.target.value)"
       rows=4
@@ -60,8 +60,8 @@
       mdl-button mdl-button-type="raised"
       mdl-colored="primary" 
       mdl-ripple
-      [disabled]="true"
-      (click)="null">Predict Factor with Model        
+      [disabled]="!machineSettingsExist"
+      (click)="predictFactorWithModel()">Predict Factor with Model        
     </button>
 
     <div style="height:20px; width:20px;"></div>
@@ -71,15 +71,21 @@
       mdl-colored="primary" 
       mdl-ripple
       [disabled]="!machineSettingsExist || measuredFactor.value==null || measuredFactor.value==''"
-      (click)="null">Add Measured Factor to Model            
+      (click)="addMeasuredFactor(measuredFactor.value)">Add Measured Factor to Model            
     </button>
 
     <p *ngIf="!machineExists">
-      This machine ID does not exist within your provided machine specifications.
+      This machine ID does not exist within your 
+      <a routerLink="/specifications" routerLinkActive="active">
+        provided machine specifications.
+      </a>
     </p>
 
     <p *ngIf="!machineSettingsExist">
-      These specific machine settings do not exist within your provided machine specifications.
+      These specific machine settings do not exist within your       
+      <a routerLink="/specifications" routerLinkActive="active">
+        provided machine specifications.
+      </a>
     </p>
   </div>
 
@@ -93,7 +99,7 @@
       style="width:100%"></mdl-textfield>
     <mdl-textfield
       type="text"
-      label="Energy (Nominal)"
+      label="Energy (Nominal or MeV)"
       (input)="insertDataChange()"
       floating-label
       [(ngModel)]="insertData.energy"
@@ -131,12 +137,12 @@
       [(ngModel)]="insertData.factor"
       style="width:100%"></mdl-textfield>
 
-    <mdl-textfield
+    <!--<mdl-textfield
       type="text"
       label="Predicted Factor"
       floating-label
       [disabled]=true
-      style="width:100%"></mdl-textfield>
+      style="width:100%"></mdl-textfield>-->
 
   </div>
 

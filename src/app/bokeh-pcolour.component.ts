@@ -52,10 +52,17 @@ export class BokehPcolourComponent implements OnChanges, AfterViewInit, OnInit {
     data: this.scatter_data
   });
 
+  hover_width: string[] = [];
+  hover_length: string[] = [];
+  hover_factor: string[] = [];
+
   pcolour_data = {
     x: <number[]> [],
     y: <number[]> [],
     z: <number[]> [],
+    hover_width: <string[]> [],
+    hover_length: <string[]> [],
+    hover_factor: <string[]> [],
     c: <string[]> []
   }
   pcolour_source = new Bokeh.ColumnDataSource({
@@ -78,7 +85,6 @@ export class BokehPcolourComponent implements OnChanges, AfterViewInit, OnInit {
     location: [-6,0]
   })
 
-
   ngOnChanges() {
     this.scatter_data = {
       x: <number[]> this.scatter_x,
@@ -86,10 +92,33 @@ export class BokehPcolourComponent implements OnChanges, AfterViewInit, OnInit {
       z: <number[]> this.scatter_z,
       c: <string[]> this.scatter_c
     }
+    
+    if (this.pcolour_data.x != this.pcolour_x) {
+      this.hover_width = <string[]> []
+      for (let x of this.pcolour_x) {
+        this.hover_width.push(x.toFixed(1))
+      }
+    }
+    if (this.pcolour_data.y != this.pcolour_y) {
+      this.hover_length = <string[]> []
+      for (let y of this.pcolour_y) {
+        this.hover_length.push(y.toFixed(1))
+      }
+    }
+    if (this.pcolour_data.z != this.pcolour_z) {
+      this.hover_factor = <string[]> []
+      for (let z of this.pcolour_z) {
+        this.hover_factor.push((Math.round(z*10000)/10000).toFixed(4))
+      }
+    }
+      
     this.pcolour_data = {
       x: <number[]> this.pcolour_x,
       y: <number[]> this.pcolour_y,
       z: <number[]> this.pcolour_z,
+      hover_width: <string[]> this.hover_width,
+      hover_length: <string[]> this.hover_length,
+      hover_factor: <string[]> this.hover_factor,
       c: <string[]> this.pcolour_c
     }
 
@@ -143,11 +172,24 @@ export class BokehPcolourComponent implements OnChanges, AfterViewInit, OnInit {
   }
 
   ngAfterViewInit() {
-    this.fig.rect(
+    let pcolor = this.fig.rect(
       { field: 'x' }, { field: 'y' }, 0.1, 0.1, {
         source: this.pcolour_source,
         color:  { field: 'c' }
     });
+
+    let hover_tool = new Bokeh.HoverTool({
+      tooltips: [
+        ["Width", " @hover_width cm"],
+        ["Length", " @hover_length cm"],
+        ["Factor", " @hover_factor"]
+      ],
+      renderers: [
+        pcolor
+      ]
+    })
+    this.fig.add_tools(hover_tool)
+
     this.fig.circle(
       { field: 'x' }, { field: 'y' }, {
         source: this.scatter_source,

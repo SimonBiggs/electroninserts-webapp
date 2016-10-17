@@ -199,6 +199,7 @@ export class ModelComponent implements OnInit {
     }
     try {
       this.modelData.measurement.width = eval('[' + widthInput + ']')
+      this.saveModel()
     }
     catch(err) {
       console.log(err)
@@ -213,6 +214,7 @@ export class ModelComponent implements OnInit {
     }
     try {
       this.modelData.measurement.length = eval('[' + lengthInput + ']')
+      this.saveModel()
     }
     catch(err) {
       console.log(err)
@@ -227,6 +229,7 @@ export class ModelComponent implements OnInit {
     }
     try {
       this.modelData.measurement.factor = eval('[' + factorInput + ']')
+      this.saveModel()
     }
     catch(err) {
       console.log(err)
@@ -244,6 +247,7 @@ export class ModelComponent implements OnInit {
         this.modelData.model.length = modelResult.model_length;
         this.modelData.model.factor = modelResult.model_factor;
         this.dataInFlight = false
+        this.saveModel()
       })
   }
 

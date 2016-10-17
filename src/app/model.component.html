@@ -10,7 +10,7 @@
   </div>
   <div 
       *ngIf="this.machineList.length == 0"
-      mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--6-col-phone>
+      class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--6-col-phone">
     <p>
       You do not have any machines defined.
       To assign models to a specific machine configuration please 
@@ -125,23 +125,18 @@
       mdl-button mdl-button-type="raised" 
       mdl-colored="primary" 
       mdl-ripple
-      [disabled]="modelData.measurement.width.length < 8 || modelData.measurement.length.length < 8 || modelData.measurement.factor.length < 8 || dataInFlight"
+      [disabled]="modelData.measurement.width.length < 8 || modelData.measurement.length.length < 8 || modelData.measurement.factor.length < 8 || dataInFlight || modelData.measurement.factor.length != modelData.measurement.width.length || modelData.measurement.factor.length != modelData.measurement.length.length || modelData.measurement.width.length != modelData.measurement.length.length"
       (click)="basicServerSubmit()">Run Spline Model
     </button>
 
-    <button
+    <!--<button
       mdl-button mdl-button-type="raised" 
       mdl-colored="primary" 
       mdl-ripple
-      [disabled]="modelData.model.width.length == 0 || modelData.model.length.length == 0 || modelData.model.factor.length == 0"
+      [disabled]="modelData.measurement.width.length == 0 || modelData.measurement.length.length == 0|| modelData.measurement.factor.length == 0"
       (click)="saveModel()">Save model  
-    </button>
-  </div>
+    </button>-->
 
-  <div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet">
-  </div>
-
-  <div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet">
     <mdl-textfield
       type="text"
       label="Measured widths (cm)"
@@ -166,6 +161,17 @@
       rows=4
       floating-label
       [style.width]="'100%'"></mdl-textfield>
+  </div>
+
+  <div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet">
+    <p>
+      <font color="#d3d3d3">Will put a plot highlighting residuals and another highlighting percent prediction differences here.</font>
+    </p>
+
+  </div>
+
+  <div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet">
+
   </div>
 
 

@@ -1,5 +1,7 @@
 import { Component, OnInit, Input, ViewChild } from '@angular/core';
 
+import { Router } from '@angular/router';
+
 import { Parameterisation } from './parameterisation';
 import { InsertData } from './insert-data';
 
@@ -28,7 +30,7 @@ export class ParameteriseComponent implements OnInit {
   };
   machineSpecifications: {};
 
-  @ViewChild('jsonInput') jsonInputComponent: any;
+  // @ViewChild('jsonInput') jsonInputComponent: any;
 
   textAreaX: string;
   textAreaY: string;
@@ -63,7 +65,8 @@ export class ParameteriseComponent implements OnInit {
   constructor(
     private electronApiService: ElectronApiService,
     private dataService: DataService,
-    private myTitleService: TitleService
+    private myTitleService: TitleService,
+    private router: Router
   ) { }
 
   ngOnInit() {
@@ -81,6 +84,48 @@ export class ParameteriseComponent implements OnInit {
     this.checkMachineSettings()
 
     this.updateTextAreaValues()
+  }
+
+  createKey() {
+    let key = (
+      '{"machine":' + JSON.stringify(String(this.insertData.machine)) + ',' +
+      '"energy":' + JSON.stringify(Number(this.insertData.energy)) + ',' +
+      '"applicator":' + JSON.stringify(String(this.insertData.applicator)) + ',' +
+      '"ssd":' + JSON.stringify(Number(this.insertData.ssd)) +
+      '}')
+    return key
+  }
+
+  addMeasuredFactor(factor: number) {
+    let key = this.createKey()
+    let modelData = JSON.parse(localStorage.getItem(key))
+    modelData.model.width = <number[]> []
+    modelData.model.length = <number[]> []
+    modelData.model.factor = <number[]> []
+
+
+    modelData.measurement.width.push(this.insertData.parameterisation.width)
+    modelData.measurement.length.push(this.insertData.parameterisation.length)
+    modelData.measurement.factor.push(factor)
+
+    localStorage.setItem(key, JSON.stringify(modelData))
+
+    this.router.navigate(["/model"])
+
+  }
+
+  predictFactorWithModel() {
+    localStorage.setItem("current_machine", JSON.stringify(Number(
+      this.insertData.machine)))
+    localStorage.setItem("currentEnergy", JSON.stringify(Number(
+      this.insertData.energy)))
+    localStorage.setItem("currentApplicator", JSON.stringify(
+      this.insertData.applicator))
+    localStorage.setItem("currentSSD", JSON.stringify(Number(
+      this.insertData.ssd)))
+
+    this.router.navigate(["/model"])
+
   }
 
   updateTextAreaValues() {
@@ -151,7 +196,7 @@ export class ParameteriseComponent implements OnInit {
   loadDemoData(): void {
     let demoData = JSON.parse(JSON.stringify(DEMO_PARAMETERISE_INPUT));
     this.insertUpdated(demoData.insert);
-    this.jsonInputComponent.refresh = true;
+    // this.jsonInputComponent.refresh = true;
     this.insertData =  {
       machine: null,
       parameterisation: this.parameterisation,
