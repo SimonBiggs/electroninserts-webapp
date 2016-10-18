@@ -3,6 +3,9 @@ import { Component, OnInit } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 
+import { Angulartics2 } from 'angulartics2';
+import { Angulartics2GoogleAnalytics } from 'angulartics2/src/providers/angulartics2-google-analytics';
+
 import { ElectronApiService } from './electron-api.service';
 import { TitleService } from './title.service';
 
@@ -17,7 +20,9 @@ export class AppComponent implements OnInit {
     private electronApiService: ElectronApiService,
     private myTitleService: TitleService,
     private router: Router,
-    private title:Title
+    private title:Title,
+    angulartics2: Angulartics2, 
+    angulartics2GoogleAnalytics: Angulartics2GoogleAnalytics
   ) { 
     router.events
       .filter(event => event instanceof NavigationEnd)

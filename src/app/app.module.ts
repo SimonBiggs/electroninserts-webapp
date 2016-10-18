@@ -8,6 +8,10 @@ import { NgZone } from '@angular/core';
 
 import { routing } from './app.routing';
 
+import { Angulartics2 } from 'angulartics2';
+import { Angulartics2GoogleAnalytics } from 'angulartics2/src/providers/angulartics2-google-analytics';
+import { Angulartics2Module } from 'angulartics2';
+
 import { MdlModule } from 'angular2-mdl';
 
 import { AppComponent }  from './app.component';
@@ -42,7 +46,8 @@ import { LocalStorageService } from './local-storage.service';
      HttpModule,
      MdlModule,
     //  MaterialModule.forRoot(),
-     routing     
+     routing,
+     Angulartics2Module.forRoot()
   ],
   declarations: [
     AppComponent,
@@ -68,7 +73,7 @@ import { LocalStorageService } from './local-storage.service';
     TitleService,
     Title,
     LocalStorageService,
-    // WEB_STORAGE_PROVIDERS
+    Angulartics2GoogleAnalytics
   ],
   bootstrap: [
     AppComponent

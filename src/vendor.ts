@@ -23,3 +23,4 @@ import 'angular2-mdl';
 // import '@angular/material/core/theming/prebuilt/deeppurple-amber.css';
 
 import 'js-yaml';
+import 'angulartics2';
