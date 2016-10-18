@@ -11,6 +11,11 @@
       </a>
     </p>
 
+    <p>
+      Currently if an invalid insert shape is sent to the server this component will hang. 
+      You will need to reload this tab in that case.
+    </p>
+
     <mdl-textfield
       type="text"
       label="X coordinates (cm)"
@@ -31,6 +36,15 @@
 
     <div style="width:100%; height:30px"></div>
 
+    <button
+      mdl-button mdl-button-type="raised" 
+      mdl-colored="primary" 
+      mdl-ripple
+      [disabled]="submitDisabled"
+      (click)="loadDemoData()">Load Demo Data         
+    </button>
+
+    <div style="width:20px; height:30px"></div>
 
     <button
       mdl-button mdl-button-type="raised" 
@@ -40,13 +54,7 @@
       (click)="onSubmit()">Parameterise Insert          
     </button>
 
-    <div style="height:20px; width:20px;"></div>
 
-    <my-width-length-table
-      [width]="parameterisation.width"
-      [length]="parameterisation.length"
-      [enabled]="jsonValid">
-    </my-width-length-table>
 
     <div [hidden]="serverResponseValid">
       {{serverErrorMessage}}
@@ -62,11 +70,88 @@
       [enabled]="jsonValid">
     </my-plot>
 
+    <div style="height:20px; width:20px;"></div>
 
+    <my-width-length-table
+      [width]="parameterisation.width"
+      [length]="parameterisation.length"
+      [enabled]="jsonValid">
+    </my-width-length-table>
 
   </div>
   <div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet mdl-cell--6-col-phone">
     <h5>Send parameterisation to model</h5>
+    <p>
+      Once you have parameterised an insert shape you may either predict this insert with the model, or you may add the insert to the model.
+    </p>
+    <p>
+      To predict the insert with the model you must have filled in the correct machine ID, energy, applicator, and ssd in the text boxes below.
+      Furthermore these inputs need to correspond to one of the 
+      <a routerLink="/specifications" routerLinkActive="active">
+        machine specifications you have defined.
+      </a>
+    </p>
+    <p>
+      To append the current insert shape along with its measured factor to the model you must have filled in the corresponding machine ID, energy, applicator, ssd, and measured factor in the text boxes below.
+      Once again the machine specifications given need to correspond to one of the 
+      <a routerLink="/specifications" routerLinkActive="active">
+        machine specifications you have defined.
+      </a>
+    </p>
+
+
+    <mdl-textfield
+      type="text"
+      label="Machine (ID)"
+      (input)="insertDataChange()"
+      floating-label
+      [(ngModel)]="insertData.machine"
+      style="width:100%"></mdl-textfield>
+
+    <p *ngIf="!machineExists">
+      This machine ID does not exist within your 
+      <a routerLink="/specifications" routerLinkActive="active">
+        provided machine specifications.
+      </a>
+    </p>
+    <mdl-textfield
+      type="text"
+      label="Energy (Nominal or MeV)"
+      (input)="insertDataChange()"
+      floating-label
+      [(ngModel)]="insertData.energy"
+      style="width:100%"></mdl-textfield>
+    <mdl-textfield
+      type="text"
+      label="Applicator (ID)"
+      (input)="insertDataChange()"
+      floating-label
+      [(ngModel)]="insertData.applicator"
+      style="width:100%"></mdl-textfield>
+    <mdl-textfield
+      type="text"
+      label="SSD (cm)"
+      (input)="insertDataChange()"
+      floating-label
+      [(ngModel)]="insertData.ssd"
+      style="width:100%"></mdl-textfield>
+
+    <p *ngIf="!machineSettingsExist">
+      These specific machine settings do not exist within your       
+      <a routerLink="/specifications" routerLinkActive="active">
+        provided machine specifications.
+      </a>
+    </p>
+
+    <mdl-textfield #measuredFactor
+      type="text"
+      label="Measured Factor"
+      (input)="insertDataChange()"
+      floating-label
+      [(ngModel)]="insertData.factor"
+      style="width:100%"></mdl-textfield>
+
+
 
     <button
       mdl-button mdl-button-type="raised"
@@ -86,63 +171,6 @@
       (click)="addMeasuredFactor(measuredFactor.value)">Add Measured Factor to Model            
     </button>
 
-    <p *ngIf="!machineExists">
-      This machine ID does not exist within your 
-      <a routerLink="/specifications" routerLinkActive="active">
-        provided machine specifications.
-      </a>
-    </p>
-
-    <p *ngIf="!machineSettingsExist">
-      These specific machine settings do not exist within your       
-      <a routerLink="/specifications" routerLinkActive="active">
-        provided machine specifications.
-      </a>
-    </p>
-
-    <mdl-textfield
-      type="text"
-      label="Machine (ID)"
-      (input)="insertDataChange()"
-      floating-label
-      [(ngModel)]="insertData.machine"
-      style="width:100%"></mdl-textfield>
-    <mdl-textfield
-      type="text"
-      label="Energy (Nominal or MeV)"
-      (input)="insertDataChange()"
-      floating-label
-      [(ngModel)]="insertData.energy"
-      style="width:100%"></mdl-textfield>
-    <mdl-textfield
-      type="text"
-      label="R50 Beam Quality (cm)"
-      floating-label
-      [value]="R50"
-      [disabled]="true"
-      style="width:100%"></mdl-textfield>
-    <mdl-textfield
-      type="text"
-      label="Applicator (ID)"
-      (input)="insertDataChange()"
-      floating-label
-      [(ngModel)]="insertData.applicator"
-      style="width:100%"></mdl-textfield>
-    <mdl-textfield
-      type="text"
-      label="SSD (cm)"
-      (input)="insertDataChange()"
-      floating-label
-      [(ngModel)]="insertData.ssd"
-      style="width:100%"></mdl-textfield>
-
-    <mdl-textfield #measuredFactor
-      type="text"
-      label="Measured Factor"
-      (input)="insertDataChange()"
-      floating-label
-      [(ngModel)]="insertData.factor"
-      style="width:100%"></mdl-textfield>
   </div>
 
 

@@ -1,6 +1,6 @@
 <div class="mdl-grid">
   <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--6-col-phone">
-    <h5>Spline modelling</h5>
+    <h5>Description</h5>
     <p>
       Use this component to turn a set of at least 8 measured factors with corresponding equivalent widths and lengths into a spline model.
       These widths and lengths need to be determined using the parameterisation method employed within the 
@@ -9,7 +9,19 @@
       </a>
     </p>
     <p>
-      If you have previously employed the above parameterisation method to determine widths and lengths you may copy this data into the text boxes provided below.
+      You are free to edit the widths, lengths, and factors manually below, or have the       
+      <a routerLink="/parameterise" routerLinkActive="active">
+        parameterisation component
+      </a>
+      automatically add the measured factors to the correct model. Both work interchangably.
+      You may only add shapes via the 
+      <a routerLink="/parameterise" routerLinkActive="active">
+        parameterisation component
+      </a>
+      if machine ID, applicator, energy, ssd, and measured factor are filled in and they match a machine configuration defined within the 
+      <a routerLink="/specifications" routerLinkActive="active">
+        specifications component.
+      </a> 
     </p>
     <p>
       A spline model is only valid for a single machine configuration. 
@@ -25,21 +37,11 @@
   <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--6-col-phone">
     <h5>Choose machine configuration</h5>
     <p>
-      To edit the machine configurations available here please head on over to the
+      Here is where you select which machine configuration you wish to currently use / edit. 
+      You will only see options here if you have actually       
       <a routerLink="/specifications" routerLinkActive="active">
-        machine specifications component.
-      </a>
-    </p> 
-  </div>
-  <div 
-      *ngIf="this.machineList.length == 0"
-      class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--6-col-phone">
-    <p>
-      You do not have any machines defined.
-      To assign models to a specific machine configuration please 
-      <a routerLink="/specifications" routerLinkActive="active">
-        define your machine specifications
-      </a>
+        defined your machine configurations.
+      </a> 
     </p>
   </div>
 
@@ -130,10 +132,7 @@
     <div *ngIf="modelData.measurement.width.length == 0 || modelData.measurement.length.length == 0|| modelData.measurement.factor.length == 0">
       <p>
         <font color="red">There is currently no data for this combination.</font> If you wish to load some demo data to see the model in action press the "load demo data" button below.
-        If you wish to input your own data you may use the text boxes below or import a shape from the 
-        <a routerLink="/parameterise" routerLinkActive="active">
-          parameterisation component. 
-        </a>
+        To set this model up with your own data follow the instructions in the description at the top of this page.
       </p>
     </div>
     <button

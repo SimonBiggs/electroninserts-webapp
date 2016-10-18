@@ -220,6 +220,8 @@ export class ParameteriseComponent implements OnInit {
       ssd: null,
       factor: null
     }
+
+    this.updateTextAreaValues()
   }
 
   sleep(time: number) {
