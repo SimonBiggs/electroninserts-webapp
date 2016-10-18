@@ -52,7 +52,7 @@ const appRoutes: Routes = [
 ];
 
 export const appRoutingProviders: any[] = [
-
+  Angulartics2GoogleAnalytics
 ];
 
 export const routing: ModuleWithProviders = RouterModule.forRoot(appRoutes);
