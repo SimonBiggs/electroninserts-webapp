@@ -8,9 +8,8 @@
     <p>
       For testing purposes you can download a demo dicom file from <a href="/30x16x30_RandomElectronShapes.dcm">here</a>.
     </p>
-  <div>
-</div>
-<div class="mdl-grid">
+  </div>
+
   <div class="mdl-cell mdl-cell--6-col">
     <input type='file' (change)='openFile($event)'>
     <div *ngIf="dicomWarning">{{dicomWarning}}</div>
