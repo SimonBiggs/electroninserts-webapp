@@ -55,30 +55,31 @@
           <a routerLink="/parameterise" routerLinkActive="active">
             parameterise component
           </a>
-          press the "Load Demo Data" button and then press the "Paramteterise Insert" button to see the parameterisation algorithim in action
+          press the "Load Demo Data" button and then press the "Parameteterise Insert" button to see the parameterisation algorithim in action
         </li>
         <li>
           Within the 
           <a routerLink="/model" routerLinkActive="active">
             model component
           </a>
-          Press the "Load Demo Data" button and then press the "Run Spline Model" to see the spline model being created. 
+          press the "Load Demo Data" button and then press the "Run Spline Model" to see the spline model being created. 
           You can then use a mouse on a desktop computer to hover over the model and view the relevant values.
         </li>
       </ul>
 
-      <h5>To impliment in your centre</h5>
+      <h5>To implement in your centre</h5>
       <p>
-        To impliment this web app in your centre you need to do the following:
+        To implement this web app in your centre you need to do the following:
       </p>
       <ul>
-        <li>      
+        <li>  
+          Specify the machine models and the corresponding applicators, energies, and ssds within the    
           <a routerLink="/specifications" routerLinkActive="active">
-            Specify the machine models and the corresponding applicators, energies, and ssds 
+            machine specification component.
           </a>
         </li>
         <li> 
-          For a given machine, applicator, energy, and ssd measure at least 8 electron insert factors defined according to TG 25.   
+          Collate / measure your electron insert factor measuremens. These factors are to measured in accordance to TG 25.   
         </li>
         <li>
           If the insert shapes are ellipses, you may directly input the ellipse widths and lengths as projected to the isocentre within the 
@@ -87,7 +88,7 @@
           </a>
         </li>
         <li>
-          If you know the x and y coordinates of your insert shape determine the equivalent ellipse widths and lengths by inputting x and y coordinates as defined at isocentre within the 
+          If the insert shape is a generic shape or you know the x and y coordinates of your insert then determine the equivalent ellipse widths and lengths by inputting x and y coordinates as defined at isocentre within the 
           <a routerLink="/parameterise" routerLinkActive="active">
             parameterisation component.
           </a>          
@@ -99,7 +100,7 @@
           </a>          
         </li>
         <li>
-          Once you have widths, lengths, and measured factors these may be appended to the relevant machine configuration within the 
+          Once you have the corresponding equivalent ellipse widths and lengths for your measured factors these may be appended to the relevant machine configuration within the 
           <a routerLink="/model" routerLinkActive="active">
             model component
           </a>
@@ -113,7 +114,7 @@
         </li>
       </ul>
 
-      <h5>To use the web app after it has been implimented</h5>
+      <h5>To use the web app after it has been implemented</h5>
       <ul>
         <li>
           Export the patient plan to dicom and then read the insert coordinates from the dicom file using the
