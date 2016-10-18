@@ -18,7 +18,7 @@
 
     <mdl-textfield
       type="text"
-      label="X coordinates (cm)"
+      label="X coordinates (cm @iso)"
       [(ngModel)]="textAreaX"
       (input)="inputTextAreaX($event.target.value)"
       rows=4
@@ -27,7 +27,7 @@
 
     <mdl-textfield
       type="text"
-      label="Y coordinates (cm)"
+      label="Y coordinates (cm @iso)"
       [(ngModel)]="textAreaY"
       (input)="inputTextAreaY($event.target.value)"
       rows=4
@@ -145,7 +145,7 @@
 
     <mdl-textfield #measuredFactor
       type="text"
-      label="Measured Factor"
+      label="Measured insert factor (as per TG 25)"
       (input)="insertDataChange()"
       floating-label
       [(ngModel)]="insertData.factor"

@@ -166,7 +166,7 @@
 
     <mdl-textfield
       type="text"
-      label="Measured widths (cm)"
+      label="Equivalent ellipse widths (cm @iso)"
       [(ngModel)]="this.initialMeasurementWidth"
       (input)="updateMeasurementWidth($event.target.value)"
       rows=4
@@ -174,7 +174,7 @@
       [style.width]="'100%'"></mdl-textfield>
     <mdl-textfield
       type="text"
-      label="Measured lengths (cm)"
+      label="Equivalent ellipse lengths (cm @iso)"
       [(ngModel)]="this.initialMeasurementLength"
       (input)="updateMeasurementLength($event.target.value)"
       rows=4
@@ -182,7 +182,7 @@
       [style.width]="'100%'"></mdl-textfield>
     <mdl-textfield
       type="text"
-      label="Measured factor"
+      label="Measured insert factor (as per TG 25)"
       [(ngModel)]="this.initialMeasurementFactor"
       (input)="updateMeasurementFactor($event.target.value)"
       rows=4
