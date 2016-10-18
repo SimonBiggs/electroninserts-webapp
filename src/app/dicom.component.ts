@@ -202,63 +202,68 @@ export class DicomComponent implements OnInit {
     let dicomPrint = window['dicomData'];
     let dicomDict = this.convertDicomDumpToDict(dicomPrint);
 
-    console.log(dicomDict)
+    // console.log(dicomDict)
 
     this.insertList = [];
 
     let beamSequence = dicomDict["(300a,00b0)"];
     for (let beam of beamSequence) {
-      let blockData = beam["(300a,00f4)"][0]["(300a,0106)"];
-      let coordinates = this.convertBlockDataToCoords(blockData);
+      let temp = beam["(300a,00f4)"]
 
-      let applicator = <string> null
-      try {
-        applicator = this.dicomPullString(
-          beam["(300a,0107)"][0]["(300a,0108)"]);
-      }
-      catch(err) {
-        applicator = null
-        console.log(err)
+      if (temp != undefined) {
+        let blockData = beam["(300a,00f4)"][0]["(300a,0106)"];
+        let coordinates = this.convertBlockDataToCoords(blockData);
+
+        let applicator = <string> null
+        try {
+          applicator = this.dicomPullString(
+            beam["(300a,0107)"][0]["(300a,0108)"]);
+        }
+        catch(err) {
+          applicator = null
+          console.log(err)
+        }
+
+        let energy = <number> null
+        try {
+          energy = this.dicomPullNumber(
+            beam["(300a,0111)"][0]["(300a,0114)"]);
+        }
+        catch(err) {
+          energy = null
+          console.log(err)
+        }
+
+        let ssd = <number> null
+        try {
+          ssd = this.dicomPullNumber(
+            beam["(300a,0111)"][0]["(300a,0130)"]) / 10;
+        }
+        catch(err) {
+          ssd = null
+          console.log(err)
+        }
+        
+        let machine = <string> null
+        try {
+          machine = this.dicomPullString(
+          beam["(300a,00b2)"]);
+        }
+        catch(err) {
+          machine = null
+          console.log(err)
+        }
+
+        let insert = {
+          "machine": machine,
+          "coordinates": coordinates,
+          "applicator": applicator.toLowerCase(),
+          "energy": energy,
+          "ssd": ssd
+        }
+        this.insertList.push(insert)
       }
 
-      let energy = <number> null
-      try {
-        energy = this.dicomPullNumber(
-          beam["(300a,0111)"][0]["(300a,0114)"]);
-      }
-      catch(err) {
-        energy = null
-        console.log(err)
-      }
-
-      let ssd = <number> null
-      try {
-        ssd = this.dicomPullNumber(
-          beam["(300a,0111)"][0]["(300a,0130)"]) / 10;
-      }
-      catch(err) {
-        ssd = null
-        console.log(err)
-      }
-      
-      let machine = <string> null
-      try {
-        machine = this.dicomPullString(
-        beam["(300a,00b2)"]);
-      }
-      catch(err) {
-        machine = null
-        console.log(err)
-      }
-
-      let insert = {
-        "machine": machine,
-        "coordinates": coordinates,
-        "applicator": applicator.toLowerCase(),
-        "energy": energy,
-        "ssd": ssd
-      }
-      this.insertList.push(insert)
     }
     localStorage.setItem('dicom_insertList', JSON.stringify(this.insertList));
   }
