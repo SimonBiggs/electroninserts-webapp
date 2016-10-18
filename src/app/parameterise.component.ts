@@ -204,7 +204,7 @@ export class ParameteriseComponent implements OnInit {
       this.insertData['parameterisation'] = this.parameterisation;
     }
     else {
-      this.loadDemoData();
+      // this.loadDemoData();
     }
   }
 
@@ -217,7 +217,8 @@ export class ParameteriseComponent implements OnInit {
       parameterisation: this.parameterisation,
       energy: null,
       applicator: null,
-      ssd: null
+      ssd: null,
+      factor: null
     }
   }
 

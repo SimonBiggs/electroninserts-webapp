@@ -38,7 +38,8 @@ export class DicomComponent implements OnInit {
     parameterisation: this.parameterisation,
     energy: null,
     applicator: null,
-    ssd: null
+    ssd: null,
+    factor: null
   }
 
   dicomWarning: string;
@@ -65,6 +66,9 @@ export class DicomComponent implements OnInit {
     let insertListString = localStorage.getItem('dicom_insertList')
     if (insertListString) {
       this.insertList = JSON.parse(insertListString);
+    }
+    else {
+      this.insertList = []
     }
 
     // localStorage.removeItem('dicomPrint');
@@ -198,6 +202,8 @@ export class DicomComponent implements OnInit {
     let dicomPrint = window['dicomData'];
     let dicomDict = this.convertDicomDumpToDict(dicomPrint);
 
+    console.log(dicomDict)
+
     this.insertList = [];
 
     let beamSequence = dicomDict["(300a,00b0)"];
@@ -205,14 +211,45 @@ export class DicomComponent implements OnInit {
       let blockData = beam["(300a,00f4)"][0]["(300a,0106)"];
       let coordinates = this.convertBlockDataToCoords(blockData);
 
-      let applicator = this.dicomPullString(
-        beam["(300a,0107)"][0]["(300a,0108)"]);
-      let energy = this.dicomPullNumber(
-        beam["(300a,0111)"][0]["(300a,0114)"]);
-      let ssd = this.dicomPullNumber(
-        beam["(300a,0111)"][0]["(300a,0130)"]) / 10;
-      let machine = this.dicomPullString(
+      let applicator = <string> null
+      try {
+        applicator = this.dicomPullString(
+          beam["(300a,0107)"][0]["(300a,0108)"]);
+      }
+      catch(err) {
+        applicator = null
+        console.log(err)
+      }
+
+      let energy = <number> null
+      try {
+        energy = this.dicomPullNumber(
+          beam["(300a,0111)"][0]["(300a,0114)"]);
+      }
+      catch(err) {
+        energy = null
+        console.log(err)
+      }
+
+      let ssd = <number> null
+      try {
+        ssd = this.dicomPullNumber(
+          beam["(300a,0111)"][0]["(300a,0130)"]) / 10;
+      }
+      catch(err) {
+        ssd = null
+        console.log(err)
+      }
+      
+      let machine = <string> null
+      try {
+        machine = this.dicomPullString(
         beam["(300a,00b2)"]);
+      }
+      catch(err) {
+        machine = null
+        console.log(err)
+      }
 
       let insert = {
         "machine": machine,
