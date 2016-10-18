@@ -1,5 +1,28 @@
 <div class="mdl-grid">
   <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--6-col-phone">
+    <h5>Spline modelling</h5>
+    <p>
+      Use this component to turn a set of at least 8 measured factors with corresponding equivalent widths and lengths into a spline model.
+      These widths and lengths need to be determined using the parameterisation method employed within the 
+      <a routerLink="/parameterise" routerLinkActive="active">
+        parameterisation component.
+      </a>
+    </p>
+    <p>
+      If you have previously employed the above parameterisation method to determine widths and lengths you may copy this data into the text boxes provided below.
+    </p>
+    <p>
+      A spline model is only valid for a single machine configuration. 
+      Therefore each machine, applicator, energy, ssd has its own model. 
+      Using the machine configuration section below you can change between the configurations.
+      This will only work if you have already
+      <a routerLink="/specifications" routerLinkActive="active">
+        defined your machine configurations.
+      </a> 
+    </p>
+
+  </div>
+  <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--6-col-phone">
     <h5>Choose machine configuration</h5>
     <p>
       To edit the machine configurations available here please head on over to the
