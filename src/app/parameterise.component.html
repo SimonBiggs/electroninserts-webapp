@@ -170,6 +170,13 @@
       [disabled]="!ableToAddDataToModel || !machineSettingsExist || measuredFactor.value==null || measuredFactor.value=='' || submitDisabled || !xInputValid || !yInputValid || !equalLengths"
       (click)="addMeasuredFactor(measuredFactor.value)">Add Measured Factor to Model            
     </button>
+
+    <p *ngIf="dataAlreadyExistsOnModel && !submitDisabled && xInputValid && yInputValid && equalLengths && machineSettingsExist">
+      This width, length, and measured factor combination exists within the model.       
+      <a routerLink="/model" routerLinkActive="active">
+        View the model.
+      </a>
+    </p>
     
     <div style="height:20px; width:20px;"></div>
 
@@ -192,13 +199,6 @@
       </font>
     </p>
 
-
-    <p *ngIf="dataAlreadyExistsOnModel && !submitDisabled && xInputValid && yInputValid && equalLengths && machineSettingsExist">
-      This width, length, and measured factor combination exists within the model.       
-      <a routerLink="/model" routerLinkActive="active">
-        View the model.
-      </a>
-    </p>
 
 
   </div>
