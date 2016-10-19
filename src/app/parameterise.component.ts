@@ -54,12 +54,15 @@ export class ParameteriseComponent implements OnInit {
     energy: null,
     applicator: null,
     ssd: null,
-    factor: null
+    factor: <number> null
   }
 
   machineExists: boolean = false;
   machineSettingsExist: boolean = false;
   modelExists: boolean = false;
+
+  ableToAddDataToModel: boolean = false;
+  dataAlreadyExistsOnModel: boolean = false;
 
   R50: number;
 
@@ -83,6 +86,7 @@ export class ParameteriseComponent implements OnInit {
       this.machineSpecifications = {};
     }
     this.checkMachineSettings()
+    this.checkIfCanBeSentToModel()
 
     this.updateTextAreaValues()
   }
@@ -98,6 +102,9 @@ export class ParameteriseComponent implements OnInit {
   }
 
   addMeasuredFactor(factor: number) {
+    this.dataAlreadyExistsOnModel = true
+    this.ableToAddDataToModel = false
+
     let key = this.createKey()
     let modelData = JSON.parse(localStorage.getItem(key))
     if (modelData == null) {
@@ -119,13 +126,20 @@ export class ParameteriseComponent implements OnInit {
     modelData.model.factor = <number[]> []
 
 
-    modelData.measurement.width.push(this.insertData.parameterisation.width)
-    modelData.measurement.length.push(this.insertData.parameterisation.length)
-    modelData.measurement.factor.push(factor)
+    modelData.measurement.width.push(Number(this.insertData.parameterisation.width))
+    modelData.measurement.length.push(Number(this.insertData.parameterisation.length))
+    modelData.measurement.factor.push(Number(factor))
 
     localStorage.setItem(key, JSON.stringify(modelData))
 
-    this.changeToModel()
+    localStorage.setItem("current_machine", JSON.stringify(Number(
+      this.insertData.machine)))
+    localStorage.setItem("currentEnergy", JSON.stringify(Number(
+      this.insertData.energy)))
+    localStorage.setItem("currentApplicator", JSON.stringify(
+      this.insertData.applicator))
+    localStorage.setItem("currentSSD", JSON.stringify(Number(
+      this.insertData.ssd)))
 
   }
 
@@ -166,6 +180,7 @@ export class ParameteriseComponent implements OnInit {
   }
 
   inputTextAreaX(xInput: string) {
+    this.dataAlreadyExistsOnModel = false
     try {
       this.parameterisation.insert.x = eval(
         '[' + xInput.replace(/[,\s]+/g,', ')  + ']')
@@ -180,6 +195,7 @@ export class ParameteriseComponent implements OnInit {
   }
 
   inputTextAreaY(yInput: string) {
+    this.dataAlreadyExistsOnModel = false
     try {
       this.parameterisation.insert.y = eval(
         '[' + yInput.replace(/[,\s]+/g,', ')  + ']')
@@ -248,11 +264,42 @@ export class ParameteriseComponent implements OnInit {
             JSON.stringify(this.parameterisation)
           );
           this.saveInsertData()
+          this.checkIfCanBeSentToModel()
         }
         else {
           this.sleep(500).then(() => this.recursiveServerSubmit());
         }
       })
+  }
+
+  checkIfCanBeSentToModel() {
+    this.ableToAddDataToModel = false;
+    this.dataAlreadyExistsOnModel = false;
+    if (this.machineSettingsExist) {
+      let key = this.createKey()
+      let modelData = JSON.parse(localStorage.getItem(key))
+
+      if (modelData == null) {
+        this.ableToAddDataToModel == true
+      }
+      else if (modelData.measurement == null) {
+        this.ableToAddDataToModel == true
+      }
+      else {
+        if (this.parameterisation.width != null && this.parameterisation.length != null && this.insertData.factor != null) {
+          if (
+              modelData.measurement.width.indexOf(Number(this.parameterisation.width)) > -1 &&
+              modelData.measurement.length.indexOf(Number(this.parameterisation.length)) > -1 &&
+              modelData.measurement.factor.indexOf(Number(this.insertData.factor)) > -1) {
+            this.dataAlreadyExistsOnModel = true
+          }
+          else {
+            this.dataAlreadyExistsOnModel = false
+            this.ableToAddDataToModel = true
+          }
+        }
+      }
+    }
   }
 
   checkMachineSettings() {

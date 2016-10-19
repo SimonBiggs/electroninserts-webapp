@@ -11,11 +11,6 @@
       </a>
     </p>
 
-    <p>
-      Currently if an invalid insert shape is sent to the server this component will hang. 
-      You will need to reload this tab in that case.
-    </p>
-
     <mdl-textfield
       type="text"
       label="X coordinates (cm @iso)"
@@ -50,7 +45,7 @@
       mdl-button mdl-button-type="raised" 
       mdl-colored="primary" 
       mdl-ripple
-      [disabled]="submitDisabled"
+      [disabled]="submitDisabled || !jsonValid"
       (click)="onSubmit()">Parameterise Insert          
     </button>
 
@@ -157,7 +152,7 @@
       mdl-button mdl-button-type="raised"
       mdl-colored="primary" 
       mdl-ripple
-      [disabled]="!machineSettingsExist"
+      [disabled]="!machineSettingsExist || submitDisabled || !jsonValid || parameterisation.width == null || parameterisation.length == null"
       (click)="changeToModel()">Predict Factor with Model        
     </button>
 
@@ -167,18 +162,25 @@
       mdl-button mdl-button-type="raised" 
       mdl-colored="primary" 
       mdl-ripple
-      [disabled]="!machineSettingsExist || measuredFactor.value==null || measuredFactor.value==''"
+      [disabled]="!ableToAddDataToModel || !machineSettingsExist || measuredFactor.value==null || measuredFactor.value=='' || submitDisabled || !jsonValid"
       (click)="addMeasuredFactor(measuredFactor.value)">Add Measured Factor to Model            
     </button>
+
+    <p *ngIf="dataAlreadyExistsOnModel && !submitDisabled && jsonValid && machineSettingsExist">
+      This width, length, and measured factor combination exists within the model.       
+      <a routerLink="/model" routerLinkActive="active">
+        View the model.
+      </a>
+    </p>
+
 
   </div>
 
 
 
   <div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet">
-    <h5>Custom parameterisation server</h5>
-    <p>Change the following address to use your own
-      parameterisation server. The default is: <br>
+    <h5>Change parameterisation server (optional)</h5>
+    <p>Only change the following address if you wish to use your own server. This is not required to be edited. The default server is: <br>
       <a>http://electronapi.simonbiggs.net/parameterise</a>       
     </p>
     <mdl-textfield
