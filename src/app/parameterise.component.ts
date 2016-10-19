@@ -361,6 +361,7 @@ export class ParameteriseComponent implements OnInit {
       "last_insertData", JSON.stringify(this.insertData)
     );
     this.checkMachineSettings()
+    this.checkIfCanBeSentToModel()
   }
 
   onSubmit() {
