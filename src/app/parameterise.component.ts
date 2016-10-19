@@ -306,10 +306,10 @@ export class ParameteriseComponent implements OnInit {
       let modelData = JSON.parse(localStorage.getItem(key))
 
       if (modelData == null) {
-        this.ableToAddDataToModel == true
+        this.ableToAddDataToModel = true
       }
       else if (modelData.measurement == null) {
-        this.ableToAddDataToModel == true
+        this.ableToAddDataToModel = true
       }
       else {
         if (this.parameterisation.width != null && this.parameterisation.length != null && this.insertData.factor != null) {
@@ -326,6 +326,7 @@ export class ParameteriseComponent implements OnInit {
         }
       }
     }
+    // console.log(this.ableToAddDataToModel)
   }
 
   checkMachineSettings() {
