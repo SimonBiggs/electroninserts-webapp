@@ -5,10 +5,17 @@
 
     <p>
       To begin shape parameterisation you need to define your insert shape. 
-      This can be done by editing the x and y within the text boxes below or by using a shape       
+      This can be done by editing the x and y coordinates within the text boxes below or by using a shape       
       <a routerLink="/dicom" routerLinkActive="active">
         pulled from a dicom file.
       </a>
+    </p>
+
+    <p>
+      Coordinates can be separated by commas (,), semicolons (;), spaces, tabs, or new lines.
+      If you have multiple commas or spaces this will count as only one separator. 
+      This web app should handle copying and pasting from a range of sources (including excel).
+      Number inputs can only contain the characters 0-9, a minus sign (-) and decimal points (.).
     </p>
 
     <mdl-textfield
@@ -18,6 +25,7 @@
       (input)="inputTextAreaX($event.target.value)"
       rows=4
       floating-label
+      [disabled]="dataInFlight"
       [style.width]="'100%'"></mdl-textfield>
 
     <mdl-textfield
@@ -27,7 +35,16 @@
       (input)="inputTextAreaY($event.target.value)"
       rows=4
       floating-label
+      [disabled]="dataInFlight"
       [style.width]="'100%'"></mdl-textfield>
+
+    <p *ngIf="!equalLengths">
+      The x and y coordinate lengths need to be the same as each other.
+    </p>
+
+    <p *ngIf="this.parameterisation.insert.x.length < 3 || this.parameterisation.insert.y.length < 3">
+      You need at least 3 data points to create an insert shape.
+    </p>
 
     <div style="width:100%; height:30px"></div>
 
@@ -45,7 +62,7 @@
       mdl-button mdl-button-type="raised" 
       mdl-colored="primary" 
       mdl-ripple
-      [disabled]="submitDisabled || !jsonValid"
+      [disabled]="submitDisabled || !xInputValid || !yInputValid || !equalLengths"
       (click)="onSubmit()">Parameterise Insert          
     </button>
 
@@ -62,7 +79,7 @@
       [insert_y]="parameterisation.insert.y"
       [circle]="parameterisation.circle"
       [ellipse]="parameterisation.ellipse"
-      [enabled]="jsonValid">
+      [enabled]="xInputValid && yInputValid && equalLengths">
     </my-plot>
 
     <div style="height:20px; width:20px;"></div>
@@ -70,7 +87,7 @@
     <my-width-length-table
       [width]="parameterisation.width"
       [length]="parameterisation.length"
-      [enabled]="jsonValid">
+      [enabled]="xInputValid && yInputValid && equalLengths">
     </my-width-length-table>
 
   </div>
@@ -146,27 +163,37 @@
       [(ngModel)]="insertData.factor"
       style="width:100%"></mdl-textfield>
 
+    <button
+      mdl-button mdl-button-type="raised" 
+      mdl-colored="primary" 
+      mdl-ripple
+      [disabled]="!ableToAddDataToModel || !machineSettingsExist || measuredFactor.value==null || measuredFactor.value=='' || submitDisabled || !xInputValid || !yInputValid || !equalLengths"
+      (click)="addMeasuredFactor(measuredFactor.value)">Add Measured Factor to Model            
+    </button>
+    
+    <div style="height:20px; width:20px;"></div>
+
+
 
 
     <button
       mdl-button mdl-button-type="raised"
       mdl-colored="primary" 
       mdl-ripple
-      [disabled]="!machineSettingsExist || submitDisabled || !jsonValid || parameterisation.width == null || parameterisation.length == null"
+      [disabled]="!machineSettingsExist || submitDisabled || !xInputValid || !yInputValid || !equalLengths || parameterisation.width == null || parameterisation.length == null"
       (click)="changeToModel()">Predict Factor with Model        
     </button>
 
-    <div style="height:20px; width:20px;"></div>
+    
+    <p>
+      <font color="#d3d3d3">
+        Currently the "Predict Factor with Model" button just changes the active machine specifications to match that given above and then takes you to the model component.
+        A future implementation is to have this button plot your insert shape on the model plot and display the parameterisation.
+      </font>
+    </p>
 
-    <button
-      mdl-button mdl-button-type="raised" 
-      mdl-colored="primary" 
-      mdl-ripple
-      [disabled]="!ableToAddDataToModel || !machineSettingsExist || measuredFactor.value==null || measuredFactor.value=='' || submitDisabled || !jsonValid"
-      (click)="addMeasuredFactor(measuredFactor.value)">Add Measured Factor to Model            
-    </button>
 
-    <p *ngIf="dataAlreadyExistsOnModel && !submitDisabled && jsonValid && machineSettingsExist">
+    <p *ngIf="dataAlreadyExistsOnModel && !submitDisabled && xInputValid && yInputValid && equalLengths && machineSettingsExist">
       This width, length, and measured factor combination exists within the model.       
       <a routerLink="/model" routerLinkActive="active">
         View the model.
@@ -179,7 +206,7 @@
 
 
   <div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet">
-    <h5>Change parameterisation server (optional)</h5>
+    <h5>Change parameterisation server url (optional)</h5>
     <p>Only change the following address if you wish to use your own server. This is not required to be edited. The default server is: <br>
       <a>http://electronapi.simonbiggs.net/parameterise</a>       
     </p>

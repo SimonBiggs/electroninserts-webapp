@@ -36,6 +36,9 @@ export class ParameteriseComponent implements OnInit {
   textAreaY: string;
 
   jsonValid: boolean = true;
+  xInputValid: boolean = true;
+  yInputValid: boolean = true;
+  equalLengths: boolean = true;
 
   serverResponseValid: boolean = true;
   serverErrorMessage: string;
@@ -63,6 +66,8 @@ export class ParameteriseComponent implements OnInit {
 
   ableToAddDataToModel: boolean = false;
   dataAlreadyExistsOnModel: boolean = false;
+
+  serverError: boolean = false;
 
   R50: number;
 
@@ -164,12 +169,12 @@ export class ParameteriseComponent implements OnInit {
       .replace(/,/g,', ')
   }
 
-  checkIfInsertValid() {
+  checkIfEqualLengths() {
     if (this.parameterisation.insert.x.length == this.parameterisation.insert.y.length) {
-      this.jsonValid = true
+      this.equalLengths = true
     }
     else {
-      this.jsonValid = false
+      this.equalLengths = false
     }
   }
 
@@ -179,33 +184,49 @@ export class ParameteriseComponent implements OnInit {
       "last_insertData", JSON.stringify(this.insertData))
   }
 
+  validateInput(input: string): boolean {
+    return /^(-?\d*(\.\d+)?[,;\s]+)*-?\d*(\.\d+)?[,;\s]*$/.test(input)
+  }
+
   inputTextAreaX(xInput: string) {
-    this.dataAlreadyExistsOnModel = false
     try {
-      this.parameterisation.insert.x = eval(
-        '[' + xInput.replace(/[,\s]+/g,', ')  + ']')
-      this.insertUpdated(this.parameterisation.insert)
-      this.checkIfInsertValid()
-      this.saveInsertData()
+      if (this.validateInput(xInput)) {
+        this.parameterisation.insert.x = eval(
+          '[' + xInput.replace(/[,;\s]+/g,', ') + ']')
+        this.insertUpdated(this.parameterisation.insert)        
+        this.xInputValid = true
+        this.checkIfEqualLengths()
+        this.saveInsertData()
+        this.checkIfCanBeSentToModel()
+      }
+      else {
+        this.xInputValid = false
+      }
     }
     catch(err) {
       console.log(err)
-      this.jsonValid = false
+      this.xInputValid = false
     }
   }
 
   inputTextAreaY(yInput: string) {
-    this.dataAlreadyExistsOnModel = false
     try {
-      this.parameterisation.insert.y = eval(
-        '[' + yInput.replace(/[,\s]+/g,', ')  + ']')
-      this.insertUpdated(this.parameterisation.insert)
-      this.checkIfInsertValid()
-      this.saveInsertData()
+      if (this.validateInput(yInput)) {
+        this.parameterisation.insert.y = eval(
+          '[' + yInput.replace(/[,;\s]+/g,', ')  + ']')
+        this.insertUpdated(this.parameterisation.insert)
+        this.yInputValid = true
+        this.checkIfEqualLengths()
+        this.saveInsertData()
+        this.checkIfCanBeSentToModel()
+      }
+      else {
+        this.yInputValid = false
+      }
     }
     catch(err) {
       console.log(err)
-      this.jsonValid = false
+      this.yInputValid = false
     }
   }
 
@@ -245,6 +266,8 @@ export class ParameteriseComponent implements OnInit {
   }
 
   recursiveServerSubmit() {
+    this.serverError = false
+
     this.electronApiService.sendToServer(
       this.parameteriseURL,
       JSON.stringify(this.parameterisation.insert)
@@ -265,6 +288,9 @@ export class ParameteriseComponent implements OnInit {
           );
           this.saveInsertData()
           this.checkIfCanBeSentToModel()
+          if (this.parameterisation.width == null) {
+            this.serverError = true
+          }
         }
         else {
           this.sleep(500).then(() => this.recursiveServerSubmit());

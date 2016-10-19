@@ -42,6 +42,8 @@ export class ModelComponent implements OnInit {
 
   dataInFlight: boolean = false
 
+  lengthSmallerThanWidth: boolean = false
+
   @ViewChild('plotContainer') plotContainer: any;
 
   constructor(
@@ -87,6 +89,7 @@ export class ModelComponent implements OnInit {
     }
 
     this.loadMeasuredData()
+    this.checkLengthSmallerThanWidth()
   }
 
   createKey() {
@@ -168,6 +171,7 @@ export class ModelComponent implements OnInit {
     localStorage.setItem("currentSSD", JSON.stringify(Number(this.currentSSD)))
 
     this.loadMeasuredData()
+    this.checkLengthSmallerThanWidth()
   }
 
   updateEnergy(newCurrentEnergy: number) {
@@ -175,6 +179,7 @@ export class ModelComponent implements OnInit {
     localStorage.setItem("currentEnergy", JSON.stringify(Number(newCurrentEnergy)))
 
     this.loadMeasuredData()
+    this.checkLengthSmallerThanWidth()
   }
 
   updateApplicator(newCurrentApplicator: string) {
@@ -182,6 +187,7 @@ export class ModelComponent implements OnInit {
     localStorage.setItem("currentApplicator", JSON.stringify(newCurrentApplicator))
 
     this.loadMeasuredData()
+    this.checkLengthSmallerThanWidth()
   }
 
   updateSSD(newCurrentSSD: number) {
@@ -189,47 +195,79 @@ export class ModelComponent implements OnInit {
     localStorage.setItem("currentSSD", JSON.stringify(Number(newCurrentSSD)))
 
     this.loadMeasuredData()
+    this.checkLengthSmallerThanWidth()
   }
 
+  checkLengthSmallerThanWidth() {
+    this.lengthSmallerThanWidth = false
+    for (let i = 0; i < this.modelData.measurement.width.length; i++) { 
+        if (this.modelData.measurement.width[i] > this.modelData.measurement.length[i]) {
+          this.lengthSmallerThanWidth = true
+          return
+        }
+    }
+  }
+
+  validateInput(input: string): boolean {
+    return /^(-?\d*(\.\d+)?[,;\s]+)*-?\d*(\.\d+)?[,;\s]*$/.test(input)
+  }
+
+  widthInputValid: boolean = true
   updateMeasurementWidth(widthInput: string) {
+    this.widthInputValid = false
     this.modelData.model = {
       width: <number[]> [],
       length: <number[]> [],
       factor: <number[]> []
     }
     try {
-      this.modelData.measurement.width = eval('[' + widthInput.replace(/[,\s]+/g,', ') + ']')
-      this.saveModel()
+      if (this.validateInput(widthInput)) {
+        this.modelData.measurement.width = eval('[' + widthInput.replace(/[,;\s]+/g,', ') + ']')
+        this.saveModel()
+        this.widthInputValid = true
+        this.checkLengthSmallerThanWidth()
+      }
     }
     catch(err) {
       console.log(err)
     }  
   }
 
+  lengthInputValid: boolean = true
   updateMeasurementLength(lengthInput: string) {
+    this.lengthInputValid = false
     this.modelData.model = {
       width: <number[]> [],
       length: <number[]> [],
       factor: <number[]> []
     }
     try {
-      this.modelData.measurement.length = eval('[' + lengthInput.replace(/[,\s]+/g,', ')  + ']')
-      this.saveModel()
+      if (this.validateInput(lengthInput)) {
+        this.modelData.measurement.length = eval('[' + lengthInput.replace(/[,;\s]+/g,', ')  + ']')
+        this.saveModel()
+        this.lengthInputValid = true
+        this.checkLengthSmallerThanWidth()
+      }
     }
     catch(err) {
       console.log(err)
     }  
   }
 
+  factorInputValid: boolean = true
   updateMeasurementFactor(factorInput: string) {
+    this.factorInputValid = false
     this.modelData.model = {
       width: <number[]> [],
       length: <number[]> [],
       factor: <number[]> []
     }
     try {
-      this.modelData.measurement.factor = eval('[' + factorInput.replace(/[,\s]+/g,', ')  + ']')
-      this.saveModel()
+      if (this.validateInput(factorInput)) {
+        this.modelData.measurement.factor = eval('[' + factorInput.replace(/[,;\s]+/g,', ')  + ']')
+        this.saveModel()
+        this.factorInputValid = true
+      }
     }
     catch(err) {
       console.log(err)

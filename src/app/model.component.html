@@ -113,9 +113,104 @@
   
 
   <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--6-col-phone">
-    <h5>The spline model</h5>    
+    <div [style.width]="'100%'" [style.height]="'30px'"></div>
+    <h5>
+      The model
+      <span *ngIf="currentMachine != null && currentEnergy != null && currentEnergy != 0 && currentApplicator != null && currentApplicator != '' && currentSSD != null && currentSSD != 0">
+        for machine ID {{currentMachine}}, at an energy of {{currentEnergy}} MeV, on the {{currentApplicator}} applicator at {{currentSSD}} cm SSD
+      </span>
+      </h5>    
   </div>
-  <div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet mdl-cell--6-col-phone" #plotContainer>
+  <div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet mdl-cell--6-col-phone">
+  
+
+    <!--<button
+      mdl-button mdl-button-type="raised" 
+      mdl-colored="primary" 
+      mdl-ripple
+      [disabled]="modelData.measurement.width.length == 0 || modelData.measurement.length.length == 0|| modelData.measurement.factor.length == 0"
+      (click)="saveModel()">Save model  
+    </button>-->
+    <h6>Input widths, lengths, and factors</h6>
+    <p>
+      Use the following text boxes to directly edit the measured data used by the spline model.
+    </p>
+    <p>
+      Inputs can be separated by commas (,), semicolons (;), spaces, tabs, or new lines.
+      If you have multiple commas or spaces this will count as only one separator. 
+      This web app should handle copying and pasting from a range of sources (including excel).
+      Number inputs can only contain the characters 0-9, a minus sign (-) and decimal points (.).
+    </p>
+
+    <mdl-textfield
+      type="text"
+      label="Equivalent ellipse widths (cm @iso)"
+      [(ngModel)]="this.initialMeasurementWidth"
+      (input)="updateMeasurementWidth($event.target.value)"
+      rows=4
+      floating-label
+      [disabled]="dataInFlight"
+      [style.width]="'100%'"></mdl-textfield>
+    <p *ngIf="!widthInputValid">
+      The width input is invalid
+    </p>
+    <mdl-textfield
+      type="text"
+      label="Equivalent ellipse lengths (cm @iso)"
+      [(ngModel)]="this.initialMeasurementLength"
+      (input)="updateMeasurementLength($event.target.value)"
+      rows=4
+      floating-label
+      [disabled]="dataInFlight"
+      [style.width]="'100%'"></mdl-textfield>
+    <p *ngIf="!lengthInputValid">
+      The length input is invalid
+    </p>
+
+    <p *ngIf="lengthSmallerThanWidth">
+      There exists a length value that is smaller than its corresponding width. Spline modelling is disabled as a result.
+    </p>
+    <mdl-textfield
+      type="text"
+      label="Measured insert factor (as per TG 25)"
+      [(ngModel)]="this.initialMeasurementFactor"
+      (input)="updateMeasurementFactor($event.target.value)"
+      rows=4
+      floating-label
+      [disabled]="dataInFlight"
+      [style.width]="'100%'"></mdl-textfield>
+    <p *ngIf="!factorInputValid">
+      The factor input is invalid
+    </p>
+
+    <p *ngIf="modelData.measurement.width.length < 8 || modelData.measurement.length.length < 8 || modelData.measurement.factor.length < 8">
+      There are currently less than 8 data points. Spline modelling is disabled as a result.
+    </p>
+
+    <p *ngIf="modelData.measurement.factor.length != modelData.measurement.width.length || modelData.measurement.factor.length != modelData.measurement.length.length || modelData.measurement.width.length != modelData.measurement.length.length">
+      The lengths of the inputs are not equal. Spline modelling is disabled as a result.
+    </p>
+
+  </div>
+
+<div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet mdl-cell--6-col-phone" #plotContainer>
+    <h6>The spline model</h6>
+    <button
+      mdl-button mdl-button-type="raised" 
+      mdl-colored="primary" 
+      mdl-ripple
+      [disabled]="dataInFlight"
+      (click)="loadDemoData()">Load demo data         
+    </button>
+      
+    <button
+      mdl-button mdl-button-type="raised" 
+      mdl-colored="primary" 
+      mdl-ripple
+      [disabled]="modelData.measurement.width.length < 8 || modelData.measurement.length.length < 8 || modelData.measurement.factor.length < 8 || dataInFlight || modelData.measurement.factor.length != modelData.measurement.width.length || modelData.measurement.factor.length != modelData.measurement.length.length || modelData.measurement.width.length != modelData.measurement.length.length || !widthInputValid || !lengthInputValid || !factorInputValid || lengthSmallerThanWidth"
+      (click)="basicServerSubmit()">Calculate Spline Model
+    </button>
+    
     <div *ngIf="modelData.measurement.width.length > 0 && modelData.measurement.length.length > 0 && modelData.measurement.factor.length > 0">
       <my-bokeh-pcolour
         [title]="'Model Plot'"
@@ -135,65 +230,6 @@
         To set this model up with your own data follow the instructions in the description at the top of this page.
       </p>
     </div>
-    <button
-      mdl-button mdl-button-type="raised" 
-      mdl-colored="primary" 
-      mdl-ripple
-      [disabled]="false"
-      (click)="loadDemoData()">Load demo data         
-    </button>
-      
-    <button
-      mdl-button mdl-button-type="raised" 
-      mdl-colored="primary" 
-      mdl-ripple
-      [disabled]="modelData.measurement.width.length < 8 || modelData.measurement.length.length < 8 || modelData.measurement.factor.length < 8 || dataInFlight || modelData.measurement.factor.length != modelData.measurement.width.length || modelData.measurement.factor.length != modelData.measurement.length.length || modelData.measurement.width.length != modelData.measurement.length.length"
-      (click)="basicServerSubmit()">Run Spline Model
-    </button>
-
-    <!--<button
-      mdl-button mdl-button-type="raised" 
-      mdl-colored="primary" 
-      mdl-ripple
-      [disabled]="modelData.measurement.width.length == 0 || modelData.measurement.length.length == 0|| modelData.measurement.factor.length == 0"
-      (click)="saveModel()">Save model  
-    </button>-->
-    <h5>Input widths, lengths, and factors</h5>
-    <p>
-      Measured widths and lengths can be input by separating by commas, \n (new lines), or \t (tabs). 
-      This means you may copy data directly from excel into these text boxes if that is convenient.
-    </p>
-
-    <mdl-textfield
-      type="text"
-      label="Equivalent ellipse widths (cm @iso)"
-      [(ngModel)]="this.initialMeasurementWidth"
-      (input)="updateMeasurementWidth($event.target.value)"
-      rows=4
-      floating-label
-      [style.width]="'100%'"></mdl-textfield>
-    <mdl-textfield
-      type="text"
-      label="Equivalent ellipse lengths (cm @iso)"
-      [(ngModel)]="this.initialMeasurementLength"
-      (input)="updateMeasurementLength($event.target.value)"
-      rows=4
-      floating-label
-      [style.width]="'100%'"></mdl-textfield>
-    <mdl-textfield
-      type="text"
-      label="Measured insert factor (as per TG 25)"
-      [(ngModel)]="this.initialMeasurementFactor"
-      (input)="updateMeasurementFactor($event.target.value)"
-      rows=4
-      floating-label
-      [style.width]="'100%'"></mdl-textfield>
-  </div>
-
-  <div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet">
-    <p>
-      <font color="#d3d3d3">Will put a plot highlighting residuals and another highlighting percent prediction differences here.</font>
-    </p>
 
   </div>
 
@@ -203,7 +239,7 @@
 
 
   <div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet">
-    <h5>Change model server (optional)</h5>
+    <h5>Change modelling server url (optional)</h5>
     <p>Only change the following address if you wish to use your own server. This is not required to be edited. The default is: <br>
       <a (click)="defaultServer()">http://electronapi.simonbiggs.net/model</a>        
     </p>
