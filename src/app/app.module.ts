@@ -11,6 +11,7 @@ import { routing } from './app.routing';
 import { Angulartics2 } from 'angulartics2';
 import { Angulartics2GoogleAnalytics } from 'angulartics2/src/providers/angulartics2-google-analytics';
 import { Angulartics2Module } from 'angulartics2';
+import { Angulartics2On } from 'angulartics2/src/core/angulartics2On';
 
 import { MdlModule } from 'angular2-mdl';
 

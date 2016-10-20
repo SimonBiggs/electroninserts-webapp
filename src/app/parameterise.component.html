@@ -52,6 +52,7 @@
       mdl-button mdl-button-type="raised" 
       mdl-colored="primary" 
       mdl-ripple
+      angulartics2On="click" angularticsEvent="Parameterise | Load demo data"
       [disabled]="submitDisabled"
       (click)="loadDemoData()">Load Demo Data         
     </button>
@@ -62,6 +63,7 @@
       mdl-button mdl-button-type="raised" 
       mdl-colored="primary" 
       mdl-ripple
+      angulartics2On="click" angularticsEvent="Parameterise | Parameterise insert"
       [disabled]="submitDisabled || !xInputValid || !yInputValid || !equalLengths"
       (click)="onSubmit()">Parameterise Insert          
     </button>
@@ -167,6 +169,7 @@
       mdl-button mdl-button-type="raised" 
       mdl-colored="primary" 
       mdl-ripple
+      angulartics2On="click" angularticsEvent="Parameterise | Add measured factor to model"
       [disabled]="!ableToAddDataToModel || !machineSettingsExist || measuredFactor.value==null || measuredFactor.value=='' || submitDisabled || !xInputValid || !yInputValid || !equalLengths"
       (click)="addMeasuredFactor(measuredFactor.value)">Add Measured Factor to Model            
     </button>
@@ -187,6 +190,7 @@
       mdl-button mdl-button-type="raised"
       mdl-colored="primary" 
       mdl-ripple
+      angulartics2On="click" angularticsEvent="Parameterise | Predict factor with model"
       [disabled]="!machineSettingsExist || submitDisabled || !xInputValid || !yInputValid || !equalLengths || parameterisation.width == null || parameterisation.length == null"
       (click)="changeToModel()">Predict Factor with Model        
     </button>

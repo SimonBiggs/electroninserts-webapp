@@ -199,6 +199,7 @@
       mdl-button mdl-button-type="raised" 
       mdl-colored="primary" 
       mdl-ripple
+      angulartics2On="click" angularticsEvent="Model | Load demo data"
       [disabled]="dataInFlight"
       (click)="loadDemoData()">Load demo data         
     </button>
@@ -207,6 +208,7 @@
       mdl-button mdl-button-type="raised" 
       mdl-colored="primary" 
       mdl-ripple
+      angulartics2On="click" angularticsEvent="Model | Calculate spline model"
       [disabled]="modelData.measurement.width.length < 8 || modelData.measurement.length.length < 8 || modelData.measurement.factor.length < 8 || dataInFlight || modelData.measurement.factor.length != modelData.measurement.width.length || modelData.measurement.factor.length != modelData.measurement.length.length || modelData.measurement.width.length != modelData.measurement.length.length || !widthInputValid || !lengthInputValid || !factorInputValid || lengthSmallerThanWidth"
       (click)="basicServerSubmit()">Calculate Spline Model
     </button>

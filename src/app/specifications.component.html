@@ -122,6 +122,7 @@
           mdl-button 
           mdl-button-type="mini-fab"
           mdl-ripple
+          angulartics2On="click" angularticsEvent="Specifications | Add machine ID"
           (click)="addMachineID()">
           <mdl-icon>add</mdl-icon>
         </button>
@@ -187,6 +188,7 @@
         <button 
           [disabled]="!newEnergySetValid" 
           mdl-button 
+          angulartics2On="click" angularticsEvent="Specifications | Add energy"
           mdl-button-type="mini-fab"
           (click)="addEnergy()">
           <mdl-icon>add</mdl-icon>
@@ -243,6 +245,7 @@
         <button 
           [disabled]="!newApplicatorValid" 
           mdl-button 
+          angulartics2On="click" angularticsEvent="Specifications | Add applicator"
           mdl-button-type="mini-fab"
           (click)="addApplicator()">
           <mdl-icon>add</mdl-icon>
@@ -299,6 +302,7 @@
         <button 
           [disabled]="!newSSDValid" 
           mdl-button 
+          angulartics2On="click" angularticsEvent="Specifications | Add ssd"
           mdl-button-type="mini-fab"
           (click)="addSSD()">
           <mdl-icon>add</mdl-icon>
