@@ -114,6 +114,7 @@
           label="Machine Make and Model"
           [(ngModel)]="newModel"
           (input)="checkNewModelInput()"
+          angulartics2On="keyup.enter" angularticsEvent="Specifications | Enter press | Add machine ID"
           (keyup.enter)="addMachineID()"
           floating-label
           style="width:70%"></mdl-textfield>
@@ -122,7 +123,7 @@
           mdl-button 
           mdl-button-type="mini-fab"
           mdl-ripple
-          angulartics2On="click" angularticsEvent="Specifications | Add machine ID"
+          angulartics2On="click" angularticsEvent="Specifications | Button click | Add machine ID"
           (click)="addMachineID()">
           <mdl-icon>add</mdl-icon>
         </button>
@@ -182,13 +183,14 @@
           label="R50 for New Energy (cm)"
           [(ngModel)]="newR50"
           (input)="checkNewR50Input()"
+          angulartics2On="keyup.enter" angularticsEvent="Specifications | Enter press | Add energy"
           (keyup.enter)="addEnergy()"
           floating-label
           style="width:70%"></mdl-textfield>
         <button 
           [disabled]="!newEnergySetValid" 
           mdl-button 
-          angulartics2On="click" angularticsEvent="Specifications | Add energy"
+          angulartics2On="click" angularticsEvent="Specifications | Button click | Add energy"
           mdl-button-type="mini-fab"
           (click)="addEnergy()">
           <mdl-icon>add</mdl-icon>
@@ -239,13 +241,14 @@
           label="New Applicator"
           [(ngModel)]="newApplicator"
           (input)="checkNewApplicatorInput()"
+          angulartics2On="keyup.enter" angularticsEvent="Specifications | Enter press | add applicator"
           (keyup.enter)="addApplicator()"
           floating-label
           style="width:70%"></mdl-textfield>
         <button 
           [disabled]="!newApplicatorValid" 
           mdl-button 
-          angulartics2On="click" angularticsEvent="Specifications | Add applicator"
+          angulartics2On="click" angularticsEvent="Specifications | Button click | Add applicator"
           mdl-button-type="mini-fab"
           (click)="addApplicator()">
           <mdl-icon>add</mdl-icon>
@@ -297,12 +300,13 @@
           [(ngModel)]="newSSD"
           (input)="checkNewSSDInput()"
           (keyup.enter)="addSSD()"
+          angulartics2On="keyup.enter" angularticsEvent="Specifications | Enter press | Add ssd"
           floating-label
           style="width:70%"></mdl-textfield>
         <button 
           [disabled]="!newSSDValid" 
           mdl-button 
-          angulartics2On="click" angularticsEvent="Specifications | Add ssd"
+          angulartics2On="click" angularticsEvent="Specifications | Button click | Add ssd"
           mdl-button-type="mini-fab"
           (click)="addSSD()">
           <mdl-icon>add</mdl-icon>
