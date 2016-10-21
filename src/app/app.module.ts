@@ -21,9 +21,9 @@ import { ParameteriseComponent } from './parameterise.component';
 import { PageNotFoundComponent } from './page-not-found.component';
 import { WidthLengthTableComponent } from './width-length-table.component';
 import { JsonInputComponent } from './json-input.component';
-import { NotYetImplimentedComponent } from './not-yet-implimented.component';
 import { HomeComponent } from './home.component';
-import { ModelComponent } from './model.component';
+import { CreateModelComponent } from './create-model.component';
+import { UseModelComponent } from './use-model.component';
 import { ExportImportComponent } from './export-import.component';
 import { SpecificationsComponent } from './specifications.component';
 import { DicomComponent } from './dicom.component';
@@ -59,9 +59,9 @@ import { LocalStorageService } from './local-storage.service';
     WidthLengthTableComponent,
     JsonInputComponent,
     MyJsonPipe,
-    NotYetImplimentedComponent,
     HomeComponent,
-    ModelComponent,
+    CreateModelComponent,
+    UseModelComponent,
     ExportImportComponent,
     SpecificationsComponent,
     DicomComponent,

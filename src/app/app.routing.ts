@@ -6,9 +6,9 @@ import { Angulartics2GoogleAnalytics } from 'angulartics2/src/providers/angulart
 
 import { ParameteriseComponent } from './parameterise.component';
 import { PageNotFoundComponent } from './page-not-found.component';
-import { NotYetImplimentedComponent } from './not-yet-implimented.component';
 import { HomeComponent } from './home.component';
-import { ModelComponent } from './model.component';
+import { CreateModelComponent } from './create-model.component';
+import { UseModelComponent } from './use-model.component'
 import { ExportImportComponent } from './export-import.component';
 import { SpecificationsComponent } from './specifications.component';
 import { DicomComponent } from './dicom.component';
@@ -39,8 +39,12 @@ const appRoutes: Routes = [
     component: ParameteriseComponent
   },
   {
-    path: 'model',
-    component: ModelComponent
+    path: 'create-model',
+    component: CreateModelComponent
+  },
+  {
+    path: 'use-model',
+    component: UseModelComponent
   },
   {
     path: '',

@@ -4,10 +4,10 @@ import { TitleService } from './title.service'
 import { ElectronApiService } from './electron-api.service';
 
 @Component({
-  selector: 'my-model',
-  templateUrl: './model.component.html'
+  selector: 'my-create-model',
+  templateUrl: './create-model.component.html'
 })
-export class ModelComponent implements OnInit {
+export class CreateModelComponent implements OnInit {
   modelData = {
     measurement: {
       width: <number[]>[],
@@ -71,7 +71,7 @@ export class ModelComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.myTitleService.setTitle('Model')
+    this.myTitleService.setTitle('Create Model')
 
     this.modelURL = localStorage.getItem("modelURL")
     if (this.modelURL == null) {
