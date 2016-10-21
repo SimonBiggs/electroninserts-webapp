@@ -30,6 +30,7 @@ import { DicomComponent } from './dicom.component';
 import { JsonEditComponent } from './json-edit.component';
 import { SendToParameterisationComponent } from './send-to-parameterisation.component';
 import { BokehPcolourComponent } from './bokeh-pcolour.component';
+import { ChooseSpecificationsComponent } from './choose-specifications.component'
 
 import { MyJsonPipe } from './my-json.pipe'
 
@@ -66,7 +67,8 @@ import { LocalStorageService } from './local-storage.service';
     DicomComponent,
     SendToParameterisationComponent,
     JsonEditComponent,
-    BokehPcolourComponent
+    BokehPcolourComponent,
+    ChooseSpecificationsComponent
   ],
   providers: [
     ElectronApiService,

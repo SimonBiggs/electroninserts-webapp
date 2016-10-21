@@ -37,7 +37,7 @@
   <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--6-col-phone">
     <h5>Choose machine configuration</h5>
     <p>
-      Here is where you select which machine configuration you wish to currently use / edit. 
+      Here is where you select the machine specifications for the model you with to edit. 
       You will only see options here if you have actually       
       <a routerLink="/specifications" routerLinkActive="active">
         defined your machine configurations.
@@ -45,92 +45,24 @@
     </p>
   </div>
 
-    <div 
-        *ngIf="this.machineList.length > 0" 
-        class="mdl-cell mdl-cell--3-col mdl-cell--4-col-tablet mdl-cell--2-col-phone">
-      <h6>Machine ID</h6>
-      <select
-          [(ngModel)]="currentMachine"
-          (input)="updateMachineID($event.target.value)">
-        <option *ngFor="let machine of machineList">{{machine}}</option>
-      </select>
-    </div>
-
-    <div 
-        *ngIf="this.machineList.length > 0 && currentMachine != null" 
-        class="mdl-cell mdl-cell--3-col mdl-cell--4-col-tablet mdl-cell--2-col-phone">
-      <h6>Energy</h6>
-      <select
-          [(ngModel)]="currentEnergy"
-          (input)="updateEnergy($event.target.value)"
-          *ngIf="machineSpecifications[currentMachine].energy.length > 0">
-        <option *ngFor="let energy of machineSpecifications[currentMachine].energy" value="{{energy}}">{{energy}} MeV</option>
-      </select>
-      <p *ngIf="machineSpecifications[currentMachine].energy == 0">
-        This machine doesn't have any energies defined. Please 
-        <a routerLink="/specifications" routerLinkActive="active">
-          define energies.
-        </a>
-      </p>
-    </div>
-
-    <div 
-        *ngIf="this.machineList.length > 0 && currentMachine != null" 
-        class="mdl-cell mdl-cell--3-col mdl-cell--4-col-tablet mdl-cell--2-col-phone">
-      <h6>Applicator</h6>
-      <select 
-          [(ngModel)]="currentApplicator"
-          (input)="updateApplicator($event.target.value)"
-          *ngIf="machineSpecifications[currentMachine].applicator.length > 0">
-        <option *ngFor="let applicator of machineSpecifications[currentMachine].applicator">{{applicator}}</option>
-      </select>
-      <p *ngIf="machineSpecifications[currentMachine].applicator == 0">
-        This machine doesn't have any applicators defined. Please 
-        <a routerLink="/specifications" routerLinkActive="active">
-          define applicators.
-        </a>
-      </p>
-    </div>
-
-    <div 
-        *ngIf="this.machineList.length > 0 && currentMachine != null" 
-        class="mdl-cell mdl-cell--3-col mdl-cell--4-col-tablet mdl-cell--2-col-phone">
-      <h6>SSD</h6>
-      <select  
-          [(ngModel)]="currentSSD"
-          (input)="updateSSD($event.target.value)"
-          *ngIf="machineSpecifications[currentMachine].ssd.length > 0">
-        <option *ngFor="let ssd of machineSpecifications[currentMachine].ssd">{{ssd}}</option>
-      </select>
-      <p *ngIf="machineSpecifications[currentMachine].ssd == 0">
-        This machine doesn't have an ssd defined. Please 
-        <a routerLink="/specifications" routerLinkActive="active">
-          define at least one ssd.
-        </a>
-      </p>
-    </div>
-
+  <div [style.width]="'100%'">
+    <my-choose-specifications #settingsPicker
+      (settingsUpdated)=currentMachineSettingsUpdated($event)>
+    </my-choose-specifications>
+  </div>
   
 
   <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--6-col-phone">
     <div [style.width]="'100%'" [style.height]="'30px'"></div>
     <h5>
       The model
-      <span *ngIf="currentMachine != null && currentEnergy != null && currentEnergy != 0 && currentApplicator != null && currentApplicator != '' && currentSSD != null && currentSSD != 0">
-        for machine ID {{currentMachine}}, at an energy of {{currentEnergy}} MeV, on the {{currentApplicator}} applicator at {{currentSSD}} cm SSD
+      <span *ngIf="currentSettings.machine != null && currentSettings.energy != null && currentSettings.energy != 0 && currentSettings.applicator != null && currentSettings.applicator != '' && currentSettings.ssd != null && currentSettings.ssd != 0">
+        for machine ID {{currentSettings.machine}}, at an energy of {{currentSettings.energy}} MeV, on the {{currentSettings.applicator}} applicator at {{currentSettings.ssd}} cm SSD
       </span>
       </h5>    
   </div>
   <div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet mdl-cell--6-col-phone">
-  
 
-    <!--<button
-      mdl-button mdl-button-type="raised" 
-      mdl-colored="primary" 
-      mdl-ripple
-      [disabled]="modelData.measurement.width.length == 0 || modelData.measurement.length.length == 0|| modelData.measurement.factor.length == 0"
-      (click)="saveModel()">Save model  
-    </button>-->
     <h6>Input widths, lengths, and factors</h6>
     <p>
       Use the following text boxes to directly edit the measured data used by the spline model.
@@ -142,45 +74,8 @@
       Number inputs can only contain the characters 0-9, a minus sign (-) and decimal points (.).
     </p>
 
-    <mdl-textfield
-      type="text"
-      label="Equivalent ellipse widths (cm @iso)"
-      [(ngModel)]="this.initialMeasurementWidth"
-      (input)="updateMeasurementWidth($event.target.value)"
-      rows=4
-      floating-label
-      [disabled]="dataInFlight"
-      [style.width]="'100%'"></mdl-textfield>
-    <p *ngIf="!widthInputValid">
-      The width input is invalid
-    </p>
-    <mdl-textfield
-      type="text"
-      label="Equivalent ellipse lengths (cm @iso)"
-      [(ngModel)]="this.initialMeasurementLength"
-      (input)="updateMeasurementLength($event.target.value)"
-      rows=4
-      floating-label
-      [disabled]="dataInFlight"
-      [style.width]="'100%'"></mdl-textfield>
-    <p *ngIf="!lengthInputValid">
-      The length input is invalid
-    </p>
-
     <p *ngIf="lengthSmallerThanWidth">
       There exists a length value that is smaller than its corresponding width. Spline modelling is disabled as a result.
-    </p>
-    <mdl-textfield
-      type="text"
-      label="Measured insert factor (as per TG 25)"
-      [(ngModel)]="this.initialMeasurementFactor"
-      (input)="updateMeasurementFactor($event.target.value)"
-      rows=4
-      floating-label
-      [disabled]="dataInFlight"
-      [style.width]="'100%'"></mdl-textfield>
-    <p *ngIf="!factorInputValid">
-      The factor input is invalid
     </p>
 
     <p *ngIf="modelData.measurement.width.length < 8 || modelData.measurement.length.length < 8 || modelData.measurement.factor.length < 8">
@@ -190,6 +85,21 @@
     <p *ngIf="modelData.measurement.factor.length != modelData.measurement.width.length || modelData.measurement.factor.length != modelData.measurement.length.length || modelData.measurement.width.length != modelData.measurement.length.length">
       The lengths of the inputs are not equal. Spline modelling is disabled as a result.
     </p>
+
+    <div *ngFor="let key of ['width', 'length', 'factor']">
+      <mdl-textfield 
+        type="text"
+        [label]="textboxLabels[key]"
+        [(ngModel)]="this.textboxInput[key]"
+        (input)="onTextboxChange(key, $event.target.value)"
+        rows=4
+        floating-label
+        [disabled]="dataInFlight"
+        [style.width]="'100%'"></mdl-textfield>
+      <p *ngIf="!textboxValid[key]">
+        The {{key}} input is invalid
+      </p>
+    </div>
 
   </div>
 
@@ -209,7 +119,7 @@
       mdl-colored="primary" 
       mdl-ripple
       angulartics2On="click" angularticsEvent="Model | Calculate spline model"
-      [disabled]="modelData.measurement.width.length < 8 || modelData.measurement.length.length < 8 || modelData.measurement.factor.length < 8 || dataInFlight || modelData.measurement.factor.length != modelData.measurement.width.length || modelData.measurement.factor.length != modelData.measurement.length.length || modelData.measurement.width.length != modelData.measurement.length.length || !widthInputValid || !lengthInputValid || !factorInputValid || lengthSmallerThanWidth"
+      [disabled]="modelData.measurement.width.length < 8 || modelData.measurement.length.length < 8 || modelData.measurement.factor.length < 8 || dataInFlight || modelData.measurement.factor.length != modelData.measurement.width.length || modelData.measurement.factor.length != modelData.measurement.length.length || modelData.measurement.width.length != modelData.measurement.length.length || !textboxValid['width'] || !textboxValid['length'] || !textboxValid['factor'] || lengthSmallerThanWidth"
       (click)="basicServerSubmit()">Calculate Spline Model
     </button>
     
@@ -235,10 +145,6 @@
 
   </div>
 
-  <!--<div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet">
-
-  </div>-->
-
 
   <div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet">
     <h5>Change modelling server url (optional)</h5>
@@ -253,16 +159,6 @@
       [(ngModel)]="modelURL"
       style="width:100%"></mdl-textfield>
   </div>
-
-  <!--<div class="mdl-cell mdl-cell--12-col">
-    <h5>Edit raw model data</h5>
-    <my-json-edit
-      [input]="modelData"
-      (inputUpdated)="jsonInputUpdated($event)"
-      buttonText="Update Model Data"
-      useMyJsonPipe="true">
-    </my-json-edit>
-  </div>-->
 
 
 </div>
