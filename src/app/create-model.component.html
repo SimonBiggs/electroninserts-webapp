@@ -68,22 +68,9 @@
       Use the following text boxes to directly edit the measured data used by the spline model.
     </p>
     <p>
-      Inputs can be separated by commas (,), semicolons (;), spaces, tabs, or new lines.
-      If you have multiple commas or spaces this will count as only one separator. 
+      Coordinates can be separated by commas (,), semicolons (;), tabs, or new lines.
       This web app should handle copying and pasting from a range of sources (including excel).
       Number inputs can only contain the characters 0-9, a minus sign (-) and decimal points (.).
-    </p>
-
-    <p *ngIf="lengthSmallerThanWidth">
-      There exists a length value that is smaller than its corresponding width. Spline modelling is disabled as a result.
-    </p>
-
-    <p *ngIf="modelData.measurement.width.length < 8 || modelData.measurement.length.length < 8 || modelData.measurement.measuredFactor.length < 8">
-      There are currently less than 8 data points. Spline modelling is disabled as a result.
-    </p>
-
-    <p *ngIf="modelData.measurement.measuredFactor.length != modelData.measurement.width.length || modelData.measurement.measuredFactor.length != modelData.measurement.length.length || modelData.measurement.width.length != modelData.measurement.length.length">
-      The lengths of the inputs are not equal. Spline modelling is disabled as a result.
     </p>
 
     <div *ngFor="let key of ['width', 'length', 'measuredFactor']">
@@ -99,8 +86,18 @@
       <p *ngIf="!textboxValid[key]">
         The {{key}} input is invalid
       </p>
+      <span *ngIf="key=='length'">
+        <p *ngIf="lengthSmallerThanWidth">
+          There exists a length value that is smaller than its corresponding width. Spline modelling is disabled as a result.
+        </p>
+      </span>
     </div>
-
+    <p *ngIf="modelData.measurement.measuredFactor.length != modelData.measurement.width.length || modelData.measurement.measuredFactor.length != modelData.measurement.length.length || modelData.measurement.width.length != modelData.measurement.length.length">
+      The lengths of the inputs are not equal. Spline modelling is disabled as a result.
+    </p>
+    <p *ngIf="modelData.measurement.width.length < 8 || modelData.measurement.length.length < 8 || modelData.measurement.measuredFactor.length < 8">
+      There are currently less than 8 data points. Spline modelling is disabled as a result.
+    </p>
   </div>
 
 <div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet mdl-cell--6-col-phone" #plotContainer>
@@ -125,7 +122,7 @@
     
 
     <div *ngIf="modelData.measurement.width.length > 0 && modelData.measurement.length.length > 0 && modelData.measurement.measuredFactor.length > 0">
-      <my-bokeh-pcolour
+      <my-bokeh-create-model
         [title]="'Model Plot'"
         [scatter_x]="modelData.measurement.width"
         [scatter_y]="modelData.measurement.length"
@@ -135,7 +132,7 @@
         [pcolour_z]="modelData.model.predictedFactor"
         [plot_width]="plot_width"
         [plot_height]="380">
-      </my-bokeh-pcolour>
+      </my-bokeh-create-model>
     </div>
     <div *ngIf="modelData.measurement.width.length == 0 || modelData.measurement.length.length == 0|| modelData.measurement.measuredFactor.length == 0">
       <p>

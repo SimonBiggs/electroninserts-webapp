@@ -12,8 +12,7 @@
     </p>
 
     <p>
-      Coordinates can be separated by commas (,), semicolons (;), spaces, tabs, or new lines.
-      If you have multiple commas or spaces this will count as only one separator. 
+      Coordinates can be separated by commas (,), semicolons (;), tabs, or new lines.
       This web app should handle copying and pasting from a range of sources (including excel).
       Number inputs can only contain the characters 0-9, a minus sign (-) and decimal points (.).
     </p>
@@ -192,16 +191,16 @@
       mdl-ripple
       angulartics2On="click" angularticsEvent="Parameterise | Predict factor with model"
       [disabled]="!machineSettingsExist || submitDisabled || !xInputValid || !yInputValid || !equalLengths || parameterisation.width == null || parameterisation.length == null"
-      (click)="changeToModel()">Predict Factor with Model        
+      (click)="predictFactor()">Predict Factor with Model        
     </button>
 
     
-    <p>
+    <!--<p>
       <font color="#d3d3d3">
         Currently the "Predict Factor with Model" button just changes the active machine specifications to match that given above and then takes you to the model component.
         A future implementation is to have this button plot your insert shape on the model plot and display the predicted factor.
       </font>
-    </p>
+    </p>-->
 
 
 

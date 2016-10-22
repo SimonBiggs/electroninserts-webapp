@@ -135,7 +135,7 @@ export class CreateModelComponent implements OnInit {
 
     try {
       if (this.validateInput(newInput)) {
-        this.modelData.measurement[key] = eval('[' + newInput.replace(/[,;\s]+/g, ', ') + ']')
+        this.modelData.measurement[key] = eval('[' + newInput.replace(/[,;\n\t]\s*/g, ', ') + ']')
         this.saveModel()
         this.textboxValid[key] = true
         this.checkLengthSmallerThanWidth()
@@ -199,7 +199,8 @@ export class CreateModelComponent implements OnInit {
       0.9934, 0.9991, 0.9831, 0.9705, 1.0019, 0.9562, 0.9348,
       0.9987, 0.9989, 0.9933, 0.9991, 1.0067, 0.9683, 0.9296,
       0.9735, 0.9709, 1.0084, 1.0028, 0.953, 0.9484, 1.0032]
-
+    
+    this.checkLengthSmallerThanWidth()
     this.updateTextboxInput()
   }
 

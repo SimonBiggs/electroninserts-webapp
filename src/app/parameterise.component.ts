@@ -11,6 +11,8 @@ import { DataService } from './data.service';
 import { TitleService } from './title.service';
 // import { LocalStorageService } from './local-storage.service';
 
+import { ModelData } from './model-data'
+
 import { DEMO_PARAMETERISE_INPUT } from './demo-data';
 
 @Component({
@@ -71,11 +73,19 @@ export class ParameteriseComponent implements OnInit {
 
   R50: number;
 
+  currentSettings: {
+    machine: string, 
+    energy: number, 
+    applicator: string, 
+    ssd: number
+  }
+
   constructor(
     private electronApiService: ElectronApiService,
     private dataService: DataService,
     private myTitleService: TitleService,
-    private router: Router
+    private router: Router,
+    private modelData: ModelData
   ) { }
 
   ngOnInit() {
@@ -148,7 +158,7 @@ export class ParameteriseComponent implements OnInit {
 
   }
 
-  changeToModel() {
+  predictFactor() {
     localStorage.setItem("current_machine", JSON.stringify(Number(
       this.insertData.machine)))
     localStorage.setItem("currentEnergy", JSON.stringify(Number(
@@ -157,6 +167,22 @@ export class ParameteriseComponent implements OnInit {
       this.insertData.applicator))
     localStorage.setItem("currentSSD", JSON.stringify(Number(
       this.insertData.ssd)))
+
+    this.currentSettings = {
+      machine: this.insertData.machine,
+      energy: this.insertData.energy,
+      applicator: this.insertData.applicator,
+      ssd: this.insertData.ssd
+    }
+
+    this.modelData.loadModelData(this.currentSettings)
+    this.modelData.predictions.width.unshift(this.parameterisation.width)
+    this.modelData.predictions.length.unshift(this.parameterisation.length)
+    if (this.insertData.factor != 0 && this.insertData.factor != null) {
+      this.modelData.predictions.measuredFactor.unshift(this.insertData.factor)
+    }    
+
+    this.modelData.saveModelData(this.currentSettings)
 
     this.router.navigate(["/use-model"])
 
@@ -194,7 +220,7 @@ export class ParameteriseComponent implements OnInit {
     try {
       if (this.validateInput(xInput)) {
         this.parameterisation.insert.x = eval(
-          '[' + xInput.replace(/[,;\s]+/g,', ') + ']')
+          '[' + xInput.replace(/[,;\n\t]\s*/g,', ') + ']')
         this.insertUpdated(this.parameterisation.insert)        
         this.xInputValid = true
         this.checkIfEqualLengths()
@@ -215,7 +241,7 @@ export class ParameteriseComponent implements OnInit {
     try {
       if (this.validateInput(yInput)) {
         this.parameterisation.insert.y = eval(
-          '[' + yInput.replace(/[,;\s]+/g,', ')  + ']')
+          '[' + yInput.replace(/[,;\n\t]\s*/g,', ')  + ']')
         this.insertUpdated(this.parameterisation.insert)
         this.yInputValid = true
         this.checkIfEqualLengths()
@@ -261,6 +287,7 @@ export class ParameteriseComponent implements OnInit {
     }
 
     this.updateTextAreaValues()
+    this.checkIfEqualLengths()
   }
 
   sleep(time: number) {

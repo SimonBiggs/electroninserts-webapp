@@ -1,36 +1,28 @@
-import { Component, Input, OnChanges, ViewChild, AfterViewInit, OnInit } from '@angular/core';
-
-import { Coordinates } from './coordinates';
+import { OnInit } from '@angular/core';
 
 declare var Bokeh: any;
 
-@Component({
-  selector: 'my-bokeh-pcolour',
-  templateUrl: './bokeh-pcolour.component.html'
-})
-export class BokehPcolourComponent implements OnChanges, AfterViewInit, OnInit {
-  @Input()
+export class BokehPcolour implements OnInit {
   title: string = "Figure Title";
-  @Input()
   plot_width: number = 300;
-  @Input()
   plot_height: number = 300;
-  @Input()
   scatter_x: number[];
-  @Input()
   scatter_y: number[];
-  @Input()
   scatter_z: number[] = [0.5];
-  @Input()
   pcolour_x: number[];
-  @Input()
   pcolour_y: number[];
-  @Input()
   pcolour_z: number[];
-  @Input()
   enabled: boolean = true;
 
-  @ViewChild('bokehplot') bokehplot: any;
+  pcolour_hover_width: string[] = [];
+  pcolour_hover_length: string[] = [];
+  pcolour_hover_predicted_factor: string[] = [];
+
+  scatter_hover_width: string[] = [];
+  scatter_hover_length: string[] = [];
+  scatter_hover_area: string[] = [];
+  scatter_hover_measured_factor: string[] = [];
+  scatter_hover_predicted_factor: string[] = [];
 
   plt = Bokeh.Plotting;
   tools = 'pan,crosshair,wheel_zoom,box_zoom,reset,save';  
@@ -46,15 +38,19 @@ export class BokehPcolourComponent implements OnChanges, AfterViewInit, OnInit {
     x: <number[]> [],
     y: <number[]> [],
     z: <number[]> [],
+    hover_width: <string[]> [],
+    hover_length: <string[]> [],
+    hover_area: <string[]> [],
+    hover_measured_factor: <string[]> [],
+    hover_predicted_factor: <string[]> [],
     c: <string[]> []
   }
   scatter_source = new Bokeh.ColumnDataSource({
     data: this.scatter_data
   });
 
-  hover_width: string[] = [];
-  hover_length: string[] = [];
-  hover_factor: string[] = [];
+  pcolour_renderer: any
+  scatter_renderer: any
 
   pcolour_data = {
     x: <number[]> [],
@@ -62,7 +58,7 @@ export class BokehPcolourComponent implements OnChanges, AfterViewInit, OnInit {
     z: <number[]> [],
     hover_width: <string[]> [],
     hover_length: <string[]> [],
-    hover_factor: <string[]> [],
+    hover_predicted_factor: <string[]> [],
     c: <string[]> []
   }
   pcolour_source = new Bokeh.ColumnDataSource({
@@ -85,43 +81,71 @@ export class BokehPcolourComponent implements OnChanges, AfterViewInit, OnInit {
     location: [-6,0]
   })
 
-  ngOnChanges() {
+  ngOnInit() {
+    this.figureInitialise()
+  }
+
+  figureInitialise() {
+    this.fig = this.plt.figure({
+        title: this.title, tools: this.tools,
+        plot_width: this.plot_width, plot_height: this.plot_height
+      });
+
+    this.pcolour_renderer = this.fig.rect(
+      { field: 'x' }, { field: 'y' }, 0.1, 0.1, {
+        source: this.pcolour_source,
+        color:  { field: 'c' }
+    });
+
+    this.scatter_renderer = this.fig.circle(
+      { field: 'x' }, { field: 'y' }, {
+        source: this.scatter_source,
+        size: 15,
+        line_color: 'black',
+        fill_color:  { field: 'c' },
+        line_width: 2
+    });
+
+    this.fig.add_layout(this.colour_bar, 'left')
+  }
+
+  runAllUpdates() {
+    this.updateScatterData()
+    this.updatePcolourData()
+    this.updateScatterColour()
+
+    this.updateSourceData()
+
+    this.updateFigureDimensions()
+  }
+
+  updateScatterData() {
     this.scatter_data = {
       x: <number[]> this.scatter_x,
       y: <number[]> this.scatter_y,
       z: <number[]> this.scatter_z,
+      hover_width: <string[]> this.scatter_hover_width,
+      hover_length: <string[]> this.scatter_hover_length,
+      hover_area: <string[]> this.scatter_hover_area,
+      hover_measured_factor: <string[]> this.scatter_hover_measured_factor,
+      hover_predicted_factor: <string[]> this.scatter_hover_predicted_factor,
       c: <string[]> this.scatter_c
     }
-    
-    if (this.pcolour_data.x != this.pcolour_x) {
-      this.hover_width = <string[]> []
-      for (let x of this.pcolour_x) {
-        this.hover_width.push(x.toFixed(1))
-      }
-    }
-    if (this.pcolour_data.y != this.pcolour_y) {
-      this.hover_length = <string[]> []
-      for (let y of this.pcolour_y) {
-        this.hover_length.push(y.toFixed(1))
-      }
-    }
-    if (this.pcolour_data.z != this.pcolour_z) {
-      this.hover_factor = <string[]> []
-      for (let z of this.pcolour_z) {
-        this.hover_factor.push((Math.round(z*10000)/10000).toFixed(4))
-      }
-    }
-      
+  }
+
+  updatePcolourData() {
     this.pcolour_data = {
       x: <number[]> this.pcolour_x,
       y: <number[]> this.pcolour_y,
       z: <number[]> this.pcolour_z,
-      hover_width: <string[]> this.hover_width,
-      hover_length: <string[]> this.hover_length,
-      hover_factor: <string[]> this.hover_factor,
+      hover_width: <string[]> this.pcolour_hover_width,
+      hover_length: <string[]> this.pcolour_hover_length,
+      hover_predicted_factor: <string[]> this.pcolour_hover_predicted_factor,
       c: <string[]> this.pcolour_c
     }
+  }
 
+  updateScatterColour() {
     if (this.old_scatter_z != this.scatter_z || this.old_pcolour_z != this.pcolour_z) {
       let allZ = this.scatter_z.concat(this.pcolour_z);
       this.vmin = Math.min(...allZ);
@@ -139,8 +163,17 @@ export class BokehPcolourComponent implements OnChanges, AfterViewInit, OnInit {
 
       this.old_scatter_z = this.scatter_z;
       this.old_pcolour_z = this.pcolour_z;
-    }
 
+      if (this.scatter_data.c.length < this.scatter_data.x.length) {
+        let difference = this.scatter_data.x.length - this.scatter_data.c.length
+        for (let i=0; i < difference; i++) {
+          this.scatter_data.c.push('#ffffff')
+        }
+      }
+    }
+  }
+
+  updateSourceData() {
     if (this.scatter_source.data != this.scatter_data) {
       this.scatter_source.data = this.scatter_data;
     }
@@ -148,7 +181,9 @@ export class BokehPcolourComponent implements OnChanges, AfterViewInit, OnInit {
     if (this.pcolour_source.data != this.pcolour_data) {
       this.pcolour_source.data = this.pcolour_data;
     }
+  }
 
+  updateFigureDimensions() {
     if (this.fig != null) {
       if (this.fig.width != this.plot_width) {
         if (this.plot_width < 200) {
@@ -162,52 +197,5 @@ export class BokehPcolourComponent implements OnChanges, AfterViewInit, OnInit {
         this.fig.height = this.plot_height;
       }
     }
-  }
-
-  ngOnInit() {
-    this.fig = this.plt.figure({
-        title: this.title, tools: this.tools,
-        plot_width: this.plot_width, plot_height: this.plot_height
-      });
-  }
-
-  ngAfterViewInit() {
-    let pcolor = this.fig.rect(
-      { field: 'x' }, { field: 'y' }, 0.1, 0.1, {
-        source: this.pcolour_source,
-        color:  { field: 'c' }
-    });
-
-    let hover_tool = new Bokeh.HoverTool({
-      tooltips: [
-        ["Width", " @hover_width cm"],
-        ["Length", " @hover_length cm"],
-        ["Factor", " @hover_factor"]
-      ],
-      renderers: [
-        pcolor
-      ]
-    })
-    this.fig.add_tools(hover_tool)
-
-    this.fig.circle(
-      { field: 'x' }, { field: 'y' }, {
-        source: this.scatter_source,
-        size: 15,
-        line_color: 'black',
-        fill_color:  { field: 'c' },
-        line_width: 2
-    });
-
-    this.fig.add_layout(this.colour_bar, 'left')
-
-    // console.log(Bokeh)
-    // console.log(this.fig.add_layout)
-    // console.log(this.doc)
-    // console.log(this.colour_mapper)
-
-    this.doc.add_root(this.fig);
-    Bokeh.embed.add_document_standalone(
-      this.doc, this.bokehplot.nativeElement); 
   }
 }

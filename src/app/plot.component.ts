@@ -6,8 +6,7 @@ declare var Bokeh: any;
 
 @Component({
   selector: 'my-plot',
-  templateUrl: './plot.component.html',
-  styleUrls: ['./plot.component.css']
+  templateUrl: './bokeh-plot.html'
 })
 export class PlotComponent implements OnChanges, AfterViewInit {
   @Input()
@@ -20,6 +19,10 @@ export class PlotComponent implements OnChanges, AfterViewInit {
   ellipse: Coordinates = null;
   @Input()
   enabled: boolean = true;
+  @Input()
+  plot_width: number = 300;
+  @Input()
+  plot_height: number = 300;
 
   parsedJSON: any;
   tempSource: any;

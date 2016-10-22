@@ -73,6 +73,12 @@ export class Predictions extends Base {
 @Injectable()
 export class ModelData {
   public propNames: string[] = ['measurement', 'model', 'predictions']
+  // currentSettings: {
+  //   machine: string, 
+  //   energy: number, 
+  //   applicator: string, 
+  //   ssd: number
+  // }
 
   constructor(    
     public measurement: ModelMeasurement,
@@ -96,6 +102,33 @@ export class ModelData {
         }
       }
     }
-
   }
+
+  createLocalStorageKey(currentSettings: {machine: string, energy: number, applicator: string, ssd: number}) {
+    let localStorageKey = (
+      '{"machine":' + JSON.stringify(String(currentSettings.machine)) + ',' +
+      '"energy":' + JSON.stringify(Number(currentSettings.energy)) + ',' +
+      '"applicator":' + JSON.stringify(String(currentSettings.applicator)) + ',' +
+      '"ssd":' + JSON.stringify(Number(currentSettings.ssd)) +
+      '}')
+
+    return localStorageKey
+  }
+
+  loadModelData(currentSettings: {machine: string, energy: number, applicator: string, ssd: number}) {
+    let localStorageKey = this.createLocalStorageKey(currentSettings)
+    let parsedData = JSON.parse(localStorage.getItem(localStorageKey))
+
+    this.fillFromObject(parsedData)
+  }
+
+  saveModelData(currentSettings: {machine: string, energy: number, applicator: string, ssd: number}) {
+    let localStorageKey = this.createLocalStorageKey(currentSettings)
+    localStorage.setItem(localStorageKey, JSON.stringify(this))
+  }
+
+  // getCurrentSettings() {
+
+  // }
 }
+

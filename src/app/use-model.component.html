@@ -1,12 +1,8 @@
 <div class="mdl-grid">
-  <div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet mdl-cell--6-col-phone">
+  <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--6-col-phone">
     <h5>Use models</h5>
     <p>
-      Component still under construction
-    </p>
-    <p>
-      This component will be where the created models will be used. 
-      Linear interpolation will be used over the 0.1 cm resolution grid returned by the model creation.
+      This component is where created models are used. 
       Factors for prediction will be able to be inputted using width, and then either length or area, and optionally
       a measured factor can be included for the purpose of comparing model results with measurement.
     </p>
@@ -18,12 +14,56 @@
     </p>
   </div>
 
-  <div [style.width]="'100%'">
+  <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--6-col-phone">
+    <h5>Choose machine configuration</h5>
     <my-choose-specifications #settingsPicker
       (settingsUpdated)=currentMachineSettingsUpdated($event)>
     </my-choose-specifications>
   </div>
 
+  <div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet mdl-cell--6-col-phone">
+    <h5>Inserts being predicted</h5>
+    <div *ngFor="let key of ['width', 'length', 'area', 'measuredFactor']">
+      <mdl-textfield 
+        type="text"
+        [label]="textboxLabels[key]"
+        [(ngModel)]="this.textboxInput[key]"
+        (input)="onTextboxChange(key, $event.target.value)"
+        rows=2
+        floating-label
+        [style.width]="'100%'"></mdl-textfield>
+      <p *ngIf="!textboxValid[key]">
+        The {{key}} input is invalid
+      </p>
+    </div>
+    <p>Predicted factors: {{modelData.predictions.predictedFactor}}</p>
+    <p>Prediction minus measured: {{predictionDifference}}</p>
+  </div>
+
   <div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet mdl-cell--6-col-phone" #plotContainer>
+    <div *ngIf="modelData.model.width.length > 0 && modelData.model.length.length > 0 && modelData.model.predictedFactor.length > 0">
+      <my-bokeh-use-model
+        [title]="'Model Plot'"
+        [scatter_x]="modelData.predictions.width"
+        [scatter_y]="modelData.predictions.length"
+        [area]="modelData.predictions.area"
+        [scatter_z]="modelData.predictions.measuredFactor"
+        [predicted_factor]="modelData.predictions.predictedFactor"
+        [pcolour_x]="modelData.model.width"
+        [pcolour_y]="modelData.model.length"
+        [pcolour_z]="modelData.model.predictedFactor"
+        [plot_width]="plot_width"
+        [plot_height]="380">
+      </my-bokeh-use-model>
+    </div>
+    <div *ngIf="modelData.model.width.length == 0 || modelData.model.length.length == 0|| modelData.model.predictedFactor.length == 0">
+      <p>
+        A model has not been calculated for this machine specification.
+        If you do have at least 8 data points please calculate the spline model on the           
+        <a routerLink="/create-model" routerLinkActive="active">
+          create model component.
+        </a>
+      </p>
+    </div>
   </div>
 </div>
