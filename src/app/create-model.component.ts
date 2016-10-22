@@ -10,14 +10,21 @@ import { ElectronApiService } from './electron-api.service';
 export class CreateModelComponent implements OnInit {
   modelData = {
     measurement: {
-      width: <number[]>[],
-      length: <number[]>[],
-      factor: <number[]>[]
+      width: <number[]> [],
+      length: <number[]> [],
+      factor: <number[]> []
     },
     model: {
-      width: <number[]>[],
-      length: <number[]>[],
-      factor: <number[]>[]
+      width: <number[]> [],
+      length: <number[]> [],
+      factor: <number[]> []
+    },
+    predictions: {
+      width: <number[]> [],
+      length: <number[]> [],
+      area: <number[]> [],
+      measured_factor: <number[]> [],
+      predicted_factor: <number[]> []
     }
   }
 
@@ -47,10 +54,10 @@ export class CreateModelComponent implements OnInit {
   }
 
   lengthSmallerThanWidth: boolean = false
-
-  modelURL: string
+  
   plot_width = 600
 
+  modelURL: string
   dataInFlight: boolean = false
 
 
@@ -65,9 +72,9 @@ export class CreateModelComponent implements OnInit {
   ) {
     window.onresize = (e) => {
       ngZone.run(() => {
-        this.plot_width = this.plotContainer.nativeElement.clientWidth;
-      });
-    };
+        this.updatePlotWidth()
+      })
+    }
   }
 
   ngOnInit() {
@@ -77,8 +84,12 @@ export class CreateModelComponent implements OnInit {
     if (this.modelURL == null) {
       this.modelURL = 'http://electronapi.simonbiggs.net/model'
     }
-    this.plot_width = this.plotContainer.nativeElement.clientWidth
+    this.updatePlotWidth()
 
+  }
+
+  updatePlotWidth() {
+    this.plot_width = this.plotContainer.nativeElement.clientWidth
   }
 
   currentMachineSettingsUpdated(newSettings: {}) {
@@ -102,23 +113,32 @@ export class CreateModelComponent implements OnInit {
 
   loadMeasuredData() {
     let key = this.createKey()
-    this.modelData = JSON.parse(localStorage.getItem(key))
+    let parsedData = JSON.parse(localStorage.getItem(key))
 
-    
-
-    if (this.modelData == null) {
-      this.modelData = {
-        measurement: {
-          width: <number[]>[],
-          length: <number[]>[],
-          factor: <number[]>[]
-        },
-        model: {
-          width: <number[]>[],
-          length: <number[]>[],
-          factor: <number[]>[]
+    for (let item of ['measurement', 'model']) {
+      if (parsedData[item] == null) {
+        this.modelData[item] = {
+          width: <number[]> [],
+          length: <number[]> [],
+          factor: <number[]> []
         }
       }
+      else {
+        this.modelData[item] = parsedData[item]
+      }
+    }
+
+    if (parsedData['predictions'] == null) {
+      this.modelData['predictions'] = {
+        width: <number[]> [],
+        length: <number[]> [],
+        area: <number[]> [],
+        measured_factor: <number[]> [],
+        predicted_factor: <number[]> []
+      }
+    }
+    else {
+      this.modelData['predictions'] = parsedData['predictions']
     }
     this.updateTextboxInput()
   }

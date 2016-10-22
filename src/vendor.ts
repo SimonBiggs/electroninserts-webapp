@@ -24,3 +24,4 @@ import 'angular2-mdl';
 
 import 'js-yaml';
 import 'angulartics2';
+// import 'typedjson-npm';

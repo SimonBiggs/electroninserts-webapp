@@ -1,0 +1,50 @@
+<div class="mdl-grid">
+  <div class="mdl-cell mdl-cell--6-col">
+    <h5>Storage management</h5>
+    <p>
+      This component is for the management of the data stored within this browser.
+      In the future you will be able to come here to bulk export/import your data to a '.json' file for backup and transfer.
+      At this current point in time the only function of this component is to see how much browser storage this web app
+      has left for its use.
+    </p>
+
+    <p>
+      None of your measured data, or your model data is stored on a remote server. 
+      Your measurements and models are only sent to the server in the form of x and y coordinates for parameterisation, and 
+      in the form of widths, lengths, and measured factors for modelling. 
+      The server does not save a copy to disk of any of that data.
+    </p>
+
+    <p>
+      In the future it is envisaged that an option will be provided for you to easily share your model with 
+      the community under the AGPLv3+ license should you so choose, but this will not be automatic. 
+      It will be opt-in only.
+    </p>
+  </div>
+
+  <div class="mdl-cell mdl-cell--6-col">
+    <h5>Local storage tests</h5>
+    <p></p>
+
+    <div *ngIf="testLocalStorage">
+      <p>Your browser supports local storage. You currently have {{usedLocalStorageSpace}} B of used space. Most browsers support
+        5 MiB.
+      </p>
+
+      <p>To check your remaining storage press the button below. Warning, this might be slow.</p>
+      <button mdl-button mdl-button-type="raised" mdl-colored="primary" mdl-ripple (click)="testRemainingStorage()">Test remaining local storage           
+      </button>
+      <div *ngIf="remainingLocalStorageSpace">
+        <p>You have {{remainingLocalStorageSpace}} B of local storage remaining which is available for use by this webapp.</p>
+      </div>
+    </div>
+    <div *ngIf="!testLocalStorage">
+      <p>
+        This webapp relies upon local storage working within your browser. Your browser does not support local storage. Please download
+        and use a modern standards compliant browser such as
+        <a href="https://www.google.com.au/chrome/browser/desktop/">Chrome</a> or
+        <a href="https://www.mozilla.org/en-GB/firefox/new/">Firefox</a> to use this webapp.
+      </p>
+    </div>
+  </div>
+</div>

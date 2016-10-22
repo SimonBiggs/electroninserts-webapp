@@ -9,7 +9,7 @@ import { PageNotFoundComponent } from './page-not-found.component';
 import { HomeComponent } from './home.component';
 import { CreateModelComponent } from './create-model.component';
 import { UseModelComponent } from './use-model.component'
-import { ExportImportComponent } from './export-import.component';
+import { StorageManagementComponent } from './storage-management.component';
 import { SpecificationsComponent } from './specifications.component';
 import { DicomComponent } from './dicom.component';
 
@@ -23,8 +23,8 @@ const appRoutes: Routes = [
     }
   },
   {
-    path: 'export-import',
-    component: ExportImportComponent
+    path: 'storage',
+    component: StorageManagementComponent
   },
   {
     path: 'specifications',

@@ -4,10 +4,10 @@ import { TitleService } from './title.service'
 import { LocalStorageService } from './local-storage.service';
 
 @Component({
-  selector: 'my-export-import',
-  templateUrl: './export-import.component.html'
+  selector: 'my-storage-management',
+  templateUrl: './storage-management.component.html'
 })
-export class ExportImportComponent implements OnInit {
+export class StorageManagementComponent implements OnInit {
   testLocalStorage: boolean;
   usedLocalStorageSpace: number;
   remainingLocalStorageSpace: number;
@@ -18,7 +18,7 @@ export class ExportImportComponent implements OnInit {
   ) {}
   
   ngOnInit() {
-    this.myTitleService.setTitle('Export / Import');
+    this.myTitleService.setTitle('Storage');
     this.testLocalStorage = this.myLocalStorageService.isSupported;
     this.usedLocalStorageSpace = this.myLocalStorageService.getUsedSpace();
   }

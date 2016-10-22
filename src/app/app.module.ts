@@ -24,7 +24,7 @@ import { JsonInputComponent } from './json-input.component';
 import { HomeComponent } from './home.component';
 import { CreateModelComponent } from './create-model.component';
 import { UseModelComponent } from './use-model.component';
-import { ExportImportComponent } from './export-import.component';
+import { StorageManagementComponent } from './storage-management.component';
 import { SpecificationsComponent } from './specifications.component';
 import { DicomComponent } from './dicom.component';
 import { JsonEditComponent } from './json-edit.component';
@@ -33,6 +33,8 @@ import { BokehPcolourComponent } from './bokeh-pcolour.component';
 import { ChooseSpecificationsComponent } from './choose-specifications.component'
 
 import { MyJsonPipe } from './my-json.pipe'
+
+import { ModelData, ModelMeasurement, ModelGrid, Predictions } from './model-data'
 
 import { ElectronApiService } from './electron-api.service';
 import { DataService } from './data.service';
@@ -62,7 +64,7 @@ import { LocalStorageService } from './local-storage.service';
     HomeComponent,
     CreateModelComponent,
     UseModelComponent,
-    ExportImportComponent,
+    StorageManagementComponent,
     SpecificationsComponent,
     DicomComponent,
     SendToParameterisationComponent,
@@ -76,7 +78,8 @@ import { LocalStorageService } from './local-storage.service';
     TitleService,
     Title,
     LocalStorageService,
-    Angulartics2GoogleAnalytics
+    Angulartics2GoogleAnalytics,
+    ModelData, ModelMeasurement, ModelGrid, Predictions
   ],
   bootstrap: [
     AppComponent
