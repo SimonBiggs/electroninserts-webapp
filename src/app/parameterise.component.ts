@@ -158,7 +158,7 @@ export class ParameteriseComponent implements OnInit {
     localStorage.setItem("currentSSD", JSON.stringify(Number(
       this.insertData.ssd)))
 
-    this.router.navigate(["/model"])
+    this.router.navigate(["/use-model"])
 
   }
 

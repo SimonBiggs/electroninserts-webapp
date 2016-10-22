@@ -78,15 +78,15 @@
       There exists a length value that is smaller than its corresponding width. Spline modelling is disabled as a result.
     </p>
 
-    <p *ngIf="modelData.measurement.width.length < 8 || modelData.measurement.length.length < 8 || modelData.measurement.factor.length < 8">
+    <p *ngIf="modelData.measurement.width.length < 8 || modelData.measurement.length.length < 8 || modelData.measurement.measuredFactor.length < 8">
       There are currently less than 8 data points. Spline modelling is disabled as a result.
     </p>
 
-    <p *ngIf="modelData.measurement.factor.length != modelData.measurement.width.length || modelData.measurement.factor.length != modelData.measurement.length.length || modelData.measurement.width.length != modelData.measurement.length.length">
+    <p *ngIf="modelData.measurement.measuredFactor.length != modelData.measurement.width.length || modelData.measurement.measuredFactor.length != modelData.measurement.length.length || modelData.measurement.width.length != modelData.measurement.length.length">
       The lengths of the inputs are not equal. Spline modelling is disabled as a result.
     </p>
 
-    <div *ngFor="let key of ['width', 'length', 'factor']">
+    <div *ngFor="let key of ['width', 'length', 'measuredFactor']">
       <mdl-textfield 
         type="text"
         [label]="textboxLabels[key]"
@@ -119,29 +119,31 @@
       mdl-colored="primary" 
       mdl-ripple
       angulartics2On="click" angularticsEvent="Model | Calculate spline model"
-      [disabled]="modelData.measurement.width.length < 8 || modelData.measurement.length.length < 8 || modelData.measurement.factor.length < 8 || dataInFlight || modelData.measurement.factor.length != modelData.measurement.width.length || modelData.measurement.factor.length != modelData.measurement.length.length || modelData.measurement.width.length != modelData.measurement.length.length || !textboxValid['width'] || !textboxValid['length'] || !textboxValid['factor'] || lengthSmallerThanWidth"
+      [disabled]="modelData.measurement.width.length < 8 || modelData.measurement.length.length < 8 || modelData.measurement.measuredFactor.length < 8 || dataInFlight || modelData.measurement.measuredFactor.length != modelData.measurement.width.length || modelData.measurement.measuredFactor.length != modelData.measurement.length.length || modelData.measurement.width.length != modelData.measurement.length.length || !textboxValid['width'] || !textboxValid['length'] || !textboxValid['measuredFactor'] || lengthSmallerThanWidth"
       (click)="basicServerSubmit()">Calculate Spline Model
     </button>
     
-    <div *ngIf="modelData.measurement.width.length > 0 && modelData.measurement.length.length > 0 && modelData.measurement.factor.length > 0">
+
+    <div *ngIf="modelData.measurement.width.length > 0 && modelData.measurement.length.length > 0 && modelData.measurement.measuredFactor.length > 0">
       <my-bokeh-pcolour
         [title]="'Model Plot'"
         [scatter_x]="modelData.measurement.width"
         [scatter_y]="modelData.measurement.length"
-        [scatter_z]="modelData.measurement.factor"
+        [scatter_z]="modelData.measurement.measuredFactor"
         [pcolour_x]="modelData.model.width"
         [pcolour_y]="modelData.model.length"
-        [pcolour_z]="modelData.model.factor"
+        [pcolour_z]="modelData.model.predictedFactor"
         [plot_width]="plot_width"
         [plot_height]="380">
       </my-bokeh-pcolour>
     </div>
-    <div *ngIf="modelData.measurement.width.length == 0 || modelData.measurement.length.length == 0|| modelData.measurement.factor.length == 0">
+    <div *ngIf="modelData.measurement.width.length == 0 || modelData.measurement.length.length == 0|| modelData.measurement.measuredFactor.length == 0">
       <p>
         <font color="red">There is currently no data for this combination.</font> If you wish to load some demo data to see the model in action press the "load demo data" button below.
         To set this model up with your own data follow the instructions in the description at the top of this page.
       </p>
     </div>
+
 
   </div>
 

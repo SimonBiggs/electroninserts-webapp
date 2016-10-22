@@ -2,48 +2,29 @@ import { Component, OnInit, NgZone, ViewChild } from '@angular/core';
 
 import { TitleService } from './title.service'
 import { ElectronApiService } from './electron-api.service';
+import { ModelData } from './model-data'
 
 @Component({
   selector: 'my-create-model',
   templateUrl: './create-model.component.html'
 })
 export class CreateModelComponent implements OnInit {
-  modelData = {
-    measurement: {
-      width: <number[]> [],
-      length: <number[]> [],
-      factor: <number[]> []
-    },
-    model: {
-      width: <number[]> [],
-      length: <number[]> [],
-      factor: <number[]> []
-    },
-    predictions: {
-      width: <number[]> [],
-      length: <number[]> [],
-      area: <number[]> [],
-      measured_factor: <number[]> [],
-      predicted_factor: <number[]> []
-    }
-  }
-
   textboxInput = {
     width: <string>null,
     length: <string>null,
-    factor: <string>null
+    measuredFactor: <string>null
   }
 
   textboxLabels = {
     width: "Equivalent ellipse widths (cm @iso)",
     length: "Equivalent ellipse lengths (cm @iso)",
-    factor: "Measured insert factor (as per TG 25)"
+    measuredFactor: "Measured insert factor (as per TG 25)"
   }
 
   textboxValid = {
     width: true,
     length: true,
-    factor: true
+    measuredFactor: true
   }
 
   currentSettings = {
@@ -66,6 +47,7 @@ export class CreateModelComponent implements OnInit {
   @ViewChild('settingsPicker') settingsPicker: any
 
   constructor(
+    private modelData: ModelData,
     private myTitleService: TitleService,
     private electronApiService: ElectronApiService,
     ngZone: NgZone
@@ -112,34 +94,11 @@ export class CreateModelComponent implements OnInit {
   }
 
   loadMeasuredData() {
-    let key = this.createKey()
-    let parsedData = JSON.parse(localStorage.getItem(key))
+    let localStorageKey = this.createKey()
+    let parsedData = JSON.parse(localStorage.getItem(localStorageKey))
 
-    for (let item of ['measurement', 'model']) {
-      if (parsedData[item] == null) {
-        this.modelData[item] = {
-          width: <number[]> [],
-          length: <number[]> [],
-          factor: <number[]> []
-        }
-      }
-      else {
-        this.modelData[item] = parsedData[item]
-      }
-    }
+    this.modelData.fillFromObject(parsedData)
 
-    if (parsedData['predictions'] == null) {
-      this.modelData['predictions'] = {
-        width: <number[]> [],
-        length: <number[]> [],
-        area: <number[]> [],
-        measured_factor: <number[]> [],
-        predicted_factor: <number[]> []
-      }
-    }
-    else {
-      this.modelData['predictions'] = parsedData['predictions']
-    }
     this.updateTextboxInput()
   }
 
@@ -149,7 +108,7 @@ export class CreateModelComponent implements OnInit {
   }
 
   updateTextboxInput() {
-    for (let key of ['width', 'length', 'factor']) {
+    for (let key of ['width', 'length', 'measuredFactor']) {
       this.textboxInput[key] = String(this.modelData.measurement[key])
         .replace(/,/g, ', ')
     }
@@ -171,11 +130,7 @@ export class CreateModelComponent implements OnInit {
 
   onTextboxChange(key: string, newInput: string) {
     this.textboxValid[key] = false
-    this.modelData.model = {
-      width: <number[]>[],
-      length: <number[]>[],
-      factor: <number[]>[]
-    }
+    this.modelData.model.reset()
 
     try {
       if (this.validateInput(newInput)) {
@@ -199,7 +154,7 @@ export class CreateModelComponent implements OnInit {
       .then((modelResult: any) => {
         this.modelData.model.width = modelResult.model_width;
         this.modelData.model.length = modelResult.model_length;
-        this.modelData.model.factor = modelResult.model_factor;
+        this.modelData.model.predictedFactor = modelResult.model_factor;
         this.dataInFlight = false
         this.saveModel()
       })
@@ -221,11 +176,7 @@ export class CreateModelComponent implements OnInit {
 
     this.settingsPicker.currentSettings = this.currentSettings
 
-    this.modelData.model = {
-      width: <number[]>[],
-      length: <number[]>[],
-      factor: <number[]>[]
-    }
+    this.modelData.model.reset()
 
     this.modelData.measurement.width = [
       3.71, 6.78, 6.3, 7.56, 5.26, 6.53, 7.08, 4.38, 3.66,
@@ -240,7 +191,7 @@ export class CreateModelComponent implements OnInit {
       5.26, 10.85, 4.21, 5.25, 11.27, 11.6, 6.64, 9.81,
       8.42, 6.54, 3.16, 6.28, 10.51, 9.47, 8.99, 13.64,
       6.83, 7.37]
-    this.modelData.measurement.factor = [
+    this.modelData.measurement.measuredFactor = [
       0.9489, 1.0067, 0.9858, 1.0045, 0.9868, 1.0004, 1.0052,
       0.9634, 0.9437, 0.9708, 0.9757, 0.9931, 0.9896, 0.9492,
       0.9911, 1.0067, 0.9923, 0.9879, 0.9609, 0.9884, 0.9587,

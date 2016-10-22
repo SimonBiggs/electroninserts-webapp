@@ -1,8 +1,20 @@
 <div class="mdl-grid">
   <div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet mdl-cell--6-col-phone">
+    <h5>Use models</h5>
     <p>
-      Just use linear interpolation to look up factors.
-      Use ramanujans formula to convert to and from area (is that possible?) within javascript.
+      Component still under construction
+    </p>
+    <p>
+      This component will be where the created models will be used. 
+      Linear interpolation will be used over the 0.1 cm resolution grid returned by the model creation.
+      Factors for prediction will be able to be inputted using width, and then either length or area, and optionally
+      a measured factor can be included for the purpose of comparing model results with measurement.
+    </p>
+    <p>
+      You can either use the parameterisation component to parameterise your shapes, or if you have a large data set of 
+      generic shapes you need only determine the diameter of the largest encompassed circle to define width, and then
+      you may input shape area instead of length.
+      This allows you to quickly check large data sets of previous measurements on generic shapes.
     </p>
   </div>
 

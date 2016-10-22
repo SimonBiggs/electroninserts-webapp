@@ -51,6 +51,10 @@ const appRoutes: Routes = [
     component: HomeComponent
   },
   {
+    path: 'model',
+    redirectTo: 'create-model'
+  },
+  {
     path: '**', component: PageNotFoundComponent
   }
 ];

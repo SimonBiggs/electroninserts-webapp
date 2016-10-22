@@ -112,9 +112,7 @@ export class UseModelComponent {
     let localStorageKey = this.createLocalStorageKey()
     let parsedData = JSON.parse(localStorage.getItem(localStorageKey))
 
-    for (let key of ['measurement', 'model', 'predictions']) {
-      this.modelData[key].fillFromObject(parsedData)
-    }
+    this.modelData.fillFromObject(parsedData)
 
     this.updateAllTextboxInputs()
   }
