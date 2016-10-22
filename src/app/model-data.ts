@@ -81,13 +81,21 @@ export class ModelData {
   ) { }
 
   fillFromObject(object: {}) {
-    for (let propName of this.propNames) {
-      if (object[propName] == null) {
+    if (object == null) {
+      for (let propName of this.propNames) {
         this[propName].reset()
       }
-      else {
-        this[propName].fillFromObject(object[propName])
+    }
+    else {
+      for (let propName of this.propNames) {
+        if (object[propName] == null) {
+          this[propName].reset()
+        }
+        else {
+          this[propName].fillFromObject(object[propName])
+        }
       }
     }
+
   }
 }
