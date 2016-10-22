@@ -144,7 +144,8 @@ export class UseModelComponent {
   }
 
   validateInput(input: string): boolean {
-    return /^(-?\d*(\.\d+)?[,;\s]+)*-?\d*(\.\d+)?[,;\s]*$/.test(input)
+    // return /^(-?\d*(\.\d+)?[,;\s]+)*-?\d*(\.\d+)?[,;\s]*$/.test(input)
+    return /^[-\d\.,;\s]*$/.test(input)
   }
 
   onTextboxChange(key: string, newInput: string) {

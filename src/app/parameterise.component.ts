@@ -185,7 +185,9 @@ export class ParameteriseComponent implements OnInit {
   }
 
   validateInput(input: string): boolean {
-    return /^(-?\d*(\.\d+)?[,;\s]+)*-?\d*(\.\d+)?[,;\s]*$/.test(input)
+    // return /^(-?\d*(\.\d+)?[,;\s]+)*-?\d*(\.\d+)?[,;\s]*$/.test(input)
+    return /^[-\d\.,;\s]*$/.test(input)
+    // return true
   }
 
   inputTextAreaX(xInput: string) {

@@ -125,7 +125,8 @@ export class CreateModelComponent implements OnInit {
   }
 
   validateInput(input: string): boolean {
-    return /^(-?\d*(\.\d+)?[,;\s]+)*-?\d*(\.\d+)?[,;\s]*$/.test(input)
+    // return /^(-?\d*(\.\d+)?[,;\s]+)*-?\d*(\.\d+)?[,;\s]*$/.test(input)
+    return true
   }
 
   onTextboxChange(key: string, newInput: string) {
