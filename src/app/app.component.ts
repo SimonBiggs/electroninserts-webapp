@@ -35,12 +35,12 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
-    let redirect = sessionStorage['redirect'];
-    delete sessionStorage['redirect'];
-    if (redirect && redirect != location.href) {
-      history.replaceState(null, null, redirect);
-      this.router.navigate([redirect])
-    }
+    // let redirect = sessionStorage['redirect'];
+    // delete sessionStorage['redirect'];
+    // if (redirect && redirect != location.href) {
+    //   history.replaceState(null, null, redirect);
+    //   this.router.navigate([redirect])
+    // }
     
     this.electronApiService.wakeUpServer();
 
