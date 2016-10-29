@@ -1,4 +1,4 @@
-<div class="mdl-grid">
+<div class="mdl-grid" *ngIf="this.machineList!=null">
   <div 
       *ngIf="this.machineList.length > 0" 
       class="mdl-cell mdl-cell--3-col mdl-cell--4-col-tablet mdl-cell--2-col-phone">
@@ -65,3 +65,9 @@
   </div>
 </div>
   
+<div class="mdl-grid" *ngIf="this.machineList==null">
+  <div class="mdl-cell mdl-cell--3-col mdl-cell--4-col-tablet mdl-cell--2-col-phone">
+    <h6>Machine ID</h6>
+    <select></select>
+  </div>
+</div>

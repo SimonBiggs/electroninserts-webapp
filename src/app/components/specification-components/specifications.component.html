@@ -36,7 +36,7 @@
                   mdl-button
                   mdl-button-type="icon"
                   mdl-ripple
-                  [disabled]="machine==currentMachine || edittingMachine!=null"
+                  [disabled]="machine==currentSettings.machine || edittingMachine!=null"
                   (click)="changeCurrentMachine(machine)"><mdl-icon>dashboard</mdl-icon>       
                 </button>
                 <button
@@ -83,7 +83,7 @@
                   mdl-button-type="icon"
                   mdl-ripple
                   mdl-colored="primary" 
-                  [disabled]="machine==currentMachine || edittingMachine!=null"
+                  [disabled]="machine==currentSettings.machine || edittingMachine!=null"
                   (click)="changeCurrentMachine(machine)"><mdl-icon>dashboard</mdl-icon>       
                 </button>
                 <button
@@ -133,16 +133,16 @@
     </mdl-card>
   </div>
 
-  <div *ngIf="currentMachine" class="mdl-cell mdl-cell--4-col mdl-cell--4-col-tablet mdl-cell--6-col-phone">
+  <div *ngIf="currentSettings.machine" class="mdl-cell mdl-cell--4-col mdl-cell--4-col-tablet mdl-cell--6-col-phone">
     <mdl-card mdl-shadow="6"  style="width:100%">
       <mdl-card-title>
-        <h2 mdl-card-title-text>Energies for {{currentMachine}}</h2>
+        <h2 mdl-card-title-text>Energies for {{currentSettings.machine}}</h2>
       </mdl-card-title>
         <mdl-list>
-          <mdl-list-item *ngFor="let energy of specifications[currentMachine].energy" lines="3">
+          <mdl-list-item *ngFor="let energy of specifications[currentSettings.machine].energy" lines="3">
             <mdl-list-item-primary-content>
               <span>{{energy}} MeV</span>
-              <mdl-list-item-text-body>R50: {{specifications[currentMachine].R50[energy]}} cm</mdl-list-item-text-body>
+              <mdl-list-item-text-body>R50: {{specifications[currentSettings.machine].R50[energy]}} cm</mdl-list-item-text-body>
             </mdl-list-item-primary-content>
             <mdl-list-item-secondary-action>
               <button
@@ -200,13 +200,13 @@
     </mdl-card>
   </div>
 
-  <div *ngIf="currentMachine" class="mdl-cell mdl-cell--4-col mdl-cell--4-col-tablet mdl-cell--6-col-phone">
+  <div *ngIf="currentSettings.machine" class="mdl-cell mdl-cell--4-col mdl-cell--4-col-tablet mdl-cell--6-col-phone">
     <mdl-card mdl-shadow="6"  style="width:100%">
       <mdl-card-title>
-        <h2 mdl-card-title-text>Applicators for {{currentMachine}}</h2>
+        <h2 mdl-card-title-text>Applicators for {{currentSettings.machine}}</h2>
       </mdl-card-title>
         <mdl-list>
-          <mdl-list-item *ngFor="let applicator of specifications[currentMachine].applicator">
+          <mdl-list-item *ngFor="let applicator of specifications[currentSettings.machine].applicator">
             <mdl-list-item-primary-content>
               <mdl-list-item-text-body>{{applicator}}</mdl-list-item-text-body>
             </mdl-list-item-primary-content>
@@ -258,13 +258,13 @@
     </mdl-card>
   </div>
 
-  <div *ngIf="currentMachine" class="mdl-cell mdl-cell--4-col mdl-cell--4-col-tablet mdl-cell--6-col-phone">
+  <div *ngIf="currentSettings.machine" class="mdl-cell mdl-cell--4-col mdl-cell--4-col-tablet mdl-cell--6-col-phone">
     <mdl-card mdl-shadow="6"  style="width:100%">
       <mdl-card-title>
-        <h2 mdl-card-title-text>SSDs for {{currentMachine}}</h2>
+        <h2 mdl-card-title-text>SSDs for {{currentSettings.machine}}</h2>
       </mdl-card-title>
         <mdl-list>
-          <mdl-list-item *ngFor="let ssd of specifications[currentMachine].ssd">
+          <mdl-list-item *ngFor="let ssd of specifications[currentSettings.machine].ssd">
             <mdl-list-item-primary-content>
               <mdl-list-item-text-body>{{ssd}} cm</mdl-list-item-text-body>
             </mdl-list-item-primary-content>

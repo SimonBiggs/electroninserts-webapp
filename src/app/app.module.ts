@@ -30,7 +30,7 @@ import { BokehUseModelComponent } from './components/bokeh-components/bokeh-use-
 import { HomeComponent } from './components/home-components/home.component'
 // Speciation components
 import { SpecificationsComponent } from './components/specification-components/specifications.component'
-import { ChooseSpecificationsComponent } from './components/specification-components/choose-specifications.component'
+import { ChooseSpecificationsComponent } from './components/model-components/choose-specifications.component'
 import { JsonEditComponent } from './components/specification-components/json-edit.component'
 // Dicom components
 import { DicomComponent } from './components/dicom-components/dicom.component'

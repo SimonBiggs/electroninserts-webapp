@@ -2,6 +2,10 @@ import { Component, OnInit } from '@angular/core';
 
 import { TitleService } from '../../services/utility-services/title.service'
 
+import { CurrentSettings } from '../../services/data-services/current-settings'
+import { DataPersistenceService } from '../../services/data-services/data-persistence.service'
+
+
 @Component({
   selector: 'my-specifications',
   templateUrl: './specifications.component.html'
@@ -9,7 +13,6 @@ import { TitleService } from '../../services/utility-services/title.service'
 export class SpecificationsComponent implements OnInit {
   machines: string[];
   specifications = {};
-  currentMachine: string;
 
   newMachineID: string;
   newMachineIDValid: boolean = false;
@@ -33,16 +36,19 @@ export class SpecificationsComponent implements OnInit {
   newSSDValid: boolean = false;
   edittingSSD: string = null;
 
-
   constructor(
-    private myTitleService: TitleService
+    private myTitleService: TitleService,
+    private currentSettings: CurrentSettings,
+    private dataPersistenceService: DataPersistenceService
   ) {}
 
 
   ngOnInit() {
     this.myTitleService.setTitle('Specifications');
-    
-    this.changeSpecifications(JSON.parse(localStorage.getItem("specifications")));    
+    this.dataPersistenceService.loadCurrentSettings(this.currentSettings).then(() => {
+      
+    })
+    this.changeSpecifications(JSON.parse(localStorage.getItem("specifications"))) 
   }
 
   changeSpecifications(newSpecifications: {}) {
@@ -53,12 +59,9 @@ export class SpecificationsComponent implements OnInit {
     }
     else {
       this.machines = Object.keys(this.specifications).sort();
-
-      this.currentMachine = JSON.parse(localStorage.getItem("current_machine"));
-      if (this.currentMachine == null || this.specifications[this.currentMachine] === undefined) {
-        this.currentMachine = this.machines[0];
-      }
     }
+    
+    this.dataPersistenceService.saveCurrentSettings(this.currentSettings)
     this.updateSpecifications()
   } 
 
@@ -67,8 +70,8 @@ export class SpecificationsComponent implements OnInit {
   }
 
   changeCurrentMachine(machine: string) {
-    this.currentMachine = machine;
-    this.updateCurrentMachine()
+    this.currentSettings.machine = machine;
+    this.dataPersistenceService.saveCurrentSettings(this.currentSettings)
   }
 
   checkNewMachineIDInput() {
@@ -120,7 +123,7 @@ export class SpecificationsComponent implements OnInit {
   }
 
   checkNewEnergyInput() {
-    if (this.specifications[this.currentMachine]["energy"].indexOf(Number(this.newEnergy)) < 0 && this.newEnergy != null && !isNaN(Number(this.newEnergy))) {
+    if (this.specifications[this.currentSettings.machine]["energy"].indexOf(Number(this.newEnergy)) < 0 && this.newEnergy != null && !isNaN(Number(this.newEnergy))) {
       this.newEnergyValid = true;
     }
     else {
@@ -147,8 +150,8 @@ export class SpecificationsComponent implements OnInit {
 
   addEnergy() {
     if (this.newEnergySetValid) {
-      this.specifications[this.currentMachine]["energy"].push(Number(this.newEnergy));
-      this.specifications[this.currentMachine]["R50"][this.newEnergy] = Number(this.newR50);
+      this.specifications[this.currentSettings.machine]["energy"].push(Number(this.newEnergy));
+      this.specifications[this.currentSettings.machine]["R50"][this.newEnergy] = Number(this.newR50);
 
       this.newEnergy = null;
       this.newR50 = null;
@@ -162,7 +165,7 @@ export class SpecificationsComponent implements OnInit {
   }
 
   checkNewApplicatorInput() {
-    if (this.specifications[this.currentMachine]["applicator"].indexOf(this.newApplicator.toLowerCase()) < 0 && this.newApplicator != null && this.newApplicator != "") {
+    if (this.specifications[this.currentSettings.machine]["applicator"].indexOf(this.newApplicator.toLowerCase()) < 0 && this.newApplicator != null && this.newApplicator != "") {
       this.newApplicatorValid = true;
     }
     else {
@@ -172,7 +175,7 @@ export class SpecificationsComponent implements OnInit {
 
   addApplicator() {
     if (this.newApplicatorValid) { 
-      this.specifications[this.currentMachine]["applicator"].push(this.newApplicator.toLowerCase());
+      this.specifications[this.currentSettings.machine]["applicator"].push(this.newApplicator.toLowerCase());
 
       this.newApplicator = null;
       this.newApplicatorValid = false;
@@ -182,7 +185,7 @@ export class SpecificationsComponent implements OnInit {
   }
 
   checkNewSSDInput() {
-    if (this.specifications[this.currentMachine]["ssd"].indexOf(Number(this.newSSD)) < 0 && this.newSSD != null && !isNaN(Number(this.newSSD))) {
+    if (this.specifications[this.currentSettings.machine]["ssd"].indexOf(Number(this.newSSD)) < 0 && this.newSSD != null && !isNaN(Number(this.newSSD))) {
       this.newSSDValid = true;
     }
     else {
@@ -192,7 +195,7 @@ export class SpecificationsComponent implements OnInit {
 
   addSSD() {
     if (this.newSSDValid) {
-    this.specifications[this.currentMachine]["ssd"].push(Number(this.newSSD));
+    this.specifications[this.currentSettings.machine]["ssd"].push(Number(this.newSSD));
 
     this.newSSD = null;
     this.newSSDValid = false;
@@ -201,12 +204,8 @@ export class SpecificationsComponent implements OnInit {
     }
   }
 
-  updateCurrentMachine() {
-    localStorage.setItem("current_machine", JSON.stringify(this.currentMachine));
-  }
-
   editMachine(machine:string) {
-    this.currentMachine = null;
+    this.currentSettings.machine = null;
     this.edittingMachine = machine;
   }
 
@@ -220,7 +219,7 @@ export class SpecificationsComponent implements OnInit {
 
     this.updateSpecifications();
 
-    this.currentMachine = this.edittingMachine;
+    this.currentSettings.machine = this.edittingMachine;
     this.edittingMachine = null;
   }
 

@@ -1,19 +1,19 @@
 import Dexie from 'dexie'
 
-import { ModelData } from './model-data'
+import { ModelData, ModelDataLite } from './model-data'
 import { MachineSpecification } from './specifications-data'
 import { CurrentSettings } from './current-settings'
 
 export class DexieDatabase extends Dexie {
   
-  modelData: Dexie.Table<ModelData, number>
+  modelData: Dexie.Table<ModelDataLite, number>
   specification: Dexie.Table<MachineSpecification, number>
   currentSettings: Dexie.Table<CurrentSettings, number>
 
   constructor() {
     super("DefaultDatabase")
     let db = this
-
+    // db.delete()
     db.version(1).stores({
       modelData: 'machineSettingsKey, measurement, model, predictions',
       specification: 'machine, makeAndModel, energy, R50, applicator, ssd',

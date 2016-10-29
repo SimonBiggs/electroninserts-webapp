@@ -122,30 +122,14 @@ export class ParameteriseComponent implements OnInit {
       this.dataPersistenceService.saveModelData(this.modelData, this.currentSettings)
     })
 
-    localStorage.setItem("current_machine", JSON.stringify(Number(
-      this.insertData.machine)))
-    localStorage.setItem("currentEnergy", JSON.stringify(Number(
-      this.insertData.energy)))
-    localStorage.setItem("currentApplicator", JSON.stringify(
-      this.insertData.applicator))
-    localStorage.setItem("currentSSD", JSON.stringify(Number(
-      this.insertData.ssd)))
-
+    this.dataPersistenceService.saveCurrentSettings(this.currentSettings)
   }
 
   predictFactor() {
-    localStorage.setItem("current_machine", JSON.stringify(Number(
-      this.insertData.machine)))
-    localStorage.setItem("currentEnergy", JSON.stringify(Number(
-      this.insertData.energy)))
-    localStorage.setItem("currentApplicator", JSON.stringify(
-      this.insertData.applicator))
-    localStorage.setItem("currentSSD", JSON.stringify(Number(
-      this.insertData.ssd)))
-
     for (let key of Object.keys(this.currentSettings)) {
       this.currentSettings[key] = this.insertData[key]
     }
+    this.dataPersistenceService.saveCurrentSettings(this.currentSettings)
 
     this.dataPersistenceService.loadModelData(this.modelData, this.currentSettings).then(() => {
       this.modelData.predictions.width.unshift(this.parameterisation.width)

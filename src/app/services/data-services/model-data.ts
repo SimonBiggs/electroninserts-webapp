@@ -118,8 +118,46 @@ export class ModelData {
     this.predictions.initialLengthAreaUpdate()
   }
 
-  // getCurrentSettings() {
-
-  // }
+  exportLite(): ModelDataLite {
+    let modelDataLite = <ModelDataLite>{
+      machineSettingsKey: this.machineSettingsKey,
+      measurement: {
+        width: this.measurement.width,
+        length: this.measurement.length,
+        measuredFactor: this.measurement.measuredFactor
+      },
+      model: {
+        width: this.model.width,
+        length: this.model.length,
+        predictedFactor: this.model.predictedFactor
+      },
+      predictions: {
+        width: this.predictions.width,
+        length: this.predictions.length,
+        measuredFactor: this.predictions.measuredFactor,
+        predictedFactor: this.predictions.predictedFactor
+      }
+    }
+    return modelDataLite
+  }
 }
 
+export interface ModelDataLite {
+  machineSettingsKey: string
+  measurement: {
+    width: number[],
+    length: number[],
+    measuredFactor: number[]
+  }
+  model: {
+    width: number[],
+    length: number[],
+    predictedFactor: number[]
+  }
+  predictions: {
+    width: number[],
+    length: number[],
+    measuredFactor: number[],
+    predictedFactor: number[]
+  }
+}
