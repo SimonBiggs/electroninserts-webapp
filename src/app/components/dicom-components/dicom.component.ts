@@ -2,11 +2,11 @@ import { Component, OnInit, ApplicationRef, ViewChild } from '@angular/core';
 
 import { Router } from '@angular/router';
 
-import { Coordinates } from './coordinates'
-import { Parameterisation } from './parameterisation';
-import { InsertData } from './insert-data';
+import { Coordinates } from '../../interfaces/coordinates'
+import { Parameterisation } from '../../interfaces/parameterisation';
+import { InsertData } from '../../interfaces/insert-data';
 
-import { TitleService } from './title.service';
+import { TitleService } from '../../services/utility-services/title.service';
 
 import { safeLoad } from 'js-yaml';
 

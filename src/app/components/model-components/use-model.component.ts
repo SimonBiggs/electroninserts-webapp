@@ -1,11 +1,11 @@
 import { Component, OnInit, ViewChild, NgZone, OnDestroy, AfterViewInit } from '@angular/core';
 
-import { TitleService } from './title.service'
-import { ModelData } from './model-data'
+import { TitleService } from '../../services/utility-services/title.service'
+import { ModelData } from '../../services/data-services/model-data'
 
 import { WidthLengthAreaInputComponent } from './width-length-area-input.component'
 
-import { validateInput } from './sanitise-validation'
+import { validateInput } from '../../services/utility-services/sanitise-validation'
 
 
 @Component({

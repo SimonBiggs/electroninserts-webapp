@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Parameterisation } from './parameterisation'
+import { Parameterisation } from '../../interfaces/parameterisation'
 
 import { DEMO_PARAMETERISE_INPUT } from './demo-data';
 // import { DEMO_MODEL_INPUT } from './demo-data';

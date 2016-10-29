@@ -1,9 +1,8 @@
 import { Component, OnInit, Input, Output, EventEmitter, DoCheck } from '@angular/core';
 
-import { TitleService } from './title.service'
-import { ModelData, AreaLengthConversion } from './model-data'
+import { ModelData, AreaLengthConversion } from '../../services/data-services/model-data'
 
-import { validateInput } from './sanitise-validation'
+import { validateInput } from '../../services/utility-services/sanitise-validation'
 
 
 @Component({

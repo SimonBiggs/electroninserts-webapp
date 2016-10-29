@@ -1,6 +1,6 @@
 import { Component, Input, Output, OnChanges, EventEmitter, ViewChild, OnInit } from '@angular/core';
 
-import { MyJsonPipe } from './my-json.pipe'
+import { MyJsonPipe } from '../../pipes/my-json.pipe'
 import { JsonPipe } from '@angular/common';
 
 @Component({

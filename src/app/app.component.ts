@@ -6,8 +6,8 @@ import { Title } from '@angular/platform-browser';
 import { Angulartics2 } from 'angulartics2';
 import { Angulartics2GoogleAnalytics } from 'angulartics2/src/providers/angulartics2-google-analytics';
 
-import { ElectronApiService } from './electron-api.service';
-import { TitleService } from './title.service';
+import { ElectronApiService } from './services/server-api-services/electron-api.service';
+import { TitleService } from './services/utility-services/title.service';
 
 @Component({
   selector: 'my-app',

@@ -2,18 +2,18 @@ import { Component, OnInit, Input, ViewChild } from '@angular/core';
 
 import { Router } from '@angular/router';
 
-import { Parameterisation } from './parameterisation';
-import { InsertData } from './insert-data';
+import { Parameterisation } from '../../interfaces/parameterisation';
+import { InsertData } from '../../interfaces/insert-data';
 
 // import { CookieService } from 'angular2-cookie/core';
-import { ElectronApiService } from './electron-api.service';
-import { DataService } from './data.service';
-import { TitleService } from './title.service';
+import { ElectronApiService } from '../../services/server-api-services/electron-api.service';
+import { DataService } from '../../services/data-services/data.service';
+import { TitleService } from '../../services/utility-services/title.service';
 // import { LocalStorageService } from './local-storage.service';
 
-import { ModelData } from './model-data'
+import { ModelData } from '../../services/data-services/model-data'
 
-import { DEMO_PARAMETERISE_INPUT } from './demo-data';
+import { DEMO_PARAMETERISE_INPUT } from '../../services/data-services/demo-data';
 
 @Component({
   selector: 'my-parameterise',

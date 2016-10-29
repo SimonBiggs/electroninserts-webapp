@@ -4,14 +4,14 @@ import { Routes, RouterModule } from '@angular/router';
 import { Angulartics2Module } from 'angulartics2';
 import { Angulartics2GoogleAnalytics } from 'angulartics2/src/providers/angulartics2-google-analytics';
 
-import { ParameteriseComponent } from './parameterise.component';
-import { PageNotFoundComponent } from './page-not-found.component';
-import { HomeComponent } from './home.component';
-import { CreateModelComponent } from './create-model.component';
-import { UseModelComponent } from './use-model.component'
-import { StorageManagementComponent } from './storage-management.component';
-import { SpecificationsComponent } from './specifications.component';
-import { DicomComponent } from './dicom.component';
+import { ParameteriseComponent } from './components/parameterise-components/parameterise.component';
+import { PageNotFoundComponent } from './components/misc-components/page-not-found.component';
+import { HomeComponent } from './components/home-components/home.component';
+import { CreateModelComponent } from './components/model-components/create-model.component';
+import { UseModelComponent } from './components/model-components/use-model.component'
+import { StorageManagementComponent } from './components/storage-components/storage-management.component';
+import { SpecificationsComponent } from './components/specification-components/specifications.component';
+import { DicomComponent } from './components/dicom-components/dicom.component';
 
 
 const appRoutes: Routes = [

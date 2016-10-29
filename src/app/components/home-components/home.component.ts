@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
-import { TitleService } from './title.service'
+import { TitleService } from '../../services/utility-services/title.service'
 
 
 @Component({

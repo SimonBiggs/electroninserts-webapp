@@ -1,8 +1,8 @@
 import { Component, OnInit, NgZone, ViewChild, OnDestroy } from '@angular/core';
 
-import { TitleService } from './title.service'
-import { ElectronApiService } from './electron-api.service';
-import { ModelData } from './model-data'
+import { TitleService } from '../../services/utility-services/title.service'
+import { ElectronApiService } from '../../services/server-api-services/electron-api.service';
+import { ModelData } from '../../services/data-services/model-data'
 
 import { WidthLengthAreaInputComponent } from './width-length-area-input.component'
 

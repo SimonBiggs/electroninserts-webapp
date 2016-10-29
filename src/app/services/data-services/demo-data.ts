@@ -1,5 +1,5 @@
-import { Parameterisation } from './parameterisation';
-import { Coordinates } from './coordinates';
+import { Parameterisation } from '../../interfaces/parameterisation';
+import { Coordinates } from '../../interfaces/coordinates';
 
 const insert: Coordinates = {
   x: [

@@ -1,6 +1,6 @@
 import { Component, OnInit, Input} from '@angular/core';
 
-import { Coordinates } from './coordinates';
+import { Coordinates } from '../../interfaces/coordinates';
 
 import { MdlDefaultTableModel } from 'angular2-mdl';
 

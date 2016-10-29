@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
-import { TitleService } from './title.service'
-import { LocalStorageService } from './local-storage.service';
+import { TitleService } from '../../services/utility-services/title.service'
+import { LocalStorageService } from '../../services/data-services/local-storage.service';
 
 @Component({
   selector: 'my-storage-management',
