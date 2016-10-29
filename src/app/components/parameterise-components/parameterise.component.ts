@@ -10,6 +10,7 @@ import { ElectronApiService } from '../../services/server-api-services/electron-
 import { DataService } from '../../services/data-services/data.service';
 import { TitleService } from '../../services/utility-services/title.service';
 import { DataPersistenceService } from '../../services/data-services/data-persistence.service'
+import { CurrentSettings } from '../../services/data-services/current-settings'
 // import { LocalStorageService } from './local-storage.service';
 
 import { ModelData } from '../../services/data-services/model-data'
@@ -29,7 +30,8 @@ export class ParameteriseComponent implements OnInit {
     width: null,
     length: null,
     circle: null,
-    ellipse: null
+    ellipse: null,
+    measuredFactor: null
   };
   machineSpecifications: {};
 
@@ -74,19 +76,13 @@ export class ParameteriseComponent implements OnInit {
 
   R50: number;
 
-  currentSettings: {
-    machine: string, 
-    energy: number, 
-    applicator: string, 
-    ssd: number
-  }
-
   constructor(
     private electronApiService: ElectronApiService,
     private dataService: DataService,
     private myTitleService: TitleService,
     private router: Router,
     private modelData: ModelData,
+    private currentSettings: CurrentSettings,
     private dataPersistenceService: DataPersistenceService,
   ) { }
 
@@ -112,11 +108,8 @@ export class ParameteriseComponent implements OnInit {
     this.dataAlreadyExistsOnModel = true
     this.ableToAddDataToModel = false
 
-    this.currentSettings = {
-      machine: this.insertData.machine,
-      energy: this.insertData.energy,
-      applicator: this.insertData.applicator,
-      ssd: this.insertData.ssd
+    for (let key of Object.keys(this.currentSettings)) {
+      this.currentSettings[key] = this.insertData[key]
     }
 
     this.dataPersistenceService.loadModelData(this.modelData, this.currentSettings).then(() => {
@@ -150,11 +143,8 @@ export class ParameteriseComponent implements OnInit {
     localStorage.setItem("currentSSD", JSON.stringify(Number(
       this.insertData.ssd)))
 
-    this.currentSettings = {
-      machine: this.insertData.machine,
-      energy: this.insertData.energy,
-      applicator: this.insertData.applicator,
-      ssd: this.insertData.ssd
+    for (let key of Object.keys(this.currentSettings)) {
+      this.currentSettings[key] = this.insertData[key]
     }
 
     this.dataPersistenceService.loadModelData(this.modelData, this.currentSettings).then(() => {
@@ -164,9 +154,9 @@ export class ParameteriseComponent implements OnInit {
         this.modelData.predictions.measuredFactor.unshift(this.insertData.factor)
       }    
 
-      this.dataPersistenceService.saveModelData(this.modelData, this.currentSettings)
-
-      this.router.navigate(["/use-model"])
+      this.dataPersistenceService.saveModelData(this.modelData, this.currentSettings).then(() => {
+        this.router.navigate(["/use-model"])
+      })
     })
 
 
@@ -315,11 +305,8 @@ export class ParameteriseComponent implements OnInit {
     this.ableToAddDataToModel = false;
     this.dataAlreadyExistsOnModel = false;
     if (this.machineSettingsExist) {
-      this.currentSettings = {
-        machine: this.insertData.machine,
-        energy: this.insertData.energy,
-        applicator: this.insertData.applicator,
-        ssd: this.insertData.ssd
+      for (let key of Object.keys(this.currentSettings)) {
+        this.currentSettings[key] = this.insertData[key]
       }
 
       this.dataPersistenceService.loadModelData(this.modelData, this.currentSettings).then(() => {

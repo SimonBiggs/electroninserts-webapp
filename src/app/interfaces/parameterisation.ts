@@ -6,6 +6,7 @@ export class Parameterisation {
     public width?: number,
     public length?: number,
     public circle?: Coordinates,
-    public ellipse?: Coordinates
+    public ellipse?: Coordinates,
+    public measuredFactor?: number
   ) { }
 }

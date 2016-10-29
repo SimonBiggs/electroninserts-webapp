@@ -1,6 +1,6 @@
 export class Base {
-  public propNames: string[]
-  public keyConversions: {}
+  protected propNames: string[]
+  protected keyConversions: {}
 
   reset() {
     for (let propName of this.propNames) {

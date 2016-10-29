@@ -4,6 +4,7 @@ import { TitleService } from '../../services/utility-services/title.service'
 import { ElectronApiService } from '../../services/server-api-services/electron-api.service';
 import { ModelData } from '../../services/data-services/model-data'
 import { DataPersistenceService } from '../../services/data-services/data-persistence.service'
+import { CurrentSettings } from '../../services/data-services/current-settings'
 
 import { WidthLengthAreaInputComponent } from './width-length-area-input.component'
 
@@ -21,13 +22,6 @@ export class CreateModelComponent implements OnInit, OnDestroy{
 
   textboxValid = true  
 
-  currentSettings = {
-    machine: <string> null,
-    energy: <number> null,
-    applicator: <string> null,
-    ssd: <number> null
-  }
-
   lengthSmallerThanWidth: boolean = false
   
   plot_width = 600
@@ -44,6 +38,7 @@ export class CreateModelComponent implements OnInit, OnDestroy{
     private myTitleService: TitleService,
     private electronApiService: ElectronApiService,
     private dataPersistenceService: DataPersistenceService,
+    private currentSettings: CurrentSettings,
     private ngZone: NgZone
   ) {
     window.onresize = (e) => {

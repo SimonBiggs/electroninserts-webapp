@@ -3,29 +3,26 @@ import { Injectable } from '@angular/core';
 import Dexie from 'dexie'
 
 import { ModelData } from './model-data'
+import { CurrentSettings } from './current-settings'
 import { db } from './dexie.service'
 
 
 @Injectable()
-export class DataPersistenceService {
-  createStorageKey(currentSettings: {machine: string, energy: number, applicator: string, ssd: number}) {
-    let storageKey = (
-      '{"machine":' + JSON.stringify(String(currentSettings.machine)) + ',' +
-      '"energy":' + JSON.stringify(Number(currentSettings.energy)) + ',' +
-      '"applicator":' + JSON.stringify(String(currentSettings.applicator)) + ',' +
-      '"ssd":' + JSON.stringify(Number(currentSettings.ssd)) +
-      '}')
+export class DataPersistenceService {  
+  loadSpecificationsData() {
 
-    return storageKey
   }
 
-  loadModelData(modelData: ModelData, currentSettings: {machine: string, energy: number, applicator: string, ssd: number}) {
-    let storageKey = this.createStorageKey(currentSettings)
+  saveSpecificationsData() {
 
-    modelData.machineSettingsKey = this.createStorageKey(currentSettings)
+  }
+
+  loadModelData(modelData: ModelData, currentSettings: CurrentSettings) {
+    let storageKey = currentSettings.returnKey()
+    modelData.machineSettingsKey = storageKey
 
     return db.modelData.where('machineSettingsKey').equals(storageKey).toArray()
-      .then((result) => {
+      .then((result: ModelData[]) => {
         if (result.length == 0) {
           let parsedData = JSON.parse(localStorage.getItem(storageKey))
           modelData.fillFromObject(parsedData)
@@ -37,14 +34,12 @@ export class DataPersistenceService {
       })
   }
 
-  saveModelData(modelData: ModelData, currentSettings: {machine: string, energy: number, applicator: string, ssd: number}) {
-    let storageKey = this.createStorageKey(currentSettings)
-    // localStorage.setItem(storageKey, JSON.stringify(modelData))
+  saveModelData(modelData: ModelData, currentSettings: CurrentSettings) {
+    let storageKey = currentSettings.returnKey()
+    modelData.machineSettingsKey = storageKey
 
-    modelData.machineSettingsKey = this.createStorageKey(currentSettings)
-
-    db.modelData.where('machineSettingsKey').equals(storageKey).toArray()
-      .then((result) => {
+    return db.modelData.where('machineSettingsKey').equals(storageKey).toArray()
+      .then((result: ModelData[]) => {
         if (result.length == 0) {
           db.modelData.add(modelData)
         }

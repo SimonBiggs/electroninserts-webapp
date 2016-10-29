@@ -63,8 +63,8 @@ export class AreaLengthConversion extends Base {
 
 @Injectable()
 export class ModelMeasurement extends AreaLengthConversion {
-  public propNames: string[] = ['width', 'length', 'area', 'measuredFactor']
-  public keyConversions: {} = {
+  protected propNames: string[] = ['width', 'length', 'area', 'measuredFactor']
+  protected keyConversions: {} = {
     'factor': 'measuredFactor'
   }
   
@@ -72,8 +72,8 @@ export class ModelMeasurement extends AreaLengthConversion {
 
 @Injectable()
 export class ModelGrid extends Base  {
-  public propNames: string[] = ['width', 'length', 'predictedFactor']
-  public keyConversions: {} = {
+  protected propNames: string[] = ['width', 'length', 'predictedFactor']
+  protected keyConversions: {} = {
     'factor': 'predictedFactor'
   }
   public width: number[] = []
@@ -83,13 +83,13 @@ export class ModelGrid extends Base  {
 
 @Injectable()
 export class Predictions extends AreaLengthConversion {
-  public propNames: string[] = ['width', 'length', 'area', 'measuredFactor', 'predictedFactor']
+  protected propNames: string[] = ['width', 'length', 'area', 'measuredFactor', 'predictedFactor']
   public predictedFactor: number[] = []
 }
 
 @Injectable()
 export class ModelData {
-  public propNames: string[] = ['measurement', 'model', 'predictions']
+  protected propNames: string[] = ['measurement', 'model', 'predictions']
   public machineSettingsKey: string
 
   constructor(    

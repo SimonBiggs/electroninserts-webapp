@@ -3,6 +3,7 @@ import { Component, OnInit, ViewChild, NgZone, OnDestroy, AfterViewInit } from '
 import { TitleService } from '../../services/utility-services/title.service'
 import { ModelData } from '../../services/data-services/model-data'
 import { DataPersistenceService } from '../../services/data-services/data-persistence.service'
+import { CurrentSettings } from '../../services/data-services/current-settings'
 
 import { WidthLengthAreaInputComponent } from './width-length-area-input.component'
 
@@ -21,13 +22,6 @@ export class UseModelComponent implements OnInit, OnDestroy, AfterViewInit {
     measuredFactor: "[Optional] Measured insert factor (as per TG 25)"
   }
 
-  currentSettings = {
-    machine: <string> null,
-    energy: <number> null,
-    applicator: <string> null,
-    ssd: <number> null
-  }
-
   modelLookup = {}
   predictionDifference: number[] = []
   
@@ -43,6 +37,7 @@ export class UseModelComponent implements OnInit, OnDestroy, AfterViewInit {
     private modelData: ModelData,
     private myTitleService: TitleService,
     private dataPersistenceService: DataPersistenceService,
+    private currentSettings: CurrentSettings,
     private ngZone: NgZone
   ) {
     window.onresize = (e) => {

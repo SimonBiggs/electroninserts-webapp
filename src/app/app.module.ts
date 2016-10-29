@@ -54,6 +54,7 @@ import { MyJsonPipe } from './pipes/my-json.pipe'
 // My services
 // Data services
 import { ModelData, ModelMeasurement, ModelGrid, Predictions, AreaLengthConversion } from './services/data-services/model-data'
+import { CurrentSettings } from './services/data-services/current-settings'
 import { DataService } from './services/data-services/data.service'
 import { DataPersistenceService } from './services/data-services/data-persistence.service'
 import { LocalStorageService } from './services/data-services/local-storage.service'
@@ -101,7 +102,8 @@ import { TitleService } from './services/utility-services/title.service'
     LocalStorageService,
     Angulartics2GoogleAnalytics,
     ModelData, ModelMeasurement, ModelGrid, Predictions, AreaLengthConversion,
-    DataPersistenceService
+    DataPersistenceService,
+    CurrentSettings
   ],
   bootstrap: [
     AppComponent
