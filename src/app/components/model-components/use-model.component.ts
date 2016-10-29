@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild, NgZone, OnDestroy, AfterViewInit } from '
 
 import { TitleService } from '../../services/utility-services/title.service'
 import { ModelData } from '../../services/data-services/model-data'
+import { DataPersistenceService } from '../../services/data-services/data-persistence.service'
 
 import { WidthLengthAreaInputComponent } from './width-length-area-input.component'
 
@@ -41,6 +42,7 @@ export class UseModelComponent implements OnInit, OnDestroy, AfterViewInit {
   constructor(
     private modelData: ModelData,
     private myTitleService: TitleService,
+    private dataPersistenceService: DataPersistenceService,
     private ngZone: NgZone
   ) {
     window.onresize = (e) => {
@@ -130,16 +132,16 @@ export class UseModelComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   loadMeasuredData() {
-    this.modelData.loadModelData(this.currentSettings)
-
-    this.updateModelLookup()
-    this.updatePredictedFactors()
-    
-    this.textboxInputs.triggerUpdate = true
+    this.dataPersistenceService.loadModelData(this.modelData, this.currentSettings).then(() => {
+      this.updateModelLookup()
+      this.updatePredictedFactors()
+      
+      this.textboxInputs.triggerUpdate = true
+    })
   }
 
   saveModel() {
-    this.modelData.saveModelData(this.currentSettings)
+    this.dataPersistenceService.saveModelData(this.modelData, this.currentSettings)
   }
 
   onValidTextboxChange() {

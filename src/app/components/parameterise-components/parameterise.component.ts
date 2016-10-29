@@ -9,6 +9,7 @@ import { InsertData } from '../../interfaces/insert-data';
 import { ElectronApiService } from '../../services/server-api-services/electron-api.service';
 import { DataService } from '../../services/data-services/data.service';
 import { TitleService } from '../../services/utility-services/title.service';
+import { DataPersistenceService } from '../../services/data-services/data-persistence.service'
 // import { LocalStorageService } from './local-storage.service';
 
 import { ModelData } from '../../services/data-services/model-data'
@@ -85,7 +86,8 @@ export class ParameteriseComponent implements OnInit {
     private dataService: DataService,
     private myTitleService: TitleService,
     private router: Router,
-    private modelData: ModelData
+    private modelData: ModelData,
+    private dataPersistenceService: DataPersistenceService,
   ) { }
 
   ngOnInit() {
@@ -106,46 +108,26 @@ export class ParameteriseComponent implements OnInit {
     this.updateTextAreaValues()
   }
 
-  createKey() {
-    let key = (
-      '{"machine":' + JSON.stringify(String(this.insertData.machine)) + ',' +
-      '"energy":' + JSON.stringify(Number(this.insertData.energy)) + ',' +
-      '"applicator":' + JSON.stringify(String(this.insertData.applicator)) + ',' +
-      '"ssd":' + JSON.stringify(Number(this.insertData.ssd)) +
-      '}')
-    return key
-  }
-
   addMeasuredFactor(factor: number) {
     this.dataAlreadyExistsOnModel = true
     this.ableToAddDataToModel = false
 
-    let key = this.createKey()
-    let modelData = JSON.parse(localStorage.getItem(key))
-    if (modelData == null) {
-      modelData = {
-        measurement: {
-          width: <number[]> [],
-          length: <number[]> [],
-          factor: <number[]> [],
-        },
-        model: {
-          width: <number[]> [],
-          length: <number[]> [],
-          factor: <number[]> []
-        }
-      }
+    this.currentSettings = {
+      machine: this.insertData.machine,
+      energy: this.insertData.energy,
+      applicator: this.insertData.applicator,
+      ssd: this.insertData.ssd
     }
-    modelData.model.width = <number[]> []
-    modelData.model.length = <number[]> []
-    modelData.model.factor = <number[]> []
 
+    this.dataPersistenceService.loadModelData(this.modelData, this.currentSettings).then(() => {
+      this.modelData.model.reset()
 
-    modelData.measurement.width.push(Number(this.insertData.parameterisation.width))
-    modelData.measurement.length.push(Number(this.insertData.parameterisation.length))
-    modelData.measurement.factor.push(Number(factor))
+      this.modelData.measurement.width.push(Number(this.insertData.parameterisation.width))
+      this.modelData.measurement.length.push(Number(this.insertData.parameterisation.length))
+      this.modelData.measurement.measuredFactor.push(Number(factor))
 
-    localStorage.setItem(key, JSON.stringify(modelData))
+      this.dataPersistenceService.saveModelData(this.modelData, this.currentSettings)
+    })
 
     localStorage.setItem("current_machine", JSON.stringify(Number(
       this.insertData.machine)))
@@ -175,16 +157,18 @@ export class ParameteriseComponent implements OnInit {
       ssd: this.insertData.ssd
     }
 
-    this.modelData.loadModelData(this.currentSettings)
-    this.modelData.predictions.width.unshift(this.parameterisation.width)
-    this.modelData.predictions.length.unshift(this.parameterisation.length)
-    if (this.insertData.factor != 0 && this.insertData.factor != null) {
-      this.modelData.predictions.measuredFactor.unshift(this.insertData.factor)
-    }    
+    this.dataPersistenceService.loadModelData(this.modelData, this.currentSettings).then(() => {
+      this.modelData.predictions.width.unshift(this.parameterisation.width)
+      this.modelData.predictions.length.unshift(this.parameterisation.length)
+      if (this.insertData.factor != 0 && this.insertData.factor != null) {
+        this.modelData.predictions.measuredFactor.unshift(this.insertData.factor)
+      }    
 
-    this.modelData.saveModelData(this.currentSettings)
+      this.dataPersistenceService.saveModelData(this.modelData, this.currentSettings)
 
-    this.router.navigate(["/use-model"])
+      this.router.navigate(["/use-model"])
+    })
+
 
   }
 
@@ -331,29 +315,37 @@ export class ParameteriseComponent implements OnInit {
     this.ableToAddDataToModel = false;
     this.dataAlreadyExistsOnModel = false;
     if (this.machineSettingsExist) {
-      let key = this.createKey()
-      let modelData = JSON.parse(localStorage.getItem(key))
+      this.currentSettings = {
+        machine: this.insertData.machine,
+        energy: this.insertData.energy,
+        applicator: this.insertData.applicator,
+        ssd: this.insertData.ssd
+      }
 
-      if (modelData == null) {
-        this.ableToAddDataToModel = true
-      }
-      else if (modelData.measurement == null) {
-        this.ableToAddDataToModel = true
-      }
-      else {
-        if (this.parameterisation.width != null && this.parameterisation.length != null && this.insertData.factor != null) {
-          if (
-              modelData.measurement.width.indexOf(Number(this.parameterisation.width)) > -1 &&
-              modelData.measurement.length.indexOf(Number(this.parameterisation.length)) > -1 &&
-              modelData.measurement.factor.indexOf(Number(this.insertData.factor)) > -1) {
-            this.dataAlreadyExistsOnModel = true
-          }
-          else {
-            this.dataAlreadyExistsOnModel = false
-            this.ableToAddDataToModel = true
+      this.dataPersistenceService.loadModelData(this.modelData, this.currentSettings).then(() => {
+        if (this.modelData == null) {
+          this.ableToAddDataToModel = true
+        }
+        else if (this.modelData.measurement == null) {
+          this.ableToAddDataToModel = true
+        }
+        else {
+          if (this.parameterisation.width != null && this.parameterisation.length != null && this.insertData.factor != null) {
+            if (
+                this.modelData.measurement.width.indexOf(Number(this.parameterisation.width)) > -1 &&
+                this.modelData.measurement.length.indexOf(Number(this.parameterisation.length)) > -1 &&
+                this.modelData.measurement.measuredFactor.indexOf(Number(this.insertData.factor)) > -1) {
+              this.dataAlreadyExistsOnModel = true
+            }
+            else {
+              this.dataAlreadyExistsOnModel = false
+              this.ableToAddDataToModel = true
+            }
           }
         }
-      }
+      })
+
+
     }
     // console.log(this.ableToAddDataToModel)
   }

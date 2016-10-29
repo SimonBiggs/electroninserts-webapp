@@ -3,6 +3,7 @@ import { Component, OnInit, NgZone, ViewChild, OnDestroy } from '@angular/core';
 import { TitleService } from '../../services/utility-services/title.service'
 import { ElectronApiService } from '../../services/server-api-services/electron-api.service';
 import { ModelData } from '../../services/data-services/model-data'
+import { DataPersistenceService } from '../../services/data-services/data-persistence.service'
 
 import { WidthLengthAreaInputComponent } from './width-length-area-input.component'
 
@@ -42,6 +43,7 @@ export class CreateModelComponent implements OnInit, OnDestroy{
     private modelData: ModelData,
     private myTitleService: TitleService,
     private electronApiService: ElectronApiService,
+    private dataPersistenceService: DataPersistenceService,
     private ngZone: NgZone
   ) {
     window.onresize = (e) => {
@@ -79,12 +81,14 @@ export class CreateModelComponent implements OnInit, OnDestroy{
   }
 
   loadMeasuredData() {
-    this.modelData.loadModelData(this.currentSettings)
-    this.textboxInputs.triggerUpdate = true
+    this.dataPersistenceService.loadModelData(this.modelData, this.currentSettings).then(() => {
+      this.textboxInputs.triggerUpdate = true
+    })
+    
   }
 
   saveModel() {
-    this.modelData.saveModelData(this.currentSettings)
+    this.dataPersistenceService.saveModelData(this.modelData, this.currentSettings)
   }
 
   checkLengthSmallerThanWidth() {
