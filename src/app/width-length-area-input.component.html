@@ -1,0 +1,14 @@
+<div *ngFor="let key of ['width', 'length', 'area', 'measuredFactor']">
+  <mdl-textfield 
+    type="text"
+    [label]="textboxLabels[key]"
+    [(ngModel)]="this.textboxInput[key]"
+    (input)="onTextboxChange(key, $event.target.value)"
+    [rows]=rows
+    floating-label
+    [disabled]=disabled
+    [style.width]="'100%'"></mdl-textfield>
+  <p *ngIf="!textboxValid[key]">
+    The {{key}} input is invalid
+  </p>
+</div>

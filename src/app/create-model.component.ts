@@ -1,37 +1,30 @@
-import { Component, OnInit, NgZone, ViewChild } from '@angular/core';
+import { Component, OnInit, NgZone, ViewChild, OnDestroy } from '@angular/core';
 
 import { TitleService } from './title.service'
 import { ElectronApiService } from './electron-api.service';
 import { ModelData } from './model-data'
 
+import { WidthLengthAreaInputComponent } from './width-length-area-input.component'
+
 @Component({
   selector: 'my-create-model',
   templateUrl: './create-model.component.html'
 })
-export class CreateModelComponent implements OnInit {
-  textboxInput = {
-    width: <string>null,
-    length: <string>null,
-    measuredFactor: <string>null
-  }
-
+export class CreateModelComponent implements OnInit, OnDestroy{
   textboxLabels = {
-    width: "Equivalent ellipse widths (cm @iso)",
-    length: "Equivalent ellipse lengths (cm @iso)",
+    width: "Width of ellipse given by diameter of largest encompassed circle (cm @iso)",
+    length: "Length of ellipse that matches insert shape area (cm @iso)",
+    area: "[Optional] Area of insert shape (cm^2 @iso)",
     measuredFactor: "Measured insert factor (as per TG 25)"
   }
 
-  textboxValid = {
-    width: true,
-    length: true,
-    measuredFactor: true
-  }
+  textboxValid = true  
 
   currentSettings = {
-    machine: <string>null,
-    energy: <number>null,
-    applicator: <string>null,
-    ssd: <number>null
+    machine: <string> null,
+    energy: <number> null,
+    applicator: <string> null,
+    ssd: <number> null
   }
 
   lengthSmallerThanWidth: boolean = false
@@ -41,22 +34,25 @@ export class CreateModelComponent implements OnInit {
   modelURL: string
   dataInFlight: boolean = false
 
-
-
   @ViewChild('plotContainer') plotContainer: any
   @ViewChild('settingsPicker') settingsPicker: any
+  @ViewChild('textboxInputs') textboxInputs: WidthLengthAreaInputComponent
 
   constructor(
     private modelData: ModelData,
     private myTitleService: TitleService,
     private electronApiService: ElectronApiService,
-    ngZone: NgZone
+    private ngZone: NgZone
   ) {
     window.onresize = (e) => {
       ngZone.run(() => {
         this.updatePlotWidth()
       })
     }
+  }
+
+  ngOnDestroy() {
+    window.onresize = null;
   }
 
   ngOnInit() {
@@ -82,36 +78,13 @@ export class CreateModelComponent implements OnInit {
     this.checkLengthSmallerThanWidth()
   }
 
-  createKey() {
-    let key = (
-      '{"machine":' + JSON.stringify(String(this.currentSettings.machine)) + ',' +
-      '"energy":' + JSON.stringify(Number(this.currentSettings.energy)) + ',' +
-      '"applicator":' + JSON.stringify(String(this.currentSettings.applicator)) + ',' +
-      '"ssd":' + JSON.stringify(Number(this.currentSettings.ssd)) +
-      '}')
-
-    return key
-  }
-
   loadMeasuredData() {
-    let localStorageKey = this.createKey()
-    let parsedData = JSON.parse(localStorage.getItem(localStorageKey))
-
-    this.modelData.fillFromObject(parsedData)
-
-    this.updateTextboxInput()
+    this.modelData.loadModelData(this.currentSettings)
+    this.textboxInputs.triggerUpdate = true
   }
 
   saveModel() {
-    let key = this.createKey()
-    localStorage.setItem(key, JSON.stringify(this.modelData))
-  }
-
-  updateTextboxInput() {
-    for (let key of ['width', 'length', 'measuredFactor']) {
-      this.textboxInput[key] = String(this.modelData.measurement[key])
-        .replace(/,/g, ', ')
-    }
+    this.modelData.saveModelData(this.currentSettings)
   }
 
   checkLengthSmallerThanWidth() {
@@ -124,26 +97,10 @@ export class CreateModelComponent implements OnInit {
     }
   }
 
-  validateInput(input: string): boolean {
-    // return /^(-?\d*(\.\d+)?[,;\s]+)*-?\d*(\.\d+)?[,;\s]*$/.test(input)
-    return true
-  }
-
-  onTextboxChange(key: string, newInput: string) {
-    this.textboxValid[key] = false
+  onValidTextboxChange() {
     this.modelData.model.reset()
-
-    try {
-      if (this.validateInput(newInput)) {
-        this.modelData.measurement[key] = eval('[' + newInput.replace(/[,;\n\t]\s*/g, ', ') + ']')
-        this.saveModel()
-        this.textboxValid[key] = true
-        this.checkLengthSmallerThanWidth()
-      }
-    }
-    catch (err) {
-      console.log(err)
-    }
+    this.checkLengthSmallerThanWidth()
+    this.saveModel()
   }
 
   basicServerSubmit() {
@@ -178,6 +135,7 @@ export class CreateModelComponent implements OnInit {
     this.settingsPicker.currentSettings = this.currentSettings
 
     this.modelData.model.reset()
+    this.modelData.measurement.reset()
 
     this.modelData.measurement.width = [
       3.71, 6.78, 6.3, 7.56, 5.26, 6.53, 7.08, 4.38, 3.66,
@@ -199,9 +157,11 @@ export class CreateModelComponent implements OnInit {
       0.9934, 0.9991, 0.9831, 0.9705, 1.0019, 0.9562, 0.9348,
       0.9987, 0.9989, 0.9933, 0.9991, 1.0067, 0.9683, 0.9296,
       0.9735, 0.9709, 1.0084, 1.0028, 0.953, 0.9484, 1.0032]
+
+    this.modelData.measurement.updateAreaFromLength()
     
     this.checkLengthSmallerThanWidth()
-    this.updateTextboxInput()
+    this.textboxInputs.triggerUpdate = true
   }
 
 }

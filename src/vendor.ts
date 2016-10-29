@@ -28,3 +28,5 @@ import 'angulartics2';
 
 // import 'tslerp'
 // import 'ndarray-linear-interpolate'
+
+import 'dexie';

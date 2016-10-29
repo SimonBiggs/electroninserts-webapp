@@ -1,52 +1,73 @@
 import { Injectable } from '@angular/core';
+import { Base } from './base-data'
 
-export class Base {
-  public propNames: string[]
-  public keyConversions: {}
 
-  reset() {
-    for (let propName of this.propNames) {
-      this[propName] = []
+@Injectable()
+export class AreaLengthConversion extends Base {
+  public width: number[] = []
+  public length: number[] = []
+  public area: number[] = []
+  public measuredFactor: number[] = []
+
+  convertLengthToArea(width: number, length: number): number {
+    let area = Math.PI * width * length / 4
+    return Math.round(area*10)/10
+  }
+
+  convertAreaToLength(width: number, area: number): number {
+    let length = 4 * area / (Math.PI * width)
+    return Math.round(length*10)/10
+  }
+
+  updateAreaFromLength() {
+    let width: number
+    let length: number
+    let area: number
+
+    this.area = []
+
+    for (let i in this.length) {
+      width = this.width[i]
+      length = this.length[i]
+
+      area = this.convertLengthToArea(width, length)
+      this.area.push(area)
     }
   }
 
-  fillFromObject(object: {}) {
-    object = this.updateOldKeyNames(object)
-    for (let propName of this.propNames) {
-      if (object[propName] == null) {
-        this[propName] = []
-      }
-      else {
-        this[propName] = object[propName]
-      }
+  updateLengthFromArea() {
+    let width: number
+    let length: number
+    let area: number
+
+    this.length = []
+
+    for (let i in this.area) {
+      width = this.width[i]
+      area = this.area[i]
+
+      length = this.convertAreaToLength(width, area)
+      this.length.push(length)
     }
   }
 
-  updateOldKeyNames(object: {}) {
-    let newKey: string
-
-    for (let oldKey in this.keyConversions) {
-      if (object[oldKey] != null && object[this.keyConversions[oldKey]] == null) {
-        newKey = this.keyConversions[oldKey]
-        Object.defineProperty(object, newKey,
-            Object.getOwnPropertyDescriptor(object, oldKey));
-        delete object[oldKey];
-      }
+  initialLengthAreaUpdate() {
+    if (this.length.length < this.area.length) {
+      this.updateLengthFromArea()
     }
-
-    return object
+    else {
+      this.updateAreaFromLength()
+    }
   }
 }
 
 @Injectable()
-export class ModelMeasurement extends Base {
-  public propNames: string[] = ['width', 'length', 'measuredFactor']
+export class ModelMeasurement extends AreaLengthConversion {
+  public propNames: string[] = ['width', 'length', 'area', 'measuredFactor']
   public keyConversions: {} = {
     'factor': 'measuredFactor'
   }
-  public width: number[] = []
-  public length: number[] = []
-  public measuredFactor: number[] = []
+  
 }
 
 @Injectable()
@@ -61,12 +82,8 @@ export class ModelGrid extends Base  {
 }
 
 @Injectable()
-export class Predictions extends Base {
+export class Predictions extends AreaLengthConversion {
   public propNames: string[] = ['width', 'length', 'area', 'measuredFactor', 'predictedFactor']
-  public width: number[] = []
-  public length: number[] = []
-  public area: number[] = []
-  public measuredFactor: number[] = []
   public predictedFactor: number[] = []
 }
 
@@ -102,6 +119,8 @@ export class ModelData {
         }
       }
     }
+    this.measurement.initialLengthAreaUpdate()
+    this.predictions.initialLengthAreaUpdate()
   }
 
   createLocalStorageKey(currentSettings: {machine: string, energy: number, applicator: string, ssd: number}) {

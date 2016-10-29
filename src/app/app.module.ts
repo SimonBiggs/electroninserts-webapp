@@ -32,10 +32,11 @@ import { SendToParameterisationComponent } from './send-to-parameterisation.comp
 import { BokehCreateModelComponent } from './bokeh-create-model.component'
 import { BokehUseModelComponent } from './bokeh-use-model.component'
 import { ChooseSpecificationsComponent } from './choose-specifications.component'
+import { WidthLengthAreaInputComponent } from './width-length-area-input.component'
 
 import { MyJsonPipe } from './my-json.pipe'
 
-import { ModelData, ModelMeasurement, ModelGrid, Predictions } from './model-data'
+import { ModelData, ModelMeasurement, ModelGrid, Predictions, AreaLengthConversion } from './model-data'
 
 import { ElectronApiService } from './electron-api.service'
 import { DataService } from './data.service'
@@ -71,7 +72,8 @@ import { LocalStorageService } from './local-storage.service'
     JsonEditComponent,
     BokehCreateModelComponent,
     BokehUseModelComponent,
-    ChooseSpecificationsComponent
+    ChooseSpecificationsComponent,
+    WidthLengthAreaInputComponent
   ],
   providers: [
     ElectronApiService,
@@ -80,7 +82,7 @@ import { LocalStorageService } from './local-storage.service'
     Title,
     LocalStorageService,
     Angulartics2GoogleAnalytics,
-    ModelData, ModelMeasurement, ModelGrid, Predictions
+    ModelData, ModelMeasurement, ModelGrid, Predictions, AreaLengthConversion
   ],
   bootstrap: [
     AppComponent

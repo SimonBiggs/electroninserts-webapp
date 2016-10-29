@@ -73,7 +73,16 @@
       Number inputs can only contain the characters 0-9, a minus sign (-) and decimal points (.).
     </p>
 
-    <div *ngFor="let key of ['width', 'length', 'measuredFactor']">
+    <my-width-length-area-input #textboxInputs
+      [dataInputs]=modelData.measurement
+      [textboxLabels]=textboxLabels
+      [triggerUpdate]=false
+      [rows]=4
+      [disabled]="dataInFlight"
+      (texboxValidCheck)="textboxValid=$event"
+      (validTextBoxChange)=onValidTextboxChange()></my-width-length-area-input>
+
+    <!--<div *ngFor="let key of ['width', 'length', 'measuredFactor']">
       <mdl-textfield 
         type="text"
         [label]="textboxLabels[key]"
@@ -87,11 +96,12 @@
         The {{key}} input is invalid
       </p>
       <span *ngIf="key=='length'">
-        <p *ngIf="lengthSmallerThanWidth">
-          There exists a length value that is smaller than its corresponding width. Spline modelling is disabled as a result.
-        </p>
+        
       </span>
-    </div>
+    </div>-->
+    <p *ngIf="lengthSmallerThanWidth">
+      There exists a length value that is smaller than its corresponding width. Spline modelling is disabled as a result.
+    </p>
     <p *ngIf="modelData.measurement.measuredFactor.length != modelData.measurement.width.length || modelData.measurement.measuredFactor.length != modelData.measurement.length.length || modelData.measurement.width.length != modelData.measurement.length.length">
       The lengths of the inputs are not equal. Spline modelling is disabled as a result.
     </p>
@@ -116,7 +126,7 @@
       mdl-colored="primary" 
       mdl-ripple
       angulartics2On="click" angularticsEvent="Model | Calculate spline model"
-      [disabled]="modelData.measurement.width.length < 8 || modelData.measurement.length.length < 8 || modelData.measurement.measuredFactor.length < 8 || dataInFlight || modelData.measurement.measuredFactor.length != modelData.measurement.width.length || modelData.measurement.measuredFactor.length != modelData.measurement.length.length || modelData.measurement.width.length != modelData.measurement.length.length || !textboxValid['width'] || !textboxValid['length'] || !textboxValid['measuredFactor'] || lengthSmallerThanWidth"
+      [disabled]="modelData.measurement.width.length < 8 || modelData.measurement.length.length < 8 || modelData.measurement.measuredFactor.length < 8 || dataInFlight || modelData.measurement.measuredFactor.length != modelData.measurement.width.length || modelData.measurement.measuredFactor.length != modelData.measurement.length.length || modelData.measurement.width.length != modelData.measurement.length.length || !textboxValid || lengthSmallerThanWidth"
       (click)="basicServerSubmit()">Calculate Spline Model
     </button>
     

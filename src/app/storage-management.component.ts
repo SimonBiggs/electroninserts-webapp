@@ -12,6 +12,9 @@ export class StorageManagementComponent implements OnInit {
   usedLocalStorageSpace: number;
   remainingLocalStorageSpace: number;
 
+
+  specifications = {};
+
   constructor(
     private myTitleService: TitleService,
     private myLocalStorageService: LocalStorageService
@@ -23,8 +26,9 @@ export class StorageManagementComponent implements OnInit {
     this.usedLocalStorageSpace = this.myLocalStorageService.getUsedSpace();
   }
 
+
+
   testRemainingStorage() {
     this.remainingLocalStorageSpace = this.myLocalStorageService.getRemainingSpace()
   }
-
 }
