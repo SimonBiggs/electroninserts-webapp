@@ -27,7 +27,9 @@ export class ChooseSpecificationsComponent implements OnInit {
   ) { }
  
   ngOnInit() {
-    this.dataPersistenceService.loadCurrentSettings(this.currentSettings).then(() => {
+    this.dataPersistenceService.loadCurrentSettings().then((currentSettings: CurrentSettings) => {
+      this.currentSettings = currentSettings
+      // console.log(currentSettings)
       return this.dataPersistenceService.loadSpecificationsData()
     }).then((specificationArray: MachineSpecification[]) => {
       this.allMachineSpecifications = specificationArray
@@ -36,19 +38,21 @@ export class ChooseSpecificationsComponent implements OnInit {
         this.machineList = []
       }
       else {
+        this.currentIndex = this.allMachineSpecifications.findIndex((specification: MachineSpecification) => {
+          return specification.machine == this.currentSettings.machine
+        })
+        this.currentMachineSpecifications = this.allMachineSpecifications[this.currentIndex]
+
         this.machineList = []
         for (let specification of specificationArray) {
           this.machineList.push(specification.machine)
         }
         if (
             this.currentSettings.machine == null || 
-            this.allMachineSpecifications[this.currentSettings.machine] === undefined) {
+            this.currentMachineSpecifications === undefined) {
           this.currentSettings.machine = this.machineList[0]
         }
-        this.currentIndex = this.allMachineSpecifications.findIndex((specification: MachineSpecification) => {
-          return specification.machine == this.currentSettings.machine
-        })
-        this.currentMachineSpecifications = this.allMachineSpecifications[this.currentIndex]
+
       }
       
       this.settingsUpdated.emit(this.currentSettings)

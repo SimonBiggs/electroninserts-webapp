@@ -45,8 +45,8 @@ export class SpecificationsComponent implements OnInit {
 
   ngOnInit() {
     this.myTitleService.setTitle('Specifications');
-    this.dataPersistenceService.loadCurrentSettings(this.currentSettings).then(() => {
-      
+    this.dataPersistenceService.loadCurrentSettings().then((currentSettings: CurrentSettings) => {
+      this.currentSettings = currentSettings
     })
     this.changeSpecifications(JSON.parse(localStorage.getItem("specifications"))) 
   }

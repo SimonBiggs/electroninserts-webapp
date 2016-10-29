@@ -16,23 +16,22 @@ export class DataPersistenceService {
     private currentSettings: CurrentSettings
   ) { }
 
-  loadCurrentSettings(currentSettings: CurrentSettings) {
+  loadCurrentSettings() {
     return db.currentSettings.toArray()
       .then((result: CurrentSettings[]) => {
         if (result.length == 0) {
           try {
-            currentSettings.energy = JSON.parse(localStorage.getItem("currentEnergy"))
-            currentSettings.applicator = JSON.parse(localStorage.getItem("currentApplicator"))
-            currentSettings.ssd = JSON.parse(localStorage.getItem("currentSSD"))
-            currentSettings.machine = String(JSON.parse(localStorage.getItem("current_machine")))
+            this.currentSettings.energy = JSON.parse(localStorage.getItem("currentEnergy"))
+            this.currentSettings.applicator = JSON.parse(localStorage.getItem("currentApplicator"))
+            this.currentSettings.ssd = JSON.parse(localStorage.getItem("currentSSD"))
+            this.currentSettings.machine = String(JSON.parse(localStorage.getItem("current_machine")))
           }
-          catch(err){}      
+          catch(err){}
         }
         else {
-          for (let key of Object.keys(result[0])) {
-            currentSettings[key] = result[0][key]
-          }
+          this.currentSettings = result[0]
         }
+        return this.currentSettings
       })
   }
 
@@ -71,7 +70,7 @@ export class DataPersistenceService {
         else {
           return result
         }        
-      })    
+      })
   }
 
   saveSpecificationsData() {
