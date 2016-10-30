@@ -1,6 +1,7 @@
 import { Component, OnInit, Input} from '@angular/core';
 
-import { Coordinates } from '../../interfaces/coordinates';
+import { Coordinates } from '../../services/data-services/insert-data'
+import { InsertData } from '../../services/data-services/insert-data'
 
 import { MdlDefaultTableModel } from 'angular2-mdl';
 
@@ -10,15 +11,7 @@ import { MdlDefaultTableModel } from 'angular2-mdl';
 })
 export class SendToParameterisationComponent implements OnInit {
   @Input()
-  applicator: string;
-  @Input()
-  machine: string;
-  @Input()
-  energy: number;
-  @Input()
-  ssd: number;
-  @Input()
-  coordinates: Coordinates;
+  insertData: InsertData
 
   tableData:[any] = [
       {machine:null, applicator:null, energy:null, ssd:null}
@@ -32,10 +25,10 @@ export class SendToParameterisationComponent implements OnInit {
       ]);
 
   ngOnInit() {
-    this.tableData[0].machine = this.machine;
-    this.tableData[0].applicator = this.applicator;
-    this.tableData[0].energy = this.energy;
-    this.tableData[0].ssd = this.ssd;
+    this.tableData[0].machine = this.insertData.machine;
+    this.tableData[0].applicator = this.insertData.applicator;
+    this.tableData[0].energy = this.insertData.energy;
+    this.tableData[0].ssd = this.insertData.ssd;
     this.tableModel.addAll(this.tableData);
   }
 

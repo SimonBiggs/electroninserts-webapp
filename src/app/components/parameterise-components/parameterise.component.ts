@@ -2,8 +2,7 @@ import { Component, OnInit, Input, ViewChild } from '@angular/core';
 
 import { Router } from '@angular/router';
 
-import { Parameterisation } from '../../interfaces/parameterisation';
-import { InsertData } from '../../interfaces/insert-data';
+import { Parameterisation, InsertData } from '../../services/data-services/insert-data'
 
 // import { CookieService } from 'angular2-cookie/core';
 import { ElectronApiService } from '../../services/server-api-services/electron-api.service';
@@ -22,17 +21,6 @@ import { DEMO_PARAMETERISE_INPUT } from '../../services/data-services/demo-data'
   templateUrl: 'parameterise.component.html',
 })
 export class ParameteriseComponent implements OnInit {
-  parameterisation: Parameterisation = {
-    insert: {
-      x: [0],
-      y: [0]
-    },
-    width: null,
-    length: null,
-    circle: null,
-    ellipse: null,
-    measuredFactor: null
-  };
   machineSpecifications: {};
 
   // @ViewChild('jsonInput') jsonInputComponent: any;
@@ -56,15 +44,6 @@ export class ParameteriseComponent implements OnInit {
 
   parameteriseURL: string;
 
-  insertData: InsertData = {
-    machine: null,
-    parameterisation: this.parameterisation,
-    energy: null,
-    applicator: null,
-    ssd: null,
-    factor: <number> null
-  }
-
   machineExists: boolean = false;
   machineSettingsExist: boolean = false;
   modelExists: boolean = false;
@@ -84,9 +63,11 @@ export class ParameteriseComponent implements OnInit {
     private modelData: ModelData,
     private currentSettings: CurrentSettings,
     private dataPersistenceService: DataPersistenceService,
+    private insertData: InsertData
   ) { }
 
   ngOnInit() {
+    console.log('parameterisation.component ngOnInit')
     this.getData();
     this.myTitleService.setTitle('Parameterisation');
 
@@ -104,7 +85,8 @@ export class ParameteriseComponent implements OnInit {
     this.updateTextAreaValues()
   }
 
-  addMeasuredFactor(factor: number) {
+  addMeasuredFactor(measuredFactor: number) {
+    console.log('parameterisation.component addMeasuredFactor')
     this.dataAlreadyExistsOnModel = true
     this.ableToAddDataToModel = false
 
@@ -117,25 +99,28 @@ export class ParameteriseComponent implements OnInit {
 
       this.modelData.measurement.width.push(Number(this.insertData.parameterisation.width))
       this.modelData.measurement.length.push(Number(this.insertData.parameterisation.length))
-      this.modelData.measurement.measuredFactor.push(Number(factor))
+      this.modelData.measurement.measuredFactor.push(Number(measuredFactor))
 
       this.dataPersistenceService.saveModelData(this.modelData, this.currentSettings)
+        .catch(err => console.log('Error saving measured factor within parameterise' + err))
     })
 
     this.dataPersistenceService.saveCurrentSettings(this.currentSettings)
+      .catch(err => console.log('Error updating current settings within parameterise' + err))
   }
 
   predictFactor() {
+    console.log('parameterisation.component predictFactor')
     for (let key of Object.keys(this.currentSettings)) {
       this.currentSettings[key] = this.insertData[key]
     }
     this.dataPersistenceService.saveCurrentSettings(this.currentSettings)
 
     this.dataPersistenceService.loadModelData(this.modelData, this.currentSettings).then(() => {
-      this.modelData.predictions.width.unshift(this.parameterisation.width)
-      this.modelData.predictions.length.unshift(this.parameterisation.length)
-      if (this.insertData.factor != 0 && this.insertData.factor != null) {
-        this.modelData.predictions.measuredFactor.unshift(this.insertData.factor)
+      this.modelData.predictions.width.unshift(this.insertData.parameterisation.width)
+      this.modelData.predictions.length.unshift(this.insertData.parameterisation.length)
+      if (this.insertData.measuredFactor != 0 && this.insertData.measuredFactor != null) {
+        this.modelData.predictions.measuredFactor.unshift(this.insertData.measuredFactor)
       }    
 
       this.dataPersistenceService.saveModelData(this.modelData, this.currentSettings).then(() => {
@@ -147,14 +132,16 @@ export class ParameteriseComponent implements OnInit {
   }
 
   updateTextAreaValues() {
-    this.textAreaX = String(this.parameterisation.insert.x)
+    console.log('parameterisation.component updateTextAreaValues')
+    this.textAreaX = String(this.insertData.parameterisation.insert.x)
       .replace(/,/g,', ')
-    this.textAreaY = String(this.parameterisation.insert.y)
+    this.textAreaY = String(this.insertData.parameterisation.insert.y)
       .replace(/,/g,', ')
   }
 
   checkIfEqualLengths() {
-    if (this.parameterisation.insert.x.length == this.parameterisation.insert.y.length) {
+    console.log('parameterisation.component checkIfEqualLengths')
+    if (this.insertData.parameterisation.insert.x.length == this.insertData.parameterisation.insert.y.length) {
       this.equalLengths = true
     }
     else {
@@ -162,24 +149,26 @@ export class ParameteriseComponent implements OnInit {
     }
   }
 
-  saveInsertData() { 
-    this.insertData['parameterisation'] = this.parameterisation
+  saveInsertData() {
+    console.log('parameterisation.component saveInsertData')
     localStorage.setItem(
       "last_insertData", JSON.stringify(this.insertData))
   }
 
   validateInput(input: string): boolean {
+    console.log('parameterisation.component validateInput')
     // return /^(-?\d*(\.\d+)?[,;\s]+)*-?\d*(\.\d+)?[,;\s]*$/.test(input)
     return /^[-\d\.,;\s]*$/.test(input)
     // return true
   }
 
   inputTextAreaX(xInput: string) {
+    console.log('parameterisation.component inputTextAreaX')
     try {
       if (this.validateInput(xInput)) {
-        this.parameterisation.insert.x = eval(
+        this.insertData.parameterisation.insert.x = eval(
           '[' + xInput.replace(/[,;\n\t]\s*/g,', ') + ']')
-        this.insertUpdated(this.parameterisation.insert)        
+        this.insertData.parameterisation.insertUpdated()       
         this.xInputValid = true
         this.checkIfEqualLengths()
         this.saveInsertData()
@@ -196,11 +185,12 @@ export class ParameteriseComponent implements OnInit {
   }
 
   inputTextAreaY(yInput: string) {
+    console.log('parameterisation.component inputTextAreaY')
     try {
       if (this.validateInput(yInput)) {
-        this.parameterisation.insert.y = eval(
+        this.insertData.parameterisation.insert.y = eval(
           '[' + yInput.replace(/[,;\n\t]\s*/g,', ')  + ']')
-        this.insertUpdated(this.parameterisation.insert)
+        this.insertData.parameterisation.insertUpdated()
         this.yInputValid = true
         this.checkIfEqualLengths()
         this.saveInsertData()
@@ -218,13 +208,12 @@ export class ParameteriseComponent implements OnInit {
 
 
   getData(): void {
+    console.log('parameterisation.component getData')
     let localStorageInsertDataString = localStorage['last_insertData'];
     
     if (localStorageInsertDataString) {
-      this.insertData = JSON.parse(localStorageInsertDataString);
-      let insert = this.insertData['parameterisation']['insert']
-      this.insertUpdated(insert);
-      this.insertData['parameterisation'] = this.parameterisation;
+      let object = JSON.parse(localStorageInsertDataString);
+      this.insertData.fillFromObject(object)
     }
     else {
       // this.loadDemoData();
@@ -232,50 +221,46 @@ export class ParameteriseComponent implements OnInit {
   }
 
   loadDemoData(): void {
+    console.log('parameterisation.component loadDemoData')
+    this.insertData.reset()
     let demoData = JSON.parse(JSON.stringify(DEMO_PARAMETERISE_INPUT));
-    this.insertUpdated(demoData.insert);
-    // this.jsonInputComponent.refresh = true;
-    this.insertData =  {
-      machine: null,
-      parameterisation: this.parameterisation,
-      energy: null,
-      applicator: null,
-      ssd: null,
-      factor: null
-    }
+    this.insertData.parameterisation.insert = demoData.insert
+    this.insertData.parameterisation.insertUpdated()
 
     this.updateTextAreaValues()
     this.checkIfEqualLengths()
   }
 
   sleep(time: number) {
+    console.log('parameterisation.component sleep')
     return new Promise((resolve) => setTimeout(resolve, time));
   }
 
   recursiveServerSubmit() {
+    console.log('parameterisation.component recursiveServerSubmit')
     this.serverError = false
 
     this.electronApiService.sendToServer(
       this.parameteriseURL,
-      JSON.stringify(this.parameterisation.insert)
+      JSON.stringify(this.insertData.parameterisation.insert)
     )
       .then((parameterisationResult: any) => {
-        this.parameterisation.circle = parameterisationResult.circle;
-        this.parameterisation.ellipse = parameterisationResult.ellipse;
-        this.parameterisation.width = parameterisationResult.width;
-        this.parameterisation.length = parameterisationResult.length;
+        this.insertData.parameterisation.circle = parameterisationResult.circle;
+        this.insertData.parameterisation.ellipse = parameterisationResult.ellipse;
+        this.insertData.parameterisation.width = parameterisationResult.width;
+        this.insertData.parameterisation.length = parameterisationResult.length;
         let complete = parameterisationResult.complete;
         if (complete) {
           this.dataInFlight = false;
           this.serverResponseValid = true;
           this.checkSubmitButton()
           localStorage.setItem(
-            JSON.stringify(this.parameterisation.insert), 
-            JSON.stringify(this.parameterisation)
+            JSON.stringify(this.insertData.parameterisation.insert), 
+            JSON.stringify(this.insertData.parameterisation)
           );
           this.saveInsertData()
           this.checkIfCanBeSentToModel()
-          if (this.parameterisation.width == null) {
+          if (this.insertData.parameterisation.width == null) {
             this.serverError = true
           }
         }
@@ -286,6 +271,7 @@ export class ParameteriseComponent implements OnInit {
   }
 
   checkIfCanBeSentToModel() {
+    console.log('parameterisation.component checkIfCanBeSentToModel')
     this.ableToAddDataToModel = false;
     this.dataAlreadyExistsOnModel = false;
     if (this.machineSettingsExist) {
@@ -301,11 +287,11 @@ export class ParameteriseComponent implements OnInit {
           this.ableToAddDataToModel = true
         }
         else {
-          if (this.parameterisation.width != null && this.parameterisation.length != null && this.insertData.factor != null) {
+          if (this.insertData.parameterisation.width != null && this.insertData.parameterisation.length != null && this.insertData.measuredFactor != null) {
             if (
-                this.modelData.measurement.width.indexOf(Number(this.parameterisation.width)) > -1 &&
-                this.modelData.measurement.length.indexOf(Number(this.parameterisation.length)) > -1 &&
-                this.modelData.measurement.measuredFactor.indexOf(Number(this.insertData.factor)) > -1) {
+                this.modelData.measurement.width.indexOf(Number(this.insertData.parameterisation.width)) > -1 &&
+                this.modelData.measurement.length.indexOf(Number(this.insertData.parameterisation.length)) > -1 &&
+                this.modelData.measurement.measuredFactor.indexOf(Number(this.insertData.measuredFactor)) > -1) {
               this.dataAlreadyExistsOnModel = true
             }
             else {
@@ -322,6 +308,7 @@ export class ParameteriseComponent implements OnInit {
   }
 
   checkMachineSettings() {
+    console.log('parameterisation.component checkMachineSettings')
     this.R50 = null;
     let machine = this.insertData['machine'];
     let energy = this.insertData['energy'];
@@ -349,6 +336,7 @@ export class ParameteriseComponent implements OnInit {
   }
 
   insertDataChange() {
+    console.log('parameterisation.component insertDataChange')
     localStorage.setItem(
       "last_insertData", JSON.stringify(this.insertData)
     );
@@ -357,44 +345,25 @@ export class ParameteriseComponent implements OnInit {
   }
 
   onSubmit() {
+    console.log('parameterisation.component onSubmit')
     this.dataInFlight = true;
     this.checkSubmitButton();
     this.recursiveServerSubmit();
   }
 
   insertDataFromLocalStorage(localStorageInsertData: string) {
+    console.log('parameterisation.component insertDataFromLocalStorage')
 
-  }
-
-  parameterisationFromLocalStorage(localStorageParameterisationString: string) {
-    let localStorageParameterisation = JSON.parse(localStorageParameterisationString); 
-    this.parameterisation.insert = localStorageParameterisation['insert'];
-    this.parameterisation.width = localStorageParameterisation['width'];
-    this.parameterisation.length = localStorageParameterisation['length'];
-    this.parameterisation.circle = localStorageParameterisation['circle'];
-    this.parameterisation.ellipse = localStorageParameterisation['ellipse'];
-  }
-
-  insertUpdated(insert: any) {
-    let localStorageParameterisation = localStorage.getItem(JSON.stringify(insert))
-    if (localStorageParameterisation) {
-      this.parameterisationFromLocalStorage(localStorageParameterisation);
-    }
-    else {
-      this.parameterisation.insert = insert;
-      this.parameterisation.width = null;
-      this.parameterisation.length = null;
-      this.parameterisation.circle = null;
-      this.parameterisation.ellipse = null;
-    }
   }
 
   onJsonStatusChange(jsonStatus: boolean) {
+    console.log('parameterisation.component onJsonStatusChange')
     this.jsonValid = jsonStatus;
     this.checkSubmitButton();
   }
 
   checkSubmitButton() {
+    console.log('parameterisation.component checkSubmitButton')
     if (this.dataInFlight || !this.jsonValid ) {
       this.submitDisabled = true;
     }
@@ -404,6 +373,7 @@ export class ParameteriseComponent implements OnInit {
   }
 
   parameterisationServerChange(serverUrl: string) {
+    console.log('parameterisation.component parameterisationServerChange')
     localStorage.setItem("parameteriseURL", serverUrl);
   }
 

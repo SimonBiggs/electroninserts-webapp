@@ -1,26 +1,26 @@
-<div class="mdl-grid" *ngIf="this.machineList!=null">
+<div class="mdl-grid" *ngIf="machineSpecificationUtility != null">
   <div 
-      *ngIf="this.machineList.length > 0" 
+      *ngIf="machineSpecificationUtility.machineList.length > 0" 
       class="mdl-cell mdl-cell--3-col mdl-cell--4-col-tablet mdl-cell--2-col-phone">
     <h6>Machine ID</h6>
     <select
         [(ngModel)]="currentSettings.machine"
         (input)="updateMachineID($event.target.value)">
-      <option *ngFor="let machine of machineList">{{machine}}</option>
+      <option *ngFor="let machine of machineSpecificationUtility.machineList">{{machine}}</option>
     </select>
   </div>
 
   <div 
-      *ngIf="this.machineList.length > 0 && currentSettings.machine != null" 
+      *ngIf="machineSpecificationUtility.machineList.length > 0 && currentSettings.machine != null" 
       class="mdl-cell mdl-cell--3-col mdl-cell--4-col-tablet mdl-cell--2-col-phone">
     <h6>Energy</h6>
     <select
         [(ngModel)]="currentSettings.energy"
         (input)="updateEnergy($event.target.value)"
-        *ngIf="currentMachineSpecifications.energy.length > 0">
-      <option *ngFor="let energy of currentMachineSpecifications.energy" value="{{energy}}">{{energy}} MeV</option>
+        *ngIf="machineSpecificationUtility.currentSpecification.energy.length > 0">
+      <option *ngFor="let energy of machineSpecificationUtility.currentSpecification.energy" value="{{energy}}">{{energy}} MeV</option>
     </select>
-    <p *ngIf="currentMachineSpecifications.energy == 0">
+    <p *ngIf="machineSpecificationUtility.currentSpecification.energy == 0">
       This machine doesn't have any energies defined. Please 
       <a routerLink="/specifications" routerLinkActive="active">
         define energies.
@@ -29,16 +29,16 @@
   </div>
 
   <div 
-      *ngIf="this.machineList.length > 0 && currentSettings.machine != null" 
+      *ngIf="machineSpecificationUtility.machineList.length > 0 && currentSettings.machine != null" 
       class="mdl-cell mdl-cell--3-col mdl-cell--4-col-tablet mdl-cell--2-col-phone">
     <h6>Applicator</h6>
     <select 
         [(ngModel)]="currentSettings.applicator"
         (input)="updateApplicator($event.target.value)"
-        *ngIf="currentMachineSpecifications.applicator.length > 0">
-      <option *ngFor="let applicator of currentMachineSpecifications.applicator">{{applicator}}</option>
+        *ngIf="machineSpecificationUtility.currentSpecification.applicator.length > 0">
+      <option *ngFor="let applicator of machineSpecificationUtility.currentSpecification.applicator">{{applicator}}</option>
     </select>
-    <p *ngIf="currentMachineSpecifications.applicator == 0">
+    <p *ngIf="machineSpecificationUtility.currentSpecification.applicator == 0">
       This machine doesn't have any applicators defined. Please 
       <a routerLink="/specifications" routerLinkActive="active">
         define applicators.
@@ -47,16 +47,16 @@
   </div>
 
   <div 
-      *ngIf="this.machineList.length > 0 && currentSettings.machine != null" 
+      *ngIf="machineSpecificationUtility.machineList.length > 0 && currentSettings.machine != null" 
       class="mdl-cell mdl-cell--3-col mdl-cell--4-col-tablet mdl-cell--2-col-phone">
     <h6>SSD</h6>
     <select  
         [(ngModel)]="currentSettings.ssd"
         (input)="updateSSD($event.target.value)"
-        *ngIf="currentMachineSpecifications.ssd.length > 0">
-      <option *ngFor="let ssd of currentMachineSpecifications.ssd">{{ssd}}</option>
+        *ngIf="machineSpecificationUtility.currentSpecification.ssd.length > 0">
+      <option *ngFor="let ssd of machineSpecificationUtility.currentSpecification.ssd">{{ssd}}</option>
     </select>
-    <p *ngIf="currentMachineSpecifications.ssd == 0">
+    <p *ngIf="machineSpecificationUtility.currentSpecification.ssd == 0">
       This machine doesn't have an ssd defined. Please 
       <a routerLink="/specifications" routerLinkActive="active">
         define at least one ssd.
@@ -65,7 +65,7 @@
   </div>
 </div>
   
-<div class="mdl-grid" *ngIf="this.machineList==null">
+<div class="mdl-grid" *ngIf="machineSpecificationUtility == null">
   <div class="mdl-cell mdl-cell--3-col mdl-cell--4-col-tablet mdl-cell--2-col-phone">
     <h6>Machine ID</h6>
     <select></select>

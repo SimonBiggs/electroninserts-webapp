@@ -44,37 +44,53 @@ export class SpecificationsComponent implements OnInit {
 
 
   ngOnInit() {
+    console.log('specifications.component ngOnInit')
     this.myTitleService.setTitle('Specifications');
     this.dataPersistenceService.loadCurrentSettings().then((currentSettings: CurrentSettings) => {
       this.currentSettings = currentSettings
     })
-    this.changeSpecifications(JSON.parse(localStorage.getItem("specifications"))) 
+    this.loadSpecifications()
   }
 
-  changeSpecifications(newSpecifications: {}) {
-    this.specifications = newSpecifications;
+  loadSpecifications() {
+    console.log('specifications.component loadSpecifications')
+    this.specifications = JSON.parse(localStorage.getItem("specifications"))
+    this.checkUpdatedSpecifications()
+  }
+
+  checkUpdatedSpecifications() {
+    console.log('specifications.component checkUpdatedSpecifications')
     if (this.specifications == null) {
-      this.specifications = {};
-      this.machines = [];
+      this.specifications = {}
+      this.machines = []
     }
     else {
       this.machines = Object.keys(this.specifications).sort();
     }
+  }
+
+  changeSpecifications(newSpecifications: {}) {
+    console.log('specifications.component changeSpecifications')
+    this.specifications = newSpecifications;
+    this.checkUpdatedSpecifications()
     
-    this.dataPersistenceService.saveCurrentSettings(this.currentSettings)
+    // this.dataPersistenceService.saveCurrentSettings(this.currentSettings)
     this.updateSpecifications()
   } 
 
   updateSpecifications() {
-    localStorage.setItem("specifications", JSON.stringify(this.specifications));
+    console.log('specifications.component updateSpecifications')
+    // localStorage.setItem("specifications", JSON.stringify(this.specifications));
   }
 
   changeCurrentMachine(machine: string) {
+    console.log('specifications.component changeCurrentMachine')
     this.currentSettings.machine = machine;
     this.dataPersistenceService.saveCurrentSettings(this.currentSettings)
   }
 
   checkNewMachineIDInput() {
+    console.log('specifications.component checkNewMachineIDInput')
     if (this.specifications[this.newMachineID] == null && this.newMachineID != null && this.newMachineID != "") {
       this.newMachineIDValid = true;
     }
@@ -86,6 +102,7 @@ export class SpecificationsComponent implements OnInit {
   }
 
   checkNewModelInput() {
+    console.log('specifications.component checkNewModelInput')
     if (this.newModel != null && this.newModel != "") {
       this.newModelValid = true;
     }
@@ -97,10 +114,12 @@ export class SpecificationsComponent implements OnInit {
   }
 
   checkNewMachineValid() {
+    console.log('specifications.component checkNewMachineValid')
     this.newMachineValid = (this.newMachineIDValid && this.newModelValid);
   }
 
   addMachineID() {
+    console.log('specifications.component addMachineID')
     if (this.newMachineValid) {
       this.machines.push(this.newMachineID);
       this.specifications[this.newMachineID] = {};
@@ -123,6 +142,7 @@ export class SpecificationsComponent implements OnInit {
   }
 
   checkNewEnergyInput() {
+    console.log('specifications.component checkNewEnergyInput')
     if (this.specifications[this.currentSettings.machine]["energy"].indexOf(Number(this.newEnergy)) < 0 && this.newEnergy != null && !isNaN(Number(this.newEnergy))) {
       this.newEnergyValid = true;
     }
@@ -134,6 +154,7 @@ export class SpecificationsComponent implements OnInit {
   }
 
   checkNewR50Input() {
+    console.log('specifications.component checkNewR50Input')
     if (this.newR50 != null && !isNaN(Number(this.newR50))) {
       this.newR50Valid = true;
     }
@@ -145,10 +166,12 @@ export class SpecificationsComponent implements OnInit {
   }
 
   checkNewEnergySetValid() {
+    console.log('specifications.component checkNewEnergySetValid')
     this.newEnergySetValid = (this.newEnergyValid && this.newR50Valid);
   }
 
   addEnergy() {
+    console.log('specifications.component addEnergy')
     if (this.newEnergySetValid) {
       this.specifications[this.currentSettings.machine]["energy"].push(Number(this.newEnergy));
       this.specifications[this.currentSettings.machine]["R50"][this.newEnergy] = Number(this.newR50);
@@ -165,6 +188,7 @@ export class SpecificationsComponent implements OnInit {
   }
 
   checkNewApplicatorInput() {
+    console.log('specifications.component checkNewApplicatorInput')
     if (this.specifications[this.currentSettings.machine]["applicator"].indexOf(this.newApplicator.toLowerCase()) < 0 && this.newApplicator != null && this.newApplicator != "") {
       this.newApplicatorValid = true;
     }
@@ -174,6 +198,7 @@ export class SpecificationsComponent implements OnInit {
   }
 
   addApplicator() {
+    console.log('specifications.component addApplicator')
     if (this.newApplicatorValid) { 
       this.specifications[this.currentSettings.machine]["applicator"].push(this.newApplicator.toLowerCase());
 
@@ -185,6 +210,7 @@ export class SpecificationsComponent implements OnInit {
   }
 
   checkNewSSDInput() {
+    console.log('specifications.component checkNewSSDInput')
     if (this.specifications[this.currentSettings.machine]["ssd"].indexOf(Number(this.newSSD)) < 0 && this.newSSD != null && !isNaN(Number(this.newSSD))) {
       this.newSSDValid = true;
     }
@@ -194,6 +220,7 @@ export class SpecificationsComponent implements OnInit {
   }
 
   addSSD() {
+    console.log('specifications.component addSSD')
     if (this.newSSDValid) {
     this.specifications[this.currentSettings.machine]["ssd"].push(Number(this.newSSD));
 
@@ -205,11 +232,13 @@ export class SpecificationsComponent implements OnInit {
   }
 
   editMachine(machine:string) {
+    console.log('specifications.component editMachine')
     this.currentSettings.machine = null;
     this.edittingMachine = machine;
   }
 
   finishMachineEdit(machine: any, idInput: any, modelInput: any) {
+    console.log('specifications.component finishMachineEdit')
     if (idInput != machine) {
       this.specifications[idInput] = this.specifications[machine]
       delete this.specifications[machine]
@@ -224,6 +253,7 @@ export class SpecificationsComponent implements OnInit {
   }
 
   deleteMachine(machine:string) {
+    console.log('specifications.component deleteMachine')
     let index = this.machines.indexOf(machine);
     this.machines.splice(index, 1);
     delete this.specifications[machine];

@@ -27,23 +27,17 @@
     
   </div>
 
-  <div *ngFor="let insert of insertList" class="mdl-cell mdl-cell--6-col">
+  <div *ngFor="let insertData of insertList" class="mdl-cell mdl-cell--6-col">
     <mdl-card mdl-shadow="6">
-
-
       <my-send-to-parameterisation
-        [machine]=insert.machine
-        [coordinates]=insert.coordinates
-        [applicator]=insert.applicator
-        [ssd]=insert.ssd
-        [energy]=insert.energy>
+        [insertData]=insertData>
       </my-send-to-parameterisation>
 
       <mdl-card-actions mdl-card-border>
         <button
           mdl-button 
           mdl-ripple
-          (click)="sendToParameterisation(insert)">Send to parameterisation           
+          (click)="sendToParameterisation(insertData)">Send to parameterisation           
         </button>
       </mdl-card-actions>
     </mdl-card>

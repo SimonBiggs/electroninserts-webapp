@@ -1,8 +1,10 @@
 <div class="mdl-grid">
   <div class="mdl-cell mdl-cell--12-col">
     <my-plot 
-      [insert_x]="coordinates.x"
-      [insert_y]="coordinates.y">
+      [insert_x]="insertData.parameterisation.insert.x"
+      [insert_y]="insertData.parameterisation.insert.y"
+      [circle]="insertData.parameterisation.circle"
+      [ellipse]="insertData.parameterisation.ellipse">
     </my-plot>
   </div>
   <div class="mdl-cell mdl-cell--12-col">

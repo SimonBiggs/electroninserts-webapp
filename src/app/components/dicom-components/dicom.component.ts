@@ -2,9 +2,9 @@ import { Component, OnInit, ApplicationRef, ViewChild } from '@angular/core';
 
 import { Router } from '@angular/router';
 
-import { Coordinates } from '../../interfaces/coordinates'
-import { Parameterisation } from '../../interfaces/parameterisation';
-import { InsertData } from '../../interfaces/insert-data';
+import { Coordinates } from '../../services/data-services/insert-data'
+import { Parameterisation } from '../../services/data-services/insert-data'
+import { InsertData } from '../../services/data-services/insert-data'
 
 import { TitleService } from '../../services/utility-services/title.service';
 
@@ -22,30 +22,10 @@ declare var FS: any;
   styles: ['./dicom.component.css']
 })
 export class DicomComponent implements OnInit {
-  parameterisation: Parameterisation = {
-    insert: {
-      x: [0],
-      y: [0]
-    },
-    width: null,
-    length: null,
-    circle: null,
-    ellipse: null
-  };
-
-  insertData: InsertData = {
-    machine: null,
-    parameterisation: this.parameterisation,
-    energy: null,
-    applicator: null,
-    ssd: null,
-    factor: null
-  }
-
   dicomWarning: string;
   dicomExitCode = 1;
 
-  insertList: any[];
+  insertList: InsertData[];
 
   reader = new FileReader();
 
@@ -182,12 +162,12 @@ export class DicomComponent implements OnInit {
       }
       i++;
     }
-    let insert = {
-      "x": x,
-      "y": y
+    let insert: Coordinates = {
+      x: x,
+      y: y
     };
 
-    return insert;
+    return insert
   }
 
   dicomPullNumber(input: string): number {
@@ -211,99 +191,60 @@ export class DicomComponent implements OnInit {
       let temp = beam["(300a,00f4)"]
 
       if (temp != undefined) {
-        let blockData = beam["(300a,00f4)"][0]["(300a,0106)"];
-        let coordinates = this.convertBlockDataToCoords(blockData);
+        let insertData = new InsertData()
 
-        let applicator = <string> null
+        let blockData = beam["(300a,00f4)"][0]["(300a,0106)"];
+        insertData.parameterisation.insert = this.convertBlockDataToCoords(blockData)
+        insertData.parameterisation.insertUpdated()
+
         try {
-          applicator = this.dicomPullString(
-            beam["(300a,0107)"][0]["(300a,0108)"]);
+          insertData.applicator = this.dicomPullString(
+            beam["(300a,0107)"][0]["(300a,0108)"]).toLowerCase();
         }
         catch(err) {
-          applicator = null
+          insertData.applicator = null
           console.log(err)
         }
 
-        let energy = <number> null
         try {
-          energy = this.dicomPullNumber(
+          insertData.energy = this.dicomPullNumber(
             beam["(300a,0111)"][0]["(300a,0114)"]);
         }
         catch(err) {
-          energy = null
+          insertData.energy = null
           console.log(err)
         }
 
-        let ssd = <number> null
         try {
-          ssd = this.dicomPullNumber(
+          insertData.ssd = this.dicomPullNumber(
             beam["(300a,0111)"][0]["(300a,0130)"]) / 10;
         }
         catch(err) {
-          ssd = null
+          insertData.ssd = null
           console.log(err)
         }
         
-        let machine = <string> null
         try {
-          machine = this.dicomPullString(
+          insertData.machine = this.dicomPullString(
           beam["(300a,00b2)"]);
         }
         catch(err) {
-          machine = null
+          insertData.machine = null
           console.log(err)
         }
-
-        let insert = {
-          "machine": machine,
-          "coordinates": coordinates,
-          "applicator": applicator.toLowerCase(),
-          "energy": energy,
-          "ssd": ssd
-        }
-        this.insertList.push(insert)
+        
+        this.insertList.push(insertData)
       }
 
     }
     localStorage.setItem('dicom_insertList', JSON.stringify(this.insertList));
   }
 
-  sendToParameterisation(insert: any) {
-    this.insertUpdated(insert['coordinates']);    
-
-    this.insertData['machine'] = insert['machine'];
-    this.insertData['parameterisation'] = this.parameterisation
-    this.insertData['energy'] = insert['energy'];
-    this.insertData['applicator'] = insert['applicator'];
-    this.insertData['ssd'] = insert['ssd'];
-
+  sendToParameterisation(insertData: InsertData) {
     localStorage.setItem(
-      "last_insertData", JSON.stringify(this.insertData)
+      "last_insertData", JSON.stringify(insertData)
     );
 
     this.router.navigate(["/parameterise"])
-  }
-
-  parameterisationFromLocalStorage(localStorageParameterisationString: string) {
-    let localStorageParameterisation = JSON.parse(localStorageParameterisationString); 
-    this.parameterisation.insert = localStorageParameterisation['insert'];
-    this.parameterisation.width = localStorageParameterisation['width'];
-    this.parameterisation.length = localStorageParameterisation['length'];
-    this.parameterisation.circle = localStorageParameterisation['circle'];
-    this.parameterisation.ellipse = localStorageParameterisation['ellipse'];
-  }
-
-  insertUpdated(insert: any) {
-    let localStorageParameterisation = localStorage.getItem(JSON.stringify(insert))
-    if (localStorageParameterisation) {
-      this.parameterisationFromLocalStorage(localStorageParameterisation);
-    }
-    else {
-      this.parameterisation.insert = insert;
-      this.parameterisation.width = null;
-      this.parameterisation.length = null;
-      this.parameterisation.circle = null;
-      this.parameterisation.ellipse = null;
-    }
   }
 }

@@ -1,6 +1,6 @@
 import { Component, Input, OnChanges, ViewChild, AfterViewInit } from '@angular/core';
 
-import { Coordinates } from '../../interfaces/coordinates';
+import { Coordinates } from '../../services/data-services/insert-data'
 
 declare var Bokeh: any;
 

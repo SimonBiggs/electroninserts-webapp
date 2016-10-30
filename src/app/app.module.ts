@@ -34,9 +34,9 @@ import { ChooseSpecificationsComponent } from './components/model-components/cho
 import { JsonEditComponent } from './components/specification-components/json-edit.component'
 // Dicom components
 import { DicomComponent } from './components/dicom-components/dicom.component'
+import { SendToParameterisationComponent } from './components/dicom-components/send-to-parameterisation.component'
 // Parameterise components
 import { ParameteriseComponent } from './components/parameterise-components/parameterise.component'
-import { SendToParameterisationComponent } from './components/parameterise-components/send-to-parameterisation.component'
 import { WidthLengthTableComponent } from './components/parameterise-components/width-length-table.component'
 // Model components
 import { WidthLengthAreaInputComponent } from './components/model-components/width-length-area-input.component'
@@ -57,6 +57,7 @@ import { ModelData, ModelMeasurement, ModelGrid, Predictions, AreaLengthConversi
 import { CurrentSettings } from './services/data-services/current-settings'
 import { DataService } from './services/data-services/data.service'
 import { DataPersistenceService } from './services/data-services/data-persistence.service'
+import { Coordinates, Parameterisation, InsertData } from './services/data-services/insert-data'
 import { LocalStorageService } from './services/data-services/local-storage.service'
 // Server api services
 import { ElectronApiService } from './services/server-api-services/electron-api.service'
@@ -103,7 +104,8 @@ import { TitleService } from './services/utility-services/title.service'
     Angulartics2GoogleAnalytics,
     ModelData, ModelMeasurement, ModelGrid, Predictions, AreaLengthConversion,
     DataPersistenceService,
-    CurrentSettings
+    CurrentSettings,
+    Coordinates, Parameterisation, InsertData
   ],
   bootstrap: [
     AppComponent

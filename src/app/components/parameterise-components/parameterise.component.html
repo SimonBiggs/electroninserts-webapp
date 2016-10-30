@@ -41,7 +41,7 @@
       The x and y coordinate lengths need to be the same as each other.
     </p>
 
-    <p *ngIf="this.parameterisation.insert.x.length < 3 || this.parameterisation.insert.y.length < 3">
+    <p *ngIf="insertData.parameterisation.insert.x.length < 3 || insertData.parameterisation.insert.y.length < 3">
       You need at least 3 data points to create an insert shape.
     </p>
 
@@ -76,18 +76,18 @@
     <div style="height:20px; width:100%;"></div>
 
     <my-plot 
-      [insert_x]="parameterisation.insert.x"
-      [insert_y]="parameterisation.insert.y"
-      [circle]="parameterisation.circle"
-      [ellipse]="parameterisation.ellipse"
+      [insert_x]="insertData.parameterisation.insert.x"
+      [insert_y]="insertData.parameterisation.insert.y"
+      [circle]="insertData.parameterisation.circle"
+      [ellipse]="insertData.parameterisation.ellipse"
       [enabled]="xInputValid && yInputValid && equalLengths">
     </my-plot>
 
     <div style="height:20px; width:20px;"></div>
 
     <my-width-length-table
-      [width]="parameterisation.width"
-      [length]="parameterisation.length"
+      [width]="insertData.parameterisation.width"
+      [length]="insertData.parameterisation.length"
       [enabled]="xInputValid && yInputValid && equalLengths">
     </my-width-length-table>
 
@@ -156,12 +156,12 @@
       </a>
     </p>
 
-    <mdl-textfield #measuredFactor
+    <mdl-textfield #measuredFactorInput
       type="text"
       label="Measured insert factor (as per TG 25)"
       (input)="insertDataChange()"
       floating-label
-      [(ngModel)]="insertData.factor"
+      [(ngModel)]="insertData.measuredFactor"
       style="width:100%"></mdl-textfield>
 
     <button
@@ -169,8 +169,8 @@
       mdl-colored="primary" 
       mdl-ripple
       angulartics2On="click" angularticsEvent="Parameterise | Add measured factor to model"
-      [disabled]="!ableToAddDataToModel || !machineSettingsExist || measuredFactor.value==null || measuredFactor.value=='' || submitDisabled || !xInputValid || !yInputValid || !equalLengths"
-      (click)="addMeasuredFactor(measuredFactor.value)">Add Measured Factor to Model            
+      [disabled]="!ableToAddDataToModel || !machineSettingsExist || measuredFactorInput.value==null || measuredFactorInput.value=='' || submitDisabled || !xInputValid || !yInputValid || !equalLengths"
+      (click)="addMeasuredFactor(measuredFactorInput.value)">Add Measured Factor to Model            
     </button>
 
     <p *ngIf="dataAlreadyExistsOnModel && !submitDisabled && xInputValid && yInputValid && equalLengths && machineSettingsExist">
@@ -190,17 +190,10 @@
       mdl-colored="primary" 
       mdl-ripple
       angulartics2On="click" angularticsEvent="Parameterise | Predict factor with model"
-      [disabled]="!machineSettingsExist || submitDisabled || !xInputValid || !yInputValid || !equalLengths || parameterisation.width == null || parameterisation.length == null"
+      [disabled]="!machineSettingsExist || submitDisabled || !xInputValid || !yInputValid || !equalLengths || insertData.parameterisation.width == null || insertData.parameterisation.length == null"
       (click)="predictFactor()">Predict Factor with Model        
     </button>
 
-    
-    <!--<p>
-      <font color="#d3d3d3">
-        Currently the "Predict Factor with Model" button just changes the active machine specifications to match that given above and then takes you to the model component.
-        A future implementation is to have this button plot your insert shape on the model plot and display the predicted factor.
-      </font>
-    </p>-->
 
 
 
@@ -221,15 +214,5 @@
       [(ngModel)]="parameteriseURL"
       style="width:100%"></mdl-textfield>
   </div>
-
-  <!--<div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet">
-    <h5>Edit raw coordinates</h5>
-    <my-json-input #jsonInput
-      [insert]="parameterisation.insert"
-      [jsonDisabled]="dataInFlight"
-      (insertUpdated)="insertUpdated($event)"
-      (jsonStatus)="onJsonStatusChange($event)">
-    </my-json-input>
-  </div>-->
 
 </div>

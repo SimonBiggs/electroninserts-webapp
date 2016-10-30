@@ -48,10 +48,12 @@ export class UseModelComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnDestroy() {
+    console.log('use-model.component ngOnDestroy')
     window.onresize = null
   }
   
   ngOnInit() {
+    console.log('use-model.component ngOnInit')
     this.myTitleService.setTitle('Use Model')
     this.updatePlotWidth()
     this.updateModelLookup()
@@ -59,11 +61,13 @@ export class UseModelComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngAfterViewInit() {
+    console.log('use-model.component ngAfterViewInit')
     this.loadMeasuredData()
     this.updatePredictedFactors()
   }
 
   lookupFactor(width: number, length: number) {
+    console.log('use-model.component lookupFactor')
     width = Math.round(width*10)/10
     length = Math.round(length*10)/10
 
@@ -74,6 +78,7 @@ export class UseModelComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   updatePredictedFactors() {
+    console.log('use-model.component updatePredictedFactors')
     this.modelData.predictions.predictedFactor = []
 
     let amount = Math.min(this.modelData.predictions.width.length, this.modelData.predictions.length.length)
@@ -92,6 +97,7 @@ export class UseModelComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   updatePredictionDifference() {
+    console.log('use-model.component updatePredictionDifference')    
     this.predictionDifference = []
     let measuredFactor: number
     let predictedFactor: number
@@ -107,6 +113,7 @@ export class UseModelComponent implements OnInit, OnDestroy, AfterViewInit {
   }
   
   updateModelLookup() {
+    console.log('use-model.component updateModelLookup')        
     this.modelLookup = {}
     let key: string
     for (let i in this.modelData.model.width) {
@@ -116,10 +123,12 @@ export class UseModelComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   updatePlotWidth() {
+    console.log('use-model.component updatePlotWidth')            
     this.plot_width = this.plotContainer.nativeElement.clientWidth
   }
 
   currentMachineSettingsUpdated(newSettings: {}) {
+    console.log('use-model.component currentMachineSettingsUpdated')                
     for (let key of ['machine', 'energy', 'applicator', 'ssd']) {
       this.currentSettings[key] = newSettings[key]
     }
@@ -127,6 +136,7 @@ export class UseModelComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   loadMeasuredData() {
+    console.log('use-model.component loadMeasuredData')                    
     this.dataPersistenceService.loadModelData(this.modelData, this.currentSettings).then(() => {
       this.updateModelLookup()
       this.updatePredictedFactors()
@@ -136,10 +146,12 @@ export class UseModelComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   saveModel() {
+    console.log('use-model.component saveModel')                        
     this.dataPersistenceService.saveModelData(this.modelData, this.currentSettings)
   }
 
   onValidTextboxChange() {
+    console.log('use-model.component onValidTextboxChange')                            
     this.updatePredictedFactors()
     this.saveModel()
   }
