@@ -12,6 +12,7 @@ export class DexieDatabase extends Dexie {
   currentSettings: Dexie.Table<CurrentSettings, number>
   parameterisationCache: Dexie.Table<Parameterisation, number>
   currentInsert: Dexie.Table<InsertData, number>
+  // serverURLs: Dexie.Table<>
 
   constructor() {
     super("DefaultDatabase")
