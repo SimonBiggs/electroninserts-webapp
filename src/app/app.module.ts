@@ -55,10 +55,10 @@ import { MyJsonPipe } from './pipes/my-json.pipe'
 // Data services
 import { ModelData, ModelMeasurement, ModelGrid, Predictions, AreaLengthConversion } from './services/data-services/model-data'
 import { CurrentSettings } from './services/data-services/current-settings'
-import { DataService } from './services/data-services/data.service'
 import { DataPersistenceService } from './services/data-services/data-persistence.service'
 import { Coordinates, Parameterisation, InsertData } from './services/data-services/insert-data'
 import { LocalStorageService } from './services/data-services/local-storage.service'
+import { MachineSpecificationsService } from './services/data-services/specifications-data.service'
 // Server api services
 import { ElectronApiService } from './services/server-api-services/electron-api.service'
 // Utility services
@@ -97,7 +97,6 @@ import { TitleService } from './services/utility-services/title.service'
   ],
   providers: [
     ElectronApiService,
-    DataService,
     TitleService,
     Title,
     LocalStorageService,
@@ -105,7 +104,8 @@ import { TitleService } from './services/utility-services/title.service'
     ModelData, ModelMeasurement, ModelGrid, Predictions, AreaLengthConversion,
     DataPersistenceService,
     CurrentSettings,
-    Coordinates, Parameterisation, InsertData
+    Coordinates, Parameterisation, InsertData,
+    MachineSpecificationsService
   ],
   bootstrap: [
     AppComponent

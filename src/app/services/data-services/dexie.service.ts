@@ -1,7 +1,7 @@
 import Dexie from 'dexie'
 
 import { ModelData, ModelDataLite } from './model-data'
-import { MachineSpecification } from './specifications-data'
+import { MachineSpecification } from './specifications-data.service'
 import { CurrentSettings } from './current-settings'
 import { InsertData, Parameterisation } from './insert-data'
 

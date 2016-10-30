@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Base } from './base-data'
 
-import { DataPersistenceService } from '../../services/data-services/data-persistence.service'
+import { DataPersistenceService } from './data-persistence.service'
 
 
 @Injectable()

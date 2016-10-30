@@ -128,7 +128,10 @@ export class UseModelComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   currentMachineSettingsUpdated(newSettings: {}) {
-    console.log('use-model.component currentMachineSettingsUpdated')                
+    console.log('use-model.component currentMachineSettingsUpdated')
+    if (newSettings === undefined) {
+      throw new RangeError("New settings was undefined within use-model.component currentMachineSettingsUpdated")
+    } 
     for (let key of ['machine', 'energy', 'applicator', 'ssd']) {
       this.currentSettings[key] = newSettings[key]
     }
@@ -136,8 +139,13 @@ export class UseModelComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   loadMeasuredData() {
-    console.log('use-model.component loadMeasuredData')                    
+    console.log('use-model.component loadMeasuredData')
+    if (this.currentSettings === undefined) {
+      throw new RangeError("Tried to load measured data but current settings are not defined")
+    }
+
     this.dataPersistenceService.loadModelData(this.modelData, this.currentSettings).then(() => {
+      console.log('use-model.component loadMeasuredData this.dataPersistenceService.loadModelData(this.modelData, this.currentSettings) promise complete')   
       this.updateModelLookup()
       this.updatePredictedFactors()
       

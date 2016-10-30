@@ -2,7 +2,7 @@ import { Component, OnInit, Output, Input, EventEmitter } from '@angular/core';
 
 import { CurrentSettings } from '../../services/data-services/current-settings'
 import { DataPersistenceService } from '../../services/data-services/data-persistence.service'
-import { MachineSpecification, MachineSpecificationsUtility } from '../../services/data-services/specifications-data'
+import { MachineSpecification, MachineSpecificationsService } from '../../services/data-services/specifications-data.service'
 
 
 @Component({
@@ -10,34 +10,30 @@ import { MachineSpecification, MachineSpecificationsUtility } from '../../servic
   templateUrl: './choose-specifications.component.html'
 })
 export class ChooseSpecificationsComponent implements OnInit {
-  machineSpecificationUtility: MachineSpecificationsUtility
-
   @Output()
   settingsUpdated = new EventEmitter()
 
+  currentSettings: CurrentSettings
+
   constructor(
     private dataPersistenceService: DataPersistenceService,
-    private currentSettings: CurrentSettings
+    private machineSpecificationService: MachineSpecificationsService
   ) { }
  
   ngOnInit() {
     console.log('choose-specifications.component ngOnInit')
-    this.dataPersistenceService.loadCurrentSettings().then((currentSettings: CurrentSettings) => {
-      this.currentSettings = currentSettings
-      // console.log(currentSettings)
-      return this.dataPersistenceService.loadSpecificationsData()
-    }).then((specificationArray: MachineSpecification[]) => {
-      this.machineSpecificationUtility = new MachineSpecificationsUtility(specificationArray, this.currentSettings)
-      console.log(this.machineSpecificationUtility)
-      this.settingsUpdated.emit(this.machineSpecificationUtility.currentSpecification)
-    })
+    this.machineSpecificationService.loadData()
+      .then(() => {
+        this.currentSettings = this.machineSpecificationService.currentSettings
+        this.settingsUpdated.emit(this.currentSettings)
+      })
   }
 
   updateMachineID(newCurrentMachine: string) {
     console.log('choose-specifications.component updateMachineID')
     this.currentSettings.machine = newCurrentMachine
-    this.machineSpecificationUtility.updateCurrentSpecification()
-    this.machineSpecificationUtility.resetCurrentSettings()
+    this.machineSpecificationService.updateCurrentSpecification()
+    this.machineSpecificationService.refreshCurrentSettings()
 
     this.dataPersistenceService.saveCurrentSettings(this.currentSettings)
     this.settingsUpdated.emit(this.currentSettings)

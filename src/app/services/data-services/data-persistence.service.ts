@@ -6,29 +6,28 @@ import { db } from './dexie.service'
 
 import { ModelData, ModelDataLite } from './model-data'
 import { CurrentSettings } from './current-settings'
-import { MachineSpecification } from './specifications-data'
+import { MachineSpecification } from './specifications-data.service'
 import { Coordinates, Parameterisation } from './insert-data'
 
 
 @Injectable()
 export class DataPersistenceService {
-  currentSettings = new CurrentSettings()
-
   loadCurrentSettings() {
     console.log('data-persistence.service loadCurrentSettings')
+    let currentSettings = new CurrentSettings()
     return db.currentSettings.toArray()
       .then((result: CurrentSettings[]) => {
         console.log('data-persistence.service loadCurrentSettings db.currentSettings.toArray() promise complete')
         if (result.length == 0) {
-          this.currentSettings.energy = null
-          this.currentSettings.applicator = null
-          this.currentSettings.ssd = null
-          this.currentSettings.machine = null
+          currentSettings.energy = null
+          currentSettings.applicator = null
+          currentSettings.ssd = null
+          currentSettings.machine = null
         }
         else {
-          this.currentSettings = result[0]
+          currentSettings = result[0]
         }
-        return this.currentSettings
+        return currentSettings
       })
   }
 
@@ -37,7 +36,10 @@ export class DataPersistenceService {
     return db.currentSettings.clear()
       .then(() => {
         console.log('data-persistence.service saveCurrentSettings db.currentSettings.clear() promise complete')
-        db.currentSettings.add(this.currentSettings)
+        return db.currentSettings.add(currentSettings)
+      })
+      .then(() => {
+        console.log('data-persistence.service saveCurrentSettings db.currentSettings.add(this.currentSettings) promise complete')
       })
   }
 

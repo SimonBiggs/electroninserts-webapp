@@ -6,7 +6,6 @@ import { Parameterisation, InsertData } from '../../services/data-services/inser
 
 // import { CookieService } from 'angular2-cookie/core';
 import { ElectronApiService } from '../../services/server-api-services/electron-api.service';
-import { DataService } from '../../services/data-services/data.service';
 import { TitleService } from '../../services/utility-services/title.service';
 import { DataPersistenceService } from '../../services/data-services/data-persistence.service'
 import { CurrentSettings } from '../../services/data-services/current-settings'
@@ -57,7 +56,6 @@ export class ParameteriseComponent implements OnInit {
 
   constructor(
     private electronApiService: ElectronApiService,
-    private dataService: DataService,
     private myTitleService: TitleService,
     private router: Router,
     private modelData: ModelData,
