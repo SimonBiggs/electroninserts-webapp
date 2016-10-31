@@ -10,16 +10,19 @@ export class AreaLengthConversion extends Base {
   public measuredFactor: number[] = []
 
   convertLengthToArea(width: number, length: number): number {
+    console.log('model.data AreaLengthConversion convertLengthToArea')
     let area = Math.PI * width * length / 4
     return Math.round(area*10)/10
   }
 
   convertAreaToLength(width: number, area: number): number {
+    console.log('model.data AreaLengthConversion convertAreaToLength')
     let length = 4 * area / (Math.PI * width)
     return Math.round(length*10)/10
   }
 
   updateAreaFromLength() {
+    console.log('model.data AreaLengthConversion updateAreaFromLength')
     let width: number
     let length: number
     let area: number
@@ -36,6 +39,7 @@ export class AreaLengthConversion extends Base {
   }
 
   updateLengthFromArea() {
+    console.log('model.data AreaLengthConversion updateLengthFromArea')
     let width: number
     let length: number
     let area: number
@@ -52,6 +56,7 @@ export class AreaLengthConversion extends Base {
   }
 
   initialLengthAreaUpdate() {
+    console.log('model.data AreaLengthConversion initialLengthAreaUpdate')
     if (this.length.length < this.area.length) {
       this.updateLengthFromArea()
     }
@@ -91,14 +96,18 @@ export class Predictions extends AreaLengthConversion {
 export class ModelData {
   protected propNames: string[] = ['measurement', 'model', 'predictions']
   public machineSettingsKey: string
+  public measurement: ModelMeasurement
+  public model: ModelGrid
+  public predictions: Predictions
 
-  constructor(    
-    public measurement: ModelMeasurement,
-    public model: ModelGrid,
-    public predictions: Predictions
-  ) { }
+  constructor() {
+    this.measurement = new ModelMeasurement()
+    this.model = new ModelGrid()
+    this.predictions = new Predictions()
+  }
 
   fillFromObject(object: {}) {
+    console.log('model.data ModelData fillFromObject')
     if (object == null) {
       for (let propName of this.propNames) {
         this[propName].reset()
@@ -119,6 +128,7 @@ export class ModelData {
   }
 
   exportLite(): ModelDataLite {
+    console.log('model.data ModelData exportLite')
     let modelDataLite = <ModelDataLite>{
       machineSettingsKey: this.machineSettingsKey,
       measurement: {

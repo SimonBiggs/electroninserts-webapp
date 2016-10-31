@@ -16,7 +16,6 @@ export class MachineSpecification {
 @Injectable()
 export class MachineSpecificationsService {
   machineList: string[]  
-  currentIndex: number
 
   specifications: MachineSpecification[]
   currentSpecification: MachineSpecification
@@ -27,6 +26,32 @@ export class MachineSpecificationsService {
     public currentSettings: CurrentSettings
   ) {
 
+  }
+
+  returnMachineSpecification(machineID: string) {
+    let machineSpecification: MachineSpecification
+    let index: number
+
+    index = this.specifications.findIndex((specification: MachineSpecification) => {
+      return specification.machine == machineID
+    })
+    if (index == -1) {
+      machineSpecification = null
+    }
+    else {
+      machineSpecification = this.specifications[index]
+    }
+
+    return machineSpecification
+  }
+
+  returnCurrentR50(energyLookup: number) {
+    let index: number
+    index = this.currentSpecification.energy.indexOf(energyLookup)
+    if (index == -1) {
+      throw new RangeError("Requested energy is not within the current specification")
+    }
+    return this.currentSpecification.R50[index]
   }
 
   loadData() {
@@ -66,17 +91,17 @@ export class MachineSpecificationsService {
 
   updateCurrentSpecification() {
     console.log('specifications-data.service updateCurrentSpecification')
-    this.currentIndex = this.specifications.findIndex((specification: MachineSpecification) => {
-      return specification.machine == this.currentSettings.machine
-    })
-    if (this.currentIndex == -1) {
-      this.currentIndex = 0
-      this.currentSettings.machine = this.machineList[0]
+
+    let machineSpecification: MachineSpecification
+    machineSpecification = this.returnMachineSpecification(this.currentSettings.machine)
+
+    if (machineSpecification == null) {      
       this.currentSpecification = this.specifications[0]
+      this.currentSettings.machine = this.machineList[0]
       this.refreshCurrentSettings()
     }
     else {
-      this.currentSpecification = this.specifications[this.currentIndex]
+      this.currentSpecification = machineSpecification
     }
 
     // console.warn(this.currentIndex)
@@ -103,4 +128,19 @@ export class MachineSpecificationsService {
     }
   }
 
+  newMachine(newMachineID: string) {
+    if (this.machineList.indexOf(newMachineID) != -1) {
+      throw new RangeError("This 'new' machine already exists")
+    }
+    let newSpecification = new MachineSpecification()
+    newSpecification.machine = newMachineID
+    this.updateMachineList()
+    this.changeMachine(newMachineID)
+  }
+
+  changeMachine(swapToMachineID: string) {
+    this.currentSettings.machine = swapToMachineID
+    this.refreshCurrentSettings()
+    this.updateCurrentSpecification()
+  }
 }

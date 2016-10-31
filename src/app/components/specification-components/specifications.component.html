@@ -8,11 +8,11 @@
     </p>
     <p>
       <font color="#d3d3d3">
-        Currently the editing and deleting of energy, applicator, and SSD entries is not yet implimented.
+        Currently the editing and deleting of energy, applicator, and SSD entries is not yet implimented. Neither is the deleting of machines.
       </font>
     </p>
   </div>
-  <div class="mdl-cell mdl-cell--4-col mdl-cell--4-col-tablet mdl-cell--6-col-phone">
+  <div class="mdl-cell mdl-cell--4-col mdl-cell--4-col-tablet mdl-cell--6-col-phone" *ngIf="machineSpecificationService !== undefined">
     <mdl-card mdl-shadow="6" style="width:100%">
       <mdl-card-title>
         <h2 mdl-card-title-text>Machine IDs</h2>
@@ -20,7 +20,7 @@
 
       <mdl-list>
         
-        <div *ngFor="let machine of machines">
+        <div *ngFor="let machine of machineSpecificationService.machineList">
         
           <div *ngIf="machine!=edittingMachine">
             <mdl-list-item lines="3">
@@ -28,7 +28,7 @@
                 <!--<div (click)="editMachine(machine)">-->
                 <div>
                   <span>{{machine}}</span>
-                  <mdl-list-item-text-body>{{specifications[machine].model}}</mdl-list-item-text-body>
+                  <mdl-list-item-text-body>{{machineSpecificationService.returnMachineSpecification(machine).makeAndModel}}</mdl-list-item-text-body>
                 </div>
               </mdl-list-item-primary-content>
               <mdl-list-item-secondary-action>
@@ -37,7 +37,7 @@
                   mdl-button-type="icon"
                   mdl-ripple
                   [disabled]="machine==currentSettings.machine || edittingMachine!=null"
-                  (click)="changeCurrentMachine(machine)"><mdl-icon>dashboard</mdl-icon>       
+                  (click)="machineSpecificationService.changeMachine(machine)"><mdl-icon>dashboard</mdl-icon>       
                 </button>
                 <button
                   mdl-button *ngIf="machine!=edittingMachine"
@@ -64,19 +64,25 @@
                 <mdl-textfield #modelTextField
                   type="text"
                   label="Model"
-                  [value]="specifications[machine].model"
+                  [value]="machineSpecificationService.returnMachineSpecification(machine).makeAndModel"
                   (keyup.enter)="finishMachineEdit(machine, machineIDTextField.value, modelTextField.value)"
                   floating-label
                   style="display:inline;"></mdl-textfield>
               </mdl-list-item-primary-content>
 
               <mdl-list-item-secondary-action>
-                <button
+                <!--<button
                   mdl-button
                   mdl-button-type="icon"
                   mdl-ripple
                   [disabled]="machine!=edittingMachine"
                   (click)="deleteMachine(machine)"><mdl-icon>delete</mdl-icon>       
+                </button>-->
+                <button
+                  mdl-button
+                  mdl-button-type="icon"
+                  mdl-ripple
+                  [disabled]="true"><mdl-icon>delete</mdl-icon>       
                 </button>
                 <button
                   mdl-button
@@ -133,16 +139,16 @@
     </mdl-card>
   </div>
 
-  <div *ngIf="currentSettings.machine" class="mdl-cell mdl-cell--4-col mdl-cell--4-col-tablet mdl-cell--6-col-phone">
+  <div *ngIf="edittingMachine==null && machineSpecificationService.currentSpecification != null" class="mdl-cell mdl-cell--4-col mdl-cell--4-col-tablet mdl-cell--6-col-phone">
     <mdl-card mdl-shadow="6"  style="width:100%">
       <mdl-card-title>
         <h2 mdl-card-title-text>Energies for {{currentSettings.machine}}</h2>
       </mdl-card-title>
         <mdl-list>
-          <mdl-list-item *ngFor="let energy of specifications[currentSettings.machine].energy" lines="3">
+          <mdl-list-item *ngFor="let energy of machineSpecificationService.currentSpecification.energy" lines="3">
             <mdl-list-item-primary-content>
               <span>{{energy}} MeV</span>
-              <mdl-list-item-text-body>R50: {{specifications[currentSettings.machine].R50[energy]}} cm</mdl-list-item-text-body>
+              <mdl-list-item-text-body>R50: {{machineSpecificationService.returnCurrentR50(energy)}} cm</mdl-list-item-text-body>
             </mdl-list-item-primary-content>
             <mdl-list-item-secondary-action>
               <button
@@ -200,13 +206,13 @@
     </mdl-card>
   </div>
 
-  <div *ngIf="currentSettings.machine" class="mdl-cell mdl-cell--4-col mdl-cell--4-col-tablet mdl-cell--6-col-phone">
+  <div *ngIf="edittingMachine==null && machineSpecificationService.currentSpecification != null" class="mdl-cell mdl-cell--4-col mdl-cell--4-col-tablet mdl-cell--6-col-phone">
     <mdl-card mdl-shadow="6"  style="width:100%">
       <mdl-card-title>
         <h2 mdl-card-title-text>Applicators for {{currentSettings.machine}}</h2>
       </mdl-card-title>
         <mdl-list>
-          <mdl-list-item *ngFor="let applicator of specifications[currentSettings.machine].applicator">
+          <mdl-list-item *ngFor="let applicator of machineSpecificationService.currentSpecification.applicator">
             <mdl-list-item-primary-content>
               <mdl-list-item-text-body>{{applicator}}</mdl-list-item-text-body>
             </mdl-list-item-primary-content>
@@ -258,13 +264,13 @@
     </mdl-card>
   </div>
 
-  <div *ngIf="currentSettings.machine" class="mdl-cell mdl-cell--4-col mdl-cell--4-col-tablet mdl-cell--6-col-phone">
+  <div *ngIf="edittingMachine==null && machineSpecificationService.currentSpecification != null" class="mdl-cell mdl-cell--4-col mdl-cell--4-col-tablet mdl-cell--6-col-phone">
     <mdl-card mdl-shadow="6"  style="width:100%">
       <mdl-card-title>
         <h2 mdl-card-title-text>SSDs for {{currentSettings.machine}}</h2>
       </mdl-card-title>
         <mdl-list>
-          <mdl-list-item *ngFor="let ssd of specifications[currentSettings.machine].ssd">
+          <mdl-list-item *ngFor="let ssd of this.machineSpecificationService.currentSpecification.ssd">
             <mdl-list-item-primary-content>
               <mdl-list-item-text-body>{{ssd}} cm</mdl-list-item-text-body>
             </mdl-list-item-primary-content>
@@ -317,7 +323,7 @@
   </div>
 
 
-  <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--6-col-phone">
+  <!--<div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--6-col-phone">
     <h5>Raw specification data editing (optional)</h5>
     <p>
       If you desire you may edit the raw machine specifications in its raw format below. 
@@ -329,7 +335,7 @@
       (inputUpdated)="changeSpecifications($event)"
       buttonText="Update Specifications">
     </my-json-edit>
-  </div>
+  </div>-->
 
 </div>
 

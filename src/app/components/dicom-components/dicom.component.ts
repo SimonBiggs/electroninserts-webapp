@@ -133,7 +133,7 @@ export class DicomComponent implements OnInit {
       / *\(fffe,e00d\): na \(ItemDelimitationItem[ \w-]*\) *\n/g,
       '')
     yamlConvert = yamlConvert.replace(
-      / *\(fffe,e0dd\): na \(SequenceDelimitationItem[ \w-\.]*\)\n/g,
+      / *\(fffe,e0dd\): na \(SequenceDelimitationItem[ \w-\.]*\) *\n/g,
       '')
     yamlConvert = yamlConvert.replace(
       /(\([0-9a-f][0-9a-f][0-9a-f][0-9a-f],[0-9a-f][0-9a-f][0-9a-f][0-9a-f]\):) (.*)/g,
