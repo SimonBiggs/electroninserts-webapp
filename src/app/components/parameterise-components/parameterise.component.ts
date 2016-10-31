@@ -167,7 +167,8 @@ export class ParameteriseComponent implements OnInit {
       if (this.validateInput(xInput)) {
         this.insertData.parameterisation.insert.x = eval(
           '[' + xInput.replace(/[,;\n\t]\s*/g,', ') + ']')
-        this.insertData.parameterisation.insertUpdated()       
+        this.insertData.parameterisation.insertUpdated()  
+        this.dataPersistenceService.loadParameterisationCache(this.insertData.parameterisation)     
         this.xInputValid = true
         this.checkIfEqualLengths()
         this.saveInsertData()
@@ -190,6 +191,7 @@ export class ParameteriseComponent implements OnInit {
         this.insertData.parameterisation.insert.y = eval(
           '[' + yInput.replace(/[,;\n\t]\s*/g,', ')  + ']')
         this.insertData.parameterisation.insertUpdated()
+        this.dataPersistenceService.loadParameterisationCache(this.insertData.parameterisation)     
         this.yInputValid = true
         this.checkIfEqualLengths()
         this.saveInsertData()
@@ -225,6 +227,7 @@ export class ParameteriseComponent implements OnInit {
     let demoData = JSON.parse(JSON.stringify(DEMO_PARAMETERISE_INPUT));
     this.insertData.parameterisation.insert = demoData.insert
     this.insertData.parameterisation.insertUpdated()
+    this.dataPersistenceService.loadParameterisationCache(this.insertData.parameterisation)     
 
     this.updateTextAreaValues()
     this.checkIfEqualLengths()
