@@ -26,20 +26,16 @@ export class DataPersistenceService {
       else {
         currentSettings = result[0]
       }
-      console.log(currentSettings)
+      // console.log(currentSettings)
       return currentSettings
     })
   }
 
   saveCurrentSettings(currentSettings: CurrentSettings) {
     console.log('data-persistence.service saveCurrentSettings')
-    return db.currentSettings.clear()
+    return db.currentSettings.put(currentSettings)
     .then(() => {
-      console.log('data-persistence.service saveCurrentSettings db.currentSettings.clear() promise complete')
-      return db.currentSettings.add(currentSettings)
-    })
-    .then(() => {
-      console.log('data-persistence.service saveCurrentSettings db.currentSettings.add(this.currentSettings) promise complete')
+      console.log('data-persistence.service saveCurrentSettings db.currentSettings.put(currentSettings) promise complete')
     })
   }
 
@@ -71,7 +67,8 @@ export class DataPersistenceService {
       if (result.length == 0) {
         modelData.fillFromObject({})
       }
-      else if (result.length > 0) {
+      else if (result.length > 1) {
+        console.log(result)
         throw new RangeError("Multiple entries found with the same key")
       }
       else {
@@ -81,6 +78,7 @@ export class DataPersistenceService {
   }
 
   saveModelData(modelData: ModelData, currentSettings: CurrentSettings) {
+    console.log('data-persistence.service saveModelData')
     let storageKey = currentSettings.returnKey()
     modelData.machineSettingsKey = storageKey
 
@@ -102,28 +100,29 @@ export class DataPersistenceService {
   }
 
   loadParameterisationCache(parameterisation: Parameterisation) {
-      let localStorageObject = JSON.parse(localStorage.getItem(parameterisation.insertKey))
-      if (localStorageObject) {
-        for (let key of ['circle', 'ellipse']) {
-          parameterisation[key] = new Coordinates()
-          if (localStorageObject[key]) {
-            
-            parameterisation[key].x = localStorageObject[key].x
-            parameterisation[key].y = localStorageObject[key].y
-          }
-          else {
-            parameterisation[key].x = [0]
-            parameterisation[key].y = [0] 
-          }
+    console.log('data-persistence.service loadParameterisationCache')
+    let localStorageObject = JSON.parse(localStorage.getItem(parameterisation.parameterisationKey))
+    if (localStorageObject) {
+      for (let key of ['circle', 'ellipse']) {
+        parameterisation[key] = new Coordinates()
+        if (localStorageObject[key]) {
+          
+          parameterisation[key].x = localStorageObject[key].x
+          parameterisation[key].y = localStorageObject[key].y
         }
-        
-        parameterisation.width = localStorageObject['width']
-        parameterisation.length = localStorageObject['length']
-      }
-      else {
-        for (let key of ['width', 'length', 'circle', 'ellipse']) {
-          parameterisation[key] = null
+        else {
+          parameterisation[key].x = [0]
+          parameterisation[key].y = [0] 
         }
       }
+      
+      parameterisation.width = localStorageObject['width']
+      parameterisation.length = localStorageObject['length']
+    }
+    else {
+      for (let key of ['width', 'length', 'circle', 'ellipse']) {
+        parameterisation[key] = null
+      }
+    }
   }
 }

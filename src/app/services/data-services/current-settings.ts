@@ -2,10 +2,15 @@ import { Injectable } from '@angular/core';
 
 @Injectable()
 export class CurrentSettings {
+  id: number
   machine: string
   energy: number
   applicator: string
   ssd: number
+
+  constructor () {
+    this.id = 0
+  }
 
   returnKey() {
     return (

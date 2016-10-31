@@ -53,7 +53,6 @@ export class SpecificationsComponent implements OnInit {
       })
   }
 
-
   checkNewMachineIDInput() {
     console.log('specifications.component checkNewMachineIDInput')
     if (
@@ -91,7 +90,7 @@ export class SpecificationsComponent implements OnInit {
     if (!this.newMachineValid) {
       throw new RangeError('The new machine being added is not a valid input')
     }
-    this.machineSpecificationService.newMachine(this.newMachineID)
+    this.machineSpecificationService.newMachine(this.newMachineID, this.newModel)
 
     this.newMachineID = null
     this.newModel = null
@@ -149,8 +148,6 @@ export class SpecificationsComponent implements OnInit {
     this.newEnergySetValid = false
 
     this.dataPersistenceService.saveSpecificationsData(this.machineSpecificationService.currentSpecification)
-
-
   }
 
   checkNewApplicatorInput() {
@@ -207,24 +204,24 @@ export class SpecificationsComponent implements OnInit {
     }
   }
 
-  editMachine(machine: string) {
-    console.log('specifications.component editMachine')
-    // this.currentSettings.machine = null
-    // this.machineSpecificationService.currentSpecification = null
-    this.edittingMachine = machine
-  }
+  // editMachine(machine: string) {
+  //   console.log('specifications.component editMachine')
+  //   // this.currentSettings.machine = null
+  //   // this.machineSpecificationService.currentSpecification = null
+  //   this.edittingMachine = machine
+  // }
 
-  finishMachineEdit(newMachineID: any, newMakeAndModel: any) {
-    console.log('specifications.component finishMachineEdit')
-    if (newMachineID != this.currentSettings.machine) {
-      this.machineSpecificationService.currentSpecification.machine = newMachineID
-      this.machineSpecificationService.updateMachineList()
-    }
-    this.machineSpecificationService.currentSpecification.makeAndModel = newMakeAndModel
+  // finishMachineEdit(newMachineID: any, newMakeAndModel: any) {
+  //   console.log('specifications.component finishMachineEdit')
+  //   if (newMachineID != this.currentSettings.machine) {
+  //     this.machineSpecificationService.currentSpecification.machine = newMachineID
+  //     this.machineSpecificationService.updateMachineList()
+  //   }
+  //   this.machineSpecificationService.currentSpecification.makeAndModel = newMakeAndModel
 
-    this.dataPersistenceService.saveSpecificationsData(this.machineSpecificationService.currentSpecification)
-    this.edittingMachine = null;
-  }
+  //   this.dataPersistenceService.saveSpecificationsData(this.machineSpecificationService.currentSpecification)
+  //   this.edittingMachine = null;
+  // }
 
   // deleteMachine(machine:string) {
   //   console.log('specifications.component deleteMachine')

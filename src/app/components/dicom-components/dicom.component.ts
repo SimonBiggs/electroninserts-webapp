@@ -7,6 +7,7 @@ import { Parameterisation } from '../../services/data-services/insert-data'
 import { InsertData } from '../../services/data-services/insert-data'
 
 import { TitleService } from '../../services/utility-services/title.service';
+import { DataPersistenceService } from '../../services/data-services/data-persistence.service'
 
 import { safeLoad } from 'js-yaml';
 
@@ -31,6 +32,7 @@ export class DicomComponent implements OnInit {
 
   constructor(
     private myTitleService: TitleService,
+    private dataPersistenceService: DataPersistenceService,
     private router: Router
   ) { }
 
@@ -197,6 +199,7 @@ export class DicomComponent implements OnInit {
         let blockData = beam["(300a,00f4)"][0]["(300a,0106)"];
         insertData.parameterisation.insert = this.convertBlockDataToCoords(blockData)
         insertData.parameterisation.insertUpdated()
+        this.dataPersistenceService.loadParameterisationCache(insertData.parameterisation)
 
         try {
           insertData.applicator = this.dicomPullString(

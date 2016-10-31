@@ -110,14 +110,19 @@ export class MachineSpecificationsService {
   }
 
   refreshCurrentSettings() {
-    console.log('specifications-data.service resetCurrentSettings')
+    console.log('specifications-data.service refreshCurrentSettings')
     if (this.currentSpecification != null) {
       for (let item of ["energy", "applicator", "ssd"]) {
-        if (this.currentSpecification[item].length > 0) {
-          this.currentSettings[item] = this.currentSpecification[item][0]
+        if (this.currentSpecification[item] == null) {
+          this.currentSettings[item] = null
         }
         else {
-          this.currentSettings[item] = null
+          if (this.currentSpecification[item].length > 0) {
+            this.currentSettings[item] = this.currentSpecification[item][0]
+          }
+          else {
+            this.currentSettings[item] = null
+          }
         }
       }
     }
@@ -126,19 +131,24 @@ export class MachineSpecificationsService {
         this.currentSettings[item] = null
       }
     }
+    this.dataPersistenceService.saveCurrentSettings(this.currentSettings)
   }
 
-  newMachine(newMachineID: string) {
+  newMachine(newMachineID: string, newMakeAndModel: string) {
+    console.log('specifications-data.service newMachine')
     if (this.machineList.indexOf(newMachineID) != -1) {
       throw new RangeError("This 'new' machine already exists")
     }
     let newSpecification = new MachineSpecification()
     newSpecification.machine = newMachineID
+    newSpecification.makeAndModel = newMakeAndModel
+    this.specifications.push(newSpecification)
     this.updateMachineList()
     this.changeMachine(newMachineID)
   }
 
   changeMachine(swapToMachineID: string) {
+    console.log('specifications-data.service changeMachine')
     this.currentSettings.machine = swapToMachineID
     this.refreshCurrentSettings()
     this.updateCurrentSpecification()

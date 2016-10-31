@@ -1,44 +1,37 @@
-import { Injectable } from '@angular/core';
-import { Base } from './base-data'
 
-import { DataPersistenceService } from './data-persistence.service'
-
-
-@Injectable()
 export class Coordinates {
   public x: number[]
   public y: number[]
+
+  constructor() {
+    this.x = [0]
+    this.y = [0]
+  }
 }
 
-@Injectable()
+
 export class Parameterisation {
-  public insertKey: string
+  public parameterisationKey: string
   public width: number
   public length: number
 
-  insert = new Coordinates()
-  circle = new Coordinates()
-  ellipse = new Coordinates()
-
-  dataPersistenceService = new DataPersistenceService()
+  insert: Coordinates
+  circle: Coordinates
+  ellipse: Coordinates
 
   constructor() {
-    for (let key of ['x', 'y']) {
-      if (this.insert[key] === undefined) {
-        this.insert[key] = [0]
-      }
-    }
+    this.insert = new Coordinates()
+    this.circle = new Coordinates()
+    this.ellipse = new Coordinates()
   }
 
   insertUpdated() {
     if (this.insert != null) {
       
-      this.insertKey = (
+      this.parameterisationKey = (
         '{"x":' + JSON.stringify(this.insert.x) + ',' +
         '"y":' + JSON.stringify(this.insert.y) +
         '}')
-
-      this.dataPersistenceService.loadParameterisationCache(this)
     }
     else {
       throw new RangeError('Insert was not defined. Cannot run insert updated.')
@@ -47,7 +40,7 @@ export class Parameterisation {
   }
 
   reset() {
-    this.insertKey = null
+    this.parameterisationKey = null
 
     for (let key of ['insert', 'circle', 'ellipse']) {
       this[key] = new Coordinates()
@@ -60,15 +53,26 @@ export class Parameterisation {
   }
 }
 
-@Injectable()
+
 export class InsertData {
+  public id: number
   public machine: string
   public energy: number
   public applicator: string
   public ssd: number
   public measuredFactor: number
 
-  parameterisation = new Parameterisation()
+  public parameterisation: Parameterisation
+
+  constructor(inputId?: number) {
+    this.parameterisation = new Parameterisation()
+    if (inputId != null) {
+      this.id = inputId
+    }
+    else {
+      this.id = 0
+    }    
+  }
 
   reset() {
     this.machine = null

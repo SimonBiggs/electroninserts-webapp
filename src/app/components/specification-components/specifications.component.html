@@ -8,11 +8,11 @@
     </p>
     <p>
       <font color="#d3d3d3">
-        Currently the editing and deleting of energy, applicator, and SSD entries is not yet implimented. Neither is the deleting of machines.
+        Currently specifcations can only be added. At this current time they cannot be edited nor deleted once they have been defined.
       </font>
     </p>
   </div>
-  <div class="mdl-cell mdl-cell--4-col mdl-cell--4-col-tablet mdl-cell--6-col-phone" *ngIf="machineSpecificationService !== undefined">
+  <div class="mdl-cell mdl-cell--4-col mdl-cell--4-col-tablet mdl-cell--6-col-phone" *ngIf="machineSpecificationService != null && currentSettings != null">
     <mdl-card mdl-shadow="6" style="width:100%">
       <mdl-card-title>
         <h2 mdl-card-title-text>Machine IDs</h2>
@@ -39,13 +39,13 @@
                   [disabled]="machine==currentSettings.machine || edittingMachine!=null"
                   (click)="machineSpecificationService.changeMachine(machine)"><mdl-icon>dashboard</mdl-icon>       
                 </button>
-                <button
+                <!--<button
                   mdl-button *ngIf="machine!=edittingMachine"
                   mdl-button-type="icon"
                   mdl-ripple
                   [disabled]="false"
                   (click)="editMachine(machine)"><mdl-icon>edit</mdl-icon>       
-                </button>
+                </button>-->
               </mdl-list-item-secondary-action>
             </mdl-list-item>
 
@@ -139,7 +139,7 @@
     </mdl-card>
   </div>
 
-  <div *ngIf="edittingMachine==null && machineSpecificationService.currentSpecification != null" class="mdl-cell mdl-cell--4-col mdl-cell--4-col-tablet mdl-cell--6-col-phone">
+  <div *ngIf="edittingMachine==null && machineSpecificationService.currentSpecification != null && currentSettings != null" class="mdl-cell mdl-cell--4-col mdl-cell--4-col-tablet mdl-cell--6-col-phone">
     <mdl-card mdl-shadow="6"  style="width:100%">
       <mdl-card-title>
         <h2 mdl-card-title-text>Energies for {{currentSettings.machine}}</h2>
@@ -151,7 +151,7 @@
               <mdl-list-item-text-body>R50: {{machineSpecificationService.returnCurrentR50(energy)}} cm</mdl-list-item-text-body>
             </mdl-list-item-primary-content>
             <mdl-list-item-secondary-action>
-              <button
+              <!--<button
                 mdl-button
                 mdl-button-type="icon"
                 mdl-ripple
@@ -171,7 +171,7 @@
                 mdl-ripple
                 [disabled]="true"
                 (click)="null"><mdl-icon>delete</mdl-icon>       
-              </button>
+              </button>-->
             </mdl-list-item-secondary-action>
           </mdl-list-item>
         </mdl-list>
@@ -206,7 +206,7 @@
     </mdl-card>
   </div>
 
-  <div *ngIf="edittingMachine==null && machineSpecificationService.currentSpecification != null" class="mdl-cell mdl-cell--4-col mdl-cell--4-col-tablet mdl-cell--6-col-phone">
+  <div *ngIf="edittingMachine==null && machineSpecificationService.currentSpecification != null && currentSettings != null" class="mdl-cell mdl-cell--4-col mdl-cell--4-col-tablet mdl-cell--6-col-phone">
     <mdl-card mdl-shadow="6"  style="width:100%">
       <mdl-card-title>
         <h2 mdl-card-title-text>Applicators for {{currentSettings.machine}}</h2>
@@ -217,7 +217,7 @@
               <mdl-list-item-text-body>{{applicator}}</mdl-list-item-text-body>
             </mdl-list-item-primary-content>
             <mdl-list-item-secondary-action>
-              <button
+              <!--<button
                 mdl-button
                 mdl-button-type="icon"
                 mdl-ripple
@@ -237,7 +237,7 @@
                 mdl-ripple
                 [disabled]="true"
                 (click)="null"><mdl-icon>delete</mdl-icon>       
-              </button>
+              </button>-->
             </mdl-list-item-secondary-action>
           </mdl-list-item>
         </mdl-list>
@@ -264,7 +264,7 @@
     </mdl-card>
   </div>
 
-  <div *ngIf="edittingMachine==null && machineSpecificationService.currentSpecification != null" class="mdl-cell mdl-cell--4-col mdl-cell--4-col-tablet mdl-cell--6-col-phone">
+  <div *ngIf="edittingMachine==null && machineSpecificationService.currentSpecification != null && currentSettings != null" class="mdl-cell mdl-cell--4-col mdl-cell--4-col-tablet mdl-cell--6-col-phone">
     <mdl-card mdl-shadow="6"  style="width:100%">
       <mdl-card-title>
         <h2 mdl-card-title-text>SSDs for {{currentSettings.machine}}</h2>
@@ -275,7 +275,7 @@
               <mdl-list-item-text-body>{{ssd}} cm</mdl-list-item-text-body>
             </mdl-list-item-primary-content>
             <mdl-list-item-secondary-action>
-              <button
+              <!--<button
                 mdl-button
                 mdl-button-type="icon"
                 mdl-ripple
@@ -295,7 +295,7 @@
                 mdl-ripple
                 [disabled]="true"
                 (click)="null"><mdl-icon>delete</mdl-icon>       
-              </button>
+              </button>-->
             </mdl-list-item-secondary-action>
           </mdl-list-item>
         </mdl-list>

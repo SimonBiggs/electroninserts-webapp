@@ -11,52 +11,58 @@
   </div>
 
   <div 
-      *ngIf="machineSpecificationService.machineList.length > 0 && currentSettings.machine != null" 
+      *ngIf="machineSpecificationService.machineList.length > 0 && currentSettings.machine != null && machineSpecificationService.currentSpecification != null" 
       class="mdl-cell mdl-cell--3-col mdl-cell--4-col-tablet mdl-cell--2-col-phone">
     <h6>Energy</h6>
-    <select
-        [(ngModel)]="currentSettings.energy"
-        (input)="updateEnergy($event.target.value)"
-        *ngIf="machineSpecificationService.currentSpecification.energy.length > 0">
-      <option *ngFor="let energy of machineSpecificationService.currentSpecification.energy" value="{{energy}}">{{energy}} MeV</option>
-    </select>
-    <p *ngIf="machineSpecificationService.currentSpecification.energy == 0">
+    <div *ngIf="machineSpecificationService.currentSpecification.energy != null">
+      <select
+          [(ngModel)]="currentSettings.energy"
+          (input)="updateEnergy($event.target.value)"
+          *ngIf="machineSpecificationService.currentSpecification.energy.length > 0">
+        <option *ngFor="let energy of machineSpecificationService.currentSpecification.energy" value="{{energy}}">{{energy}} MeV</option>
+      </select>
+    </div>
+    <p *ngIf="machineSpecificationService.currentSpecification.energy == null">
       This machine doesn't have any energies defined. Please 
       <a routerLink="/specifications" routerLinkActive="active">
-        define energies.
+        define at least one energy.
       </a>
     </p>
   </div>
 
   <div 
-      *ngIf="machineSpecificationService.machineList.length > 0 && currentSettings.machine != null" 
+      *ngIf="machineSpecificationService.machineList.length > 0 && currentSettings.machine != null && machineSpecificationService.currentSpecification != null" 
       class="mdl-cell mdl-cell--3-col mdl-cell--4-col-tablet mdl-cell--2-col-phone">
     <h6>Applicator</h6>
-    <select 
-        [(ngModel)]="currentSettings.applicator"
-        (input)="updateApplicator($event.target.value)"
-        *ngIf="machineSpecificationService.currentSpecification.applicator.length > 0">
-      <option *ngFor="let applicator of machineSpecificationService.currentSpecification.applicator">{{applicator}}</option>
-    </select>
-    <p *ngIf="machineSpecificationService.currentSpecification.applicator == 0">
+    <div *ngIf="machineSpecificationService.currentSpecification.applicator != null">
+      <select 
+          [(ngModel)]="currentSettings.applicator"
+          (input)="updateApplicator($event.target.value)"
+          *ngIf="machineSpecificationService.currentSpecification.applicator.length > 0">
+        <option *ngFor="let applicator of machineSpecificationService.currentSpecification.applicator">{{applicator}}</option>
+      </select>
+    </div>
+    <p *ngIf="machineSpecificationService.currentSpecification.applicator == null">
       This machine doesn't have any applicators defined. Please 
       <a routerLink="/specifications" routerLinkActive="active">
-        define applicators.
+        define at least one applicator.
       </a>
     </p>
   </div>
 
   <div 
-      *ngIf="machineSpecificationService.machineList.length > 0 && currentSettings.machine != null" 
+      *ngIf="machineSpecificationService.machineList.length > 0 && currentSettings.machine != null && machineSpecificationService.currentSpecification != null" 
       class="mdl-cell mdl-cell--3-col mdl-cell--4-col-tablet mdl-cell--2-col-phone">
     <h6>SSD</h6>
-    <select  
-        [(ngModel)]="currentSettings.ssd"
-        (input)="updateSSD($event.target.value)"
-        *ngIf="machineSpecificationService.currentSpecification.ssd.length > 0">
-      <option *ngFor="let ssd of machineSpecificationService.currentSpecification.ssd">{{ssd}}</option>
-    </select>
-    <p *ngIf="machineSpecificationService.currentSpecification.ssd == 0">
+    <div *ngIf="machineSpecificationService.currentSpecification.ssd != null">
+      <select  
+          [(ngModel)]="currentSettings.ssd"
+          (input)="updateSSD($event.target.value)"
+          *ngIf="machineSpecificationService.currentSpecification.ssd.length > 0">
+        <option *ngFor="let ssd of machineSpecificationService.currentSpecification.ssd">{{ssd}}</option>
+      </select>
+    </div>
+    <p *ngIf="machineSpecificationService.currentSpecification.ssd == null">
       This machine doesn't have an ssd defined. Please 
       <a routerLink="/specifications" routerLinkActive="active">
         define at least one ssd.

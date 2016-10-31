@@ -54,6 +54,8 @@ export class ParameteriseComponent implements OnInit {
 
   R50: number;
 
+  insertData = new InsertData()
+
   constructor(
     private electronApiService: ElectronApiService,
     private myTitleService: TitleService,
@@ -61,7 +63,6 @@ export class ParameteriseComponent implements OnInit {
     private modelData: ModelData,
     private currentSettings: CurrentSettings,
     private dataPersistenceService: DataPersistenceService,
-    private insertData: InsertData
   ) { }
 
   ngOnInit() {

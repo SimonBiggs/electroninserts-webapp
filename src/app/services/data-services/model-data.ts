@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Base } from './base-data'
+import { CurrentSettings } from './current-settings'
 
 
 @Injectable()
@@ -125,6 +126,10 @@ export class ModelData {
     }
     this.measurement.initialLengthAreaUpdate()
     this.predictions.initialLengthAreaUpdate()
+  }
+
+  updateKey(currentSettings: CurrentSettings) {
+    this.machineSettingsKey = currentSettings.returnKey()
   }
 
   exportLite(): ModelDataLite {

@@ -1,20 +1,32 @@
 import Dexie from 'dexie'
 
+import { InsertData, Parameterisation } from './insert-data'
 import { ModelData, ModelDataLite } from './model-data'
 import { MachineSpecification } from './specifications-data.service'
 import { CurrentSettings } from './current-settings'
-import { InsertData, Parameterisation } from './insert-data'
 
 
-export class DexieDatabase extends Dexie {
-  
+export class PulledFromLocalStorage {
+  id: number
+  pulledFromLocalStorage: boolean
+}
+
+
+export class ServerURLs {
+  purpose: string
+  url: string
+}
+
+
+export class DexieDatabase extends Dexie {  
   pulledFromLocalStorage: Dexie.Table<PulledFromLocalStorage, number>
   modelData: Dexie.Table<ModelDataLite, string>
   specification: Dexie.Table<MachineSpecification, string>
   currentSettings: Dexie.Table<CurrentSettings, number>
   parameterisationCache: Dexie.Table<Parameterisation, string>
   currentInsert: Dexie.Table<InsertData, number>
-  // serverURLs: Dexie.Table<>
+  serverURLs: Dexie.Table<ServerURLs, string>
+  dicomInsertList: Dexie.Table<InsertData, number>
 
   constructor() {
     super("DefaultDatabase")
@@ -27,14 +39,20 @@ export class DexieDatabase extends Dexie {
       specification: 'machine, makeAndModel, energy, R50, applicator, ssd',
       currentSettings: 'id, machine, energy, applicator, ssd',
       parameterisationCache: 'parameterisationKey, insert, width, length, circle, ellipse',
-      currentInsert: 'id, machine, parameterisation, energy, applicator, ssd, measuredFactor'
+      currentInsert: 'id, machine, parameterisation, energy, applicator, ssd, measuredFactor',
+      serverURLs: 'purpose, url',
+      dicomInsertList: 'id, machine, parameterisation, energy, applicator, ssd, measuredFactor'
     })
 
+    db.pulledFromLocalStorage.mapToClass(PulledFromLocalStorage)
     db.modelData.mapToClass(ModelData)
     db.specification.mapToClass(MachineSpecification)
     db.currentSettings.mapToClass(CurrentSettings)
-    // db.parameterisationCache.mapToClass(Parameterisation)
-    // db.currentInsert.mapToClass(InsertData)
+    db.parameterisationCache.mapToClass(Parameterisation)
+    db.currentInsert.mapToClass(InsertData)
+    db.serverURLs.mapToClass(ServerURLs)
+    db.dicomInsertList.mapToClass(InsertData)
+    
 
     db.pulledFromLocalStorage.toArray()
       .then((result: PulledFromLocalStorage[]) => {
@@ -42,6 +60,8 @@ export class DexieDatabase extends Dexie {
           this.fillDatabaseFromLocalStorage()
         }
         else if(result[0].pulledFromLocalStorage == false) {
+          db.specification.clear()
+          db.modelData.clear()          
           this.fillDatabaseFromLocalStorage()
         }
       })
@@ -50,15 +70,35 @@ export class DexieDatabase extends Dexie {
   fillDatabaseFromLocalStorage() {
     console.log('dexie.service fillDatabaseFromLocalStorage')
     let specifications = this.loadSpecificationsFromLocalStorage()
-    let modelDataLiteArray = this.loadModelDataFromLocalStorage(specifications)
+    let machineList: string[] = []
+    for (let specification of specifications) {
+      machineList.push(specification.machine)
+    }
+    machineList.sort()
+    for (let i = 0; i < machineList.length - 1; i++) {
+      if (machineList[i] == machineList[i+1]) {
+        console.log(machineList)
+        throw new RangeError("Local storage specifications contain duplicate Machine IDs")
+      }
+    }
 
+    let modelDataLiteArray = this.loadModelDataFromLocalStorage(specifications)
+    let machineSettingsKeys: string[] = []
+    for (let modelDataLite of modelDataLiteArray) {
+      machineSettingsKeys.push(modelDataLite.machineSettingsKey)
+    }
+    machineSettingsKeys.sort()
+    for (let i = 0; i < machineSettingsKeys.length - 1; i++) {
+      if (machineSettingsKeys[i] == machineSettingsKeys[i+1]) {
+        throw new RangeError("Local storage specifications contain duplicate models")
+      }
+    }
 
     db.specification.bulkAdd(specifications)
     .then(() => {
       console.log('dexie.service fillDatabaseFromLocalStorage db.specification.bulkAdd(specifications) promise complete')
       return db.modelData.bulkAdd(modelDataLiteArray)
     })
-
     .then(() => {
       console.log('dexie.service fillDatabaseFromLocalStorage db.modelData.bulkAdd(modelDataLiteArray) promise complete')
       let pulledFromLocalStorage: PulledFromLocalStorage = {
@@ -179,6 +219,7 @@ export class DexieDatabase extends Dexie {
             if (parsedData != null) {
               modelData = new ModelData()
               modelData.fillFromObject(parsedData)
+              modelData.updateKey(currentSettings)
               modelDataLiteArray.push(modelData.exportLite())
             }
           }
@@ -192,9 +233,3 @@ export class DexieDatabase extends Dexie {
 
 
 export let db = new DexieDatabase()
-
-export class PulledFromLocalStorage {
-  id: number
-  pulledFromLocalStorage: boolean
-}
-
