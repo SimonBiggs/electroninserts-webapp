@@ -118,21 +118,22 @@ export class DicomComponent implements OnInit {
   }
 
   convertDicomDumpToDict(dump: string) {
+    // console.log(dump)
     let yamlConvert = dump.replace(/\s*#[^#\n]*\n/g,'\n');
     yamlConvert = yamlConvert.replace(/\s*#[^#\n]*$/g,'');
     yamlConvert = yamlConvert.replace(/^\n*/,'');
     yamlConvert = yamlConvert.replace(/(\([0-9a-f][0-9a-f][0-9a-f][0-9a-f],[0-9a-f][0-9a-f][0-9a-f][0-9a-f]\))/g,'$1:')
     yamlConvert = yamlConvert.replace(
-      /(\([0-9a-f][0-9a-f][0-9a-f][0-9a-f],[0-9a-f][0-9a-f][0-9a-f][0-9a-f]\):) SQ \(Sequence with undefined length #=\d+\)/g,
+      /(\([0-9a-f][0-9a-f][0-9a-f][0-9a-f],[0-9a-f][0-9a-f][0-9a-f][0-9a-f]\):) SQ \(Sequence with \w+ length #=\d+\)/g,
       '$1')
     yamlConvert = yamlConvert.replace(
-      /(\([0-9a-f][0-9a-f][0-9a-f][0-9a-f],[0-9a-f][0-9a-f][0-9a-f][0-9a-f]\):) na \(Item with undefined length #=\d+\)/g,
+      /(\([0-9a-f][0-9a-f][0-9a-f][0-9a-f],[0-9a-f][0-9a-f][0-9a-f][0-9a-f]\):) na \(Item with \w+ length #=\d+\)/g,
       '$1')
     yamlConvert = yamlConvert.replace(
-      / *\(fffe,e00d\): na \(ItemDelimitationItem\) *\n/g,
+      / *\(fffe,e00d\): na \(ItemDelimitationItem[ \w-]*\) *\n/g,
       '')
     yamlConvert = yamlConvert.replace(
-      / *\(fffe,e0dd\): na \(SequenceDelimitationItem\)\n/g,
+      / *\(fffe,e0dd\): na \(SequenceDelimitationItem[ \w-\.]*\)\n/g,
       '')
     yamlConvert = yamlConvert.replace(
       /(\([0-9a-f][0-9a-f][0-9a-f][0-9a-f],[0-9a-f][0-9a-f][0-9a-f][0-9a-f]\):) (.*)/g,
