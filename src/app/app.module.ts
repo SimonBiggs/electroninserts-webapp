@@ -38,6 +38,7 @@ import { SendToParameterisationComponent } from './components/dicom-components/s
 // Parameterise components
 import { ParameteriseComponent } from './components/parameterise-components/parameterise.component'
 import { WidthLengthTableComponent } from './components/parameterise-components/width-length-table.component'
+import { XYInputComponent } from './components/parameterise-components/x-y-input.component'
 // Model components
 import { WidthLengthAreaInputComponent } from './components/model-components/width-length-area-input.component'
 import { CreateModelComponent } from './components/model-components/create-model.component'
@@ -92,7 +93,8 @@ import { TitleService } from './services/utility-services/title.service'
     BokehCreateModelComponent,
     BokehUseModelComponent,
     ChooseSpecificationsComponent,
-    WidthLengthAreaInputComponent
+    WidthLengthAreaInputComponent,
+    XYInputComponent
   ],
   providers: [
     ElectronApiService,

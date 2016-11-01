@@ -42,20 +42,13 @@ export class DicomComponent implements OnInit {
 
   ngOnInit() {
     window['dicomData'] = ' ';
+    window['dicomLoadStatus'] = 0;
 
     this.reader.onload = () => this.onceFileIsLoaded();
     
-    let insertListString = localStorage.getItem('dicom_insertList')
-    if (insertListString) {
-      this.insertList = JSON.parse(insertListString);
-    }
-    else {
-      this.insertList = []
-    }
+    this.insertList = this.dataPersistenceService.loadDicomInsertList()
 
-    // localStorage.removeItem('dicomPrint');
     Module.print = this.sendDicomDumpToGlobalVariable;
-    // Module.printErr = this.sendDicomDumpToLocalStorage;
     this.myTitleService.setTitle('Dicom');
 
     // pypyjs.exec("import json; print json.dumps({'hello': 'world'})")
@@ -67,7 +60,7 @@ export class DicomComponent implements OnInit {
   }
 
   updateDicomWarning() {
-    let status = Number(localStorage.getItem('dicomLoadStatus'));
+    let status = Number(window['dicomLoadStatus']);
     if (status == 0) {
       this.getBlockDataButton.disabled = false;
       this.dicomWarning = null;
@@ -89,8 +82,8 @@ export class DicomComponent implements OnInit {
     FS.writeFile(fileName, content, {encoding: "binary"});
 
     let exit_orig = Module.exit;    
-    Module.exit = (status: any) => {
-      localStorage.setItem('dicomLoadStatus', status);
+    Module.exit = (status: number) => {
+      window['dicomLoadStatus'] = status
       exit_orig(status);
     }
     Module.callMain(['dcmdump', fileName, '--print-all']);
@@ -241,14 +234,11 @@ export class DicomComponent implements OnInit {
       }
 
     }
-    localStorage.setItem('dicom_insertList', JSON.stringify(this.insertList));
+    this.dataPersistenceService.saveDicomInsertList(this.insertList)
   }
 
   sendToParameterisation(insertData: InsertData) {
-    localStorage.setItem(
-      "last_insertData", JSON.stringify(insertData)
-    );
-
+    this.dataPersistenceService.saveCurrentInsertData(insertData)
     this.router.navigate(["/parameterise"])
   }
 }

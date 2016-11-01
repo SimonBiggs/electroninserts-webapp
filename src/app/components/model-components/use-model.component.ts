@@ -27,8 +27,6 @@ export class UseModelComponent implements OnInit, OnDestroy, AfterViewInit {
   
   plot_width = 600
 
-  triggerTextboxUpdate = false
-
   @ViewChild('plotContainer') plotContainer: any
   @ViewChild('settingsPicker') settingsPicker: any
   @ViewChild('textboxInputs') textboxInputs: WidthLengthAreaInputComponent

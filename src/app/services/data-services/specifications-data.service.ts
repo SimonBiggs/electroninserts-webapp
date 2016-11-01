@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { CurrentSettings } from './current-settings'
 import { DataPersistenceService } from './data-persistence.service'
+import { InsertData } from './insert-data'
 
 @Injectable()
 export class MachineSpecification {
@@ -28,14 +29,38 @@ export class MachineSpecificationsService {
 
   }
 
+  checkInsertSettingsExist(insertData: InsertData) {
+    let specification = this.returnMachineSpecification(insertData.machine)
+    console.log(specification)
+    if (
+      specification.energy.indexOf(Number(insertData.energy)) > -1 &&
+      specification.applicator.indexOf(String(insertData.applicator)) > -1 &&
+      specification.ssd.indexOf(Number(insertData.ssd)) > -1
+    ) {
+      return true
+    }
+    else {
+      return false
+    }
+  }
+
+  doesMachineExist(machineID: string) {
+    if (this.machineList.indexOf(machineID) > -1) {
+      return true
+    }
+    else {
+      return false
+    }
+  }
+
   returnMachineSpecification(machineID: string) {
     let machineSpecification: MachineSpecification
     let index: number
 
-    index = this.specifications.findIndex((specification: MachineSpecification) => {
-      return specification.machine == machineID
-    })
+    index = this.machineList.indexOf(machineID)
+
     if (index == -1) {
+      // throw new RangeError("Requested machine does not exist")
       machineSpecification = null
     }
     else {

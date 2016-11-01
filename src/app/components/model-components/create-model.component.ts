@@ -55,10 +55,8 @@ export class CreateModelComponent implements OnInit, OnDestroy{
   ngOnInit() {
     this.myTitleService.setTitle('Create Model')
 
-    this.modelURL = localStorage.getItem("modelURL")
-    if (this.modelURL == null) {
-      this.modelURL = 'http://electronapi.simonbiggs.net/model'
-    }
+    this.modelURL = this.dataPersistenceService.loadServerUrl('model')
+
     this.updatePlotWidth()
 
   }
@@ -118,12 +116,12 @@ export class CreateModelComponent implements OnInit, OnDestroy{
   }
 
   modelServerChange(newModelURL: string) {
-    localStorage.setItem("modelURL", newModelURL);
+    this.dataPersistenceService.saveServerUrl('model', newModelURL)
   }
 
   defaultServer() {
     this.modelURL = 'http://electronapi.simonbiggs.net/model';
-    localStorage.setItem("modelURL", this.modelURL);
+    this.dataPersistenceService.saveServerUrl('model', this.modelURL)
   }
 
   loadDemoData() {

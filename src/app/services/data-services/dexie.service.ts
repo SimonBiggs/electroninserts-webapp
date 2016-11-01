@@ -21,10 +21,10 @@ export class ServerURLs {
 export class DexieDatabase extends Dexie {  
   pulledFromLocalStorage: Dexie.Table<PulledFromLocalStorage, number>
   modelData: Dexie.Table<ModelDataLite, string>
-  specification: Dexie.Table<MachineSpecification, string>
+  specifications: Dexie.Table<MachineSpecification, string>
   currentSettings: Dexie.Table<CurrentSettings, number>
   parameterisationCache: Dexie.Table<Parameterisation, string>
-  currentInsert: Dexie.Table<InsertData, number>
+  currentInsertData: Dexie.Table<InsertData, number>
   serverURLs: Dexie.Table<ServerURLs, string>
   dicomInsertList: Dexie.Table<InsertData, number>
 
@@ -36,20 +36,20 @@ export class DexieDatabase extends Dexie {
     db.version(1).stores({
       pulledFromLocalStorage: 'id, pulledFromLocalStorage',
       modelData: 'machineSettingsKey, measurement, model, predictions',
-      specification: 'machine, makeAndModel, energy, R50, applicator, ssd',
+      specifications: 'machine, makeAndModel, energy, R50, applicator, ssd',
       currentSettings: 'id, machine, energy, applicator, ssd',
       parameterisationCache: 'parameterisationKey, insert, width, length, circle, ellipse',
-      currentInsert: 'id, machine, parameterisation, energy, applicator, ssd, measuredFactor',
+      currentInsertData: 'id, machine, parameterisation, energy, applicator, ssd, measuredFactor',
       serverURLs: 'purpose, url',
       dicomInsertList: 'id, machine, parameterisation, energy, applicator, ssd, measuredFactor'
     })
 
     db.pulledFromLocalStorage.mapToClass(PulledFromLocalStorage)
     db.modelData.mapToClass(ModelData)
-    db.specification.mapToClass(MachineSpecification)
+    db.specifications.mapToClass(MachineSpecification)
     db.currentSettings.mapToClass(CurrentSettings)
     db.parameterisationCache.mapToClass(Parameterisation)
-    db.currentInsert.mapToClass(InsertData)
+    db.currentInsertData.mapToClass(InsertData)
     db.serverURLs.mapToClass(ServerURLs)
     db.dicomInsertList.mapToClass(InsertData)
     
@@ -60,7 +60,7 @@ export class DexieDatabase extends Dexie {
           this.fillDatabaseFromLocalStorage()
         }
         else if(result[0].pulledFromLocalStorage == false) {
-          db.specification.clear()
+          db.specifications.clear()
           db.modelData.clear()          
           this.fillDatabaseFromLocalStorage()
         }
@@ -94,7 +94,7 @@ export class DexieDatabase extends Dexie {
       }
     }
 
-    db.specification.bulkAdd(specifications)
+    db.specifications.bulkAdd(specifications)
     .then(() => {
       console.log('dexie.service fillDatabaseFromLocalStorage db.specification.bulkAdd(specifications) promise complete')
       return db.modelData.bulkAdd(modelDataLiteArray)

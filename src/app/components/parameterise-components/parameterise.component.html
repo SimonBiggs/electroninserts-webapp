@@ -17,7 +17,16 @@
       Number inputs can only contain the characters 0-9, a minus sign (-) and decimal points (.).
     </p>
 
-    <mdl-textfield
+    <my-x-y-input #textboxInputs
+      [dataInputs]="insertData.parameterisation.insert"
+      [triggerUpdate]=false
+      [rows]=4
+      [disabled]="dataInFlight"
+      (texboxValidCheck)="textInputsValid=$event"
+      (validTextBoxChange)=onValidTextboxChange()
+      [style.width]="'100%'"></my-x-y-input>
+
+    <!--<mdl-textfield
       type="text"
       label="X coordinates (cm @iso)"
       [(ngModel)]="textAreaX"
@@ -35,7 +44,7 @@
       rows=4
       floating-label
       [disabled]="dataInFlight"
-      [style.width]="'100%'"></mdl-textfield>
+      [style.width]="'100%'"></mdl-textfield>-->
 
     <p *ngIf="!equalLengths">
       The x and y coordinate lengths need to be the same as each other.
@@ -63,7 +72,7 @@
       mdl-colored="primary" 
       mdl-ripple
       angulartics2On="click" angularticsEvent="Parameterise | Parameterise insert"
-      [disabled]="submitDisabled || !xInputValid || !yInputValid || !equalLengths"
+      [disabled]="submitDisabled || !textInputsValid || !equalLengths"
       (click)="onSubmit()">Parameterise Insert          
     </button>
 
@@ -80,7 +89,7 @@
       [insert_y]="insertData.parameterisation.insert.y"
       [circle]="insertData.parameterisation.circle"
       [ellipse]="insertData.parameterisation.ellipse"
-      [enabled]="xInputValid && yInputValid && equalLengths">
+      [enabled]="textInputsValid && equalLengths">
     </my-plot>
 
     <div style="height:20px; width:20px;"></div>
@@ -88,7 +97,7 @@
     <my-width-length-table
       [width]="insertData.parameterisation.width"
       [length]="insertData.parameterisation.length"
-      [enabled]="xInputValid && yInputValid && equalLengths">
+      [enabled]="textInputsValid && equalLengths">
     </my-width-length-table>
 
   </div>
@@ -169,11 +178,11 @@
       mdl-colored="primary" 
       mdl-ripple
       angulartics2On="click" angularticsEvent="Parameterise | Add measured factor to model"
-      [disabled]="!ableToAddDataToModel || !machineSettingsExist || measuredFactorInput.value==null || measuredFactorInput.value=='' || submitDisabled || !xInputValid || !yInputValid || !equalLengths"
+      [disabled]="!ableToAddDataToModel || !machineSettingsExist || measuredFactorInput.value==null || measuredFactorInput.value=='' || submitDisabled || !textboxInputs || !equalLengths"
       (click)="addMeasuredFactor(measuredFactorInput.value)">Add Measured Factor to Model            
     </button>
 
-    <p *ngIf="dataAlreadyExistsOnModel && !submitDisabled && xInputValid && yInputValid && equalLengths && machineSettingsExist">
+    <p *ngIf="dataAlreadyExistsOnModel && !submitDisabled && textInputsValid && equalLengths && machineSettingsExist">
       This width, length, and measured factor combination exists within the model.       
       <a routerLink="/model" routerLinkActive="active">
         View the model.
@@ -190,7 +199,7 @@
       mdl-colored="primary" 
       mdl-ripple
       angulartics2On="click" angularticsEvent="Parameterise | Predict factor with model"
-      [disabled]="!machineSettingsExist || submitDisabled || !xInputValid || !yInputValid || !equalLengths || insertData.parameterisation.width == null || insertData.parameterisation.length == null"
+      [disabled]="!machineSettingsExist || submitDisabled || !textInputsValid || !equalLengths || insertData.parameterisation.width == null || insertData.parameterisation.length == null"
       (click)="predictFactor()">Predict Factor with Model        
     </button>
 
