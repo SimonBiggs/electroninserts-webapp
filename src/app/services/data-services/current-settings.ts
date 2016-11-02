@@ -10,6 +10,10 @@ export class CurrentSettings {
 
   constructor () {
     this.id = 0
+    this.machine = null
+    this.energy = null
+    this.applicator = null
+    this.ssd = null
   }
 
   returnKey() {

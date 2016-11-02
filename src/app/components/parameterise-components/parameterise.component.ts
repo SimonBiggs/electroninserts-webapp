@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, AfterViewInit, ApplicationRef, AfterContentInit } from '@angular/core';
 
 import { Router } from '@angular/router';
 
@@ -9,6 +9,7 @@ import { TitleService } from '../../services/utility-services/title.service';
 import { DataPersistenceService } from '../../services/data-services/data-persistence.service'
 import { CurrentSettings } from '../../services/data-services/current-settings'
 import { MachineSpecification, MachineSpecificationsService } from '../../services/data-services/specifications-data.service'
+import { ServerURLs } from '../../services/data-services/dexie.service'
 
 import { XYInputComponent } from './x-y-input.component'
 
@@ -20,7 +21,7 @@ import { DEMO_PARAMETERISE_INPUT } from '../../services/data-services/demo-data'
   selector: 'my-parameterise',
   templateUrl: 'parameterise.component.html',
 })
-export class ParameteriseComponent implements OnInit, AfterViewInit {
+export class ParameteriseComponent implements OnInit, AfterViewInit, AfterContentInit {
   textInputsValid: boolean = true;
   equalLengths: boolean = true;
 
@@ -54,7 +55,8 @@ export class ParameteriseComponent implements OnInit, AfterViewInit {
     private router: Router,
     private modelData: ModelData,
     private dataPersistenceService: DataPersistenceService,
-    private machineSpecificationService: MachineSpecificationsService
+    private machineSpecificationService: MachineSpecificationsService,
+    private applicationRef: ApplicationRef
   ) { }
 
   @ViewChild('textboxInputs') textboxInputs: XYInputComponent
@@ -63,13 +65,21 @@ export class ParameteriseComponent implements OnInit, AfterViewInit {
     console.log('parameterisation.component ngOnInit')
 
     this.myTitleService.setTitle('Parameterisation')
+    this.dataPersistenceService.loadServerUrl('parameterisation')
+    .then((serverUrl: ServerURLs) => {
+      if (serverUrl == null) {
+        this.parameteriseURL = 'http://electronapi.simonbiggs.net/parameterise'
+      }
+      else {
+        this.parameteriseURL = serverUrl.url
+      } 
+    })
 
     this.dataPersistenceService.loadCurrentInsertData(this.insertData)
-    this.checkIfEqualLengths()    
-
-    this.parameteriseURL = this.dataPersistenceService.loadServerUrl('parameterisation')
-
-    this.machineSpecificationService.loadData()
+    .then(() => {
+      this.checkIfEqualLengths()
+      return this.machineSpecificationService.loadData()
+    })
     .then(() => {
       console.log('specifications.component ngOnInit this.machineSpecificationService.loadData() promise complete')
       this.machineSettings = this.machineSpecificationService.currentSettings
@@ -79,7 +89,7 @@ export class ParameteriseComponent implements OnInit, AfterViewInit {
         this.textboxInputs.triggerUpdate = true
         this.initialTextBoxUpdate = true
       }
-      this.dataLoaded = true 
+      this.dataLoaded = true
     })
   }
 
@@ -89,6 +99,20 @@ export class ParameteriseComponent implements OnInit, AfterViewInit {
       this.initialTextBoxUpdate = true
     }
     this.viewInitialised = true 
+
+    // this.sleep(10)
+    // .then(() => {
+    //   this.textboxInputs.triggerUpdate = true
+    //   this.applicationRef.tick()
+    // })
+  }
+
+  ngAfterContentInit() {
+    // this.sleep(10)
+    // .then(() => {
+    //   this.textboxInputs.triggerUpdate = true
+    //   this.applicationRef.tick()
+    // })
   }
 
   checkMachineSettings() {
@@ -111,6 +135,7 @@ export class ParameteriseComponent implements OnInit, AfterViewInit {
         this.machineSettings[key] = this.insertData[key]
       }
       this.dataPersistenceService.loadModelData(this.modelData, this.machineSettings).then(() => {
+        console.log('parameterisation.component checkIfCanBeSentToModel this.dataPersistenceService.loadModelData(this.modelData, this.machineSettings) promise complete')
         if (
             this.modelData.measurement.width.indexOf(Number(this.insertData.parameterisation.width)) > -1 &&
             this.modelData.measurement.length.indexOf(Number(this.insertData.parameterisation.length)) > -1 &&
@@ -120,7 +145,17 @@ export class ParameteriseComponent implements OnInit, AfterViewInit {
         }
         else {
           this.dataAlreadyExistsOnModel = false
-          this.ableToAddDataToModel = true
+          if (
+            Number(this.insertData.parameterisation.width) == 0 || 
+            Number(this.insertData.parameterisation.length) == 0 ||
+            Number(this.insertData.measuredFactor) == 0
+          )
+          {
+            this.ableToAddDataToModel = false
+          }
+          else {
+            this.ableToAddDataToModel = true
+          }
         }
       })
     }
@@ -131,11 +166,19 @@ export class ParameteriseComponent implements OnInit, AfterViewInit {
   }
 
   onValidTextboxChange() {
+    console.log('parameterisation.component onValidTextboxChange')
     this.insertData.parameterisation.insertUpdated()
     this.dataPersistenceService.loadParameterisationCache(this.insertData.parameterisation)
-    this.checkIfEqualLengths()
-    this.dataPersistenceService.saveCurrentInsertData(this.insertData)
-    this.checkIfCanBeSentToModel()
+    .then(() => {
+      console.log('parameterisation.component onValidTextboxChange this.dataPersistenceService.loadParameterisationCache(this.insertData.parameterisation) promise complete')
+      this.checkIfEqualLengths()
+      this.checkIfCanBeSentToModel()
+      return this.dataPersistenceService.saveCurrentInsertData(this.insertData)      
+    })
+    .then(() => {
+      console.log('parameterisation.component onValidTextboxChange this.dataPersistenceService.saveCurrentInsertData(this.insertData)  promise complete')
+    })
+
   }
 
   checkIfEqualLengths() {
@@ -157,19 +200,26 @@ export class ParameteriseComponent implements OnInit, AfterViewInit {
       this.machineSettings[key] = this.insertData[key]
     }
 
-    this.dataPersistenceService.loadModelData(this.modelData, this.machineSettings).then(() => {
+    this.dataPersistenceService.loadModelData(this.modelData, this.machineSettings)
+    .then(() => {
+      console.log('parameterisation.component addMeasuredFactor this.dataPersistenceService.loadModelData(this.modelData, this.machineSettings) promise complete')
       this.modelData.model.reset()
 
       this.modelData.measurement.width.push(Number(this.insertData.parameterisation.width))
       this.modelData.measurement.length.push(Number(this.insertData.parameterisation.length))
       this.modelData.measurement.measuredFactor.push(Number(measuredFactor))
 
-      this.dataPersistenceService.saveModelData(this.modelData, this.machineSettings)
-        .catch(err => console.log('Error saving measured factor within parameterise' + err))
+      return this.dataPersistenceService.saveModelData(this.modelData, this.machineSettings)
+    })
+    .then(() => {
+      console.log('parameterisation.component addMeasuredFactor this.dataPersistenceService.saveModelData(this.modelData, this.machineSettings) promise complete')
+      return this.dataPersistenceService.saveCurrentSettings(this.machineSettings)
+        
+    })
+    .then(() => {
+      console.log('parameterisation.component addMeasuredFactor this.dataPersistenceService.saveCurrentSettings(this.machineSettings) promise complete')
     })
 
-    this.dataPersistenceService.saveCurrentSettings(this.machineSettings)
-      .catch(err => console.log('Error updating current settings within parameterise' + err))
   }
 
   predictFactor() {
@@ -178,17 +228,23 @@ export class ParameteriseComponent implements OnInit, AfterViewInit {
       this.machineSettings[key] = this.insertData[key]
     }
     this.dataPersistenceService.saveCurrentSettings(this.machineSettings)
-
-    this.dataPersistenceService.loadModelData(this.modelData, this.machineSettings).then(() => {
+    .then(() => {
+      console.log('parameterisation.component predictFactor this.dataPersistenceService.saveCurrentSettings(this.machineSettings) promise complete')
+      return this.dataPersistenceService.loadModelData(this.modelData, this.machineSettings)
+    })
+    .then(() => {
+      console.log('parameterisation.component predictFactor this.dataPersistenceService.loadModelData(this.modelData, this.machineSettings) promise complete')
       this.modelData.predictions.width.unshift(this.insertData.parameterisation.width)
       this.modelData.predictions.length.unshift(this.insertData.parameterisation.length)
       if (this.insertData.measuredFactor != 0 && this.insertData.measuredFactor != null) {
         this.modelData.predictions.measuredFactor.unshift(this.insertData.measuredFactor)
-      }    
+      }
 
-      this.dataPersistenceService.saveModelData(this.modelData, this.machineSettings).then(() => {
-        this.router.navigate(["/use-model"])
-      })
+      return this.dataPersistenceService.saveModelData(this.modelData, this.machineSettings)
+    })
+    .then(() => {
+      console.log('parameterisation.component predictFactor this.dataPersistenceService.saveModelData(this.modelData, this.machineSettings) promise complete')
+      this.router.navigate(["/use-model"])
     })
 
 
@@ -204,12 +260,17 @@ export class ParameteriseComponent implements OnInit, AfterViewInit {
     this.insertData.parameterisation.insert.x = demoData.insert.x
     this.insertData.parameterisation.insert.y = demoData.insert.y
     this.insertData.parameterisation.insertUpdated()
-    this.dataPersistenceService.loadParameterisationCache(this.insertData.parameterisation)     
+    this.dataPersistenceService.loadParameterisationCache(this.insertData.parameterisation)
+    .then(() => {
+      console.log('parameterisation.component loadDemoData this.dataPersistenceService.loadParameterisationCache(this.insertData.parameterisation) promise complete')
+      this.textboxInputs.triggerUpdate = true
+      this.checkIfEqualLengths()
 
-    this.textboxInputs.triggerUpdate = true
-    this.checkIfEqualLengths()
-
-    this.dataPersistenceService.saveCurrentInsertData(this.insertData)
+      return this.dataPersistenceService.saveCurrentInsertData(this.insertData)
+    })
+    .then(() => {
+      console.log('parameterisation.component loadDemoData this.dataPersistenceService.saveCurrentInsertData(this.insertData) promise complete')
+    })
   }
 
   sleep(time: number) {
@@ -236,7 +297,13 @@ export class ParameteriseComponent implements OnInit, AfterViewInit {
           this.serverResponseValid = true;
           this.checkSubmitButton()
           this.dataPersistenceService.saveParameterisationCache(this.insertData.parameterisation)
+          .then(() => {
+            console.log('parameterisation.component recursiveServerSubmit this.dataPersistenceService.saveParameterisationCache(this.insertData.parameterisation) promise complete')
+          })
           this.dataPersistenceService.saveCurrentInsertData(this.insertData)
+          .then(() => {
+            console.log('parameterisation.component recursiveServerSubmit this.dataPersistenceService.saveCurrentInsertData(this.insertData) promise complete')
+          })
           this.checkIfCanBeSentToModel()
           if (this.insertData.parameterisation.width == null) {
             this.serverError = true
@@ -251,15 +318,18 @@ export class ParameteriseComponent implements OnInit, AfterViewInit {
   insertDataChange() {
     console.log('parameterisation.component insertDataChange')
     this.dataPersistenceService.saveCurrentInsertData(this.insertData)
+    .then(() => {
+      console.log('parameterisation.component insertDataChange this.dataPersistenceService.saveCurrentInsertData(this.insertData) promise complete')
+    })
     this.checkMachineSettings()
     this.checkIfCanBeSentToModel()
   }
 
   onSubmit() {
     console.log('parameterisation.component onSubmit')
-    this.dataInFlight = true;
-    this.checkSubmitButton();
-    this.recursiveServerSubmit();
+    this.dataInFlight = true
+    this.checkSubmitButton()
+    this.recursiveServerSubmit()
   }
 
 
@@ -282,6 +352,9 @@ export class ParameteriseComponent implements OnInit, AfterViewInit {
   parameterisationServerChange(serverUrl: string) {
     console.log('parameterisation.component parameterisationServerChange')
     this.dataPersistenceService.saveServerUrl('parameterisation', serverUrl)
+    .then(() => {
+
+    })
   }
 
 }

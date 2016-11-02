@@ -3,21 +3,29 @@
     <h3 itemprop="name">Electron insert factor modelling</h3>
     <p>
       Tags: <span itemprop="applicationCategory">Medical physics, electron inserts, electron cutouts, Python, Angular2, Bokeh, spline modelling</span><br>
-      Last update: <span itemprop="datePublished" content="2016-10-18">2016-10-23</span><br>
+      Last update: <span itemprop="datePublished" content="2016-10-18">2016-11-03</span><br>
       Version: <span itemprop="softwareVersion">0.2.0-beta</span><br>
       Operating system: <span itemprop="operatingSystem">Windows, Linux, Mac, Android, and iOS</span> <br>
-      Requirements: <span itemprop="requirements">A browser such as <a href="https://www.google.com.au/chrome/browser">Chrome</a> that supports <a href="http://caniuse.com/#feat=indexeddb">IndexedDB</a></span><br>
+      Requirements: <span itemprop="requirements">A browser such as <a href="https://www.google.com.au/chrome/browser">Chrome</a> that supports <a href="http://caniuse.com/#feat=indexeddb">IndexedDB</a> browser database</span><br>
       Developed by: <span itemprop="author" itemscope itemtype="http://schema.org/Person"><a itemprop="name" href="https://github.com/SimonBiggs">Simon Biggs</a></span>
-
     </p>
-    
+
+    <h4>Warning</h4>
+    <p>
+      This web app is currently under active development. 
+      On 3-Nov-2016 the underlying data structure of this web app underwent a refactor. This was to facilitate data importing and exporting.
+      Although I have put methods in place to transfer data across to the new format in a reasonable manner this may not have been successful.
+      If you suspect that your data has been corrupted during this process please empty your browser database via the 
+      <a routerLink="/specifications" routerLinkActive="active">
+        storage component</a>.
+    </p>
+    <p>
+      If you find bugs, or have any usability suggestions please <a href="mailto:mail@simonbiggs.net">email me</a> so that I may make appropriate fixes and improvements.
+    </p>
     <h4>Description</h4>
     <p>
       This online web app is for the modelling of the portion of the electron output factor that is dependent on the shape of the shielding insert mounted within the applicator. This allows modelling insert factors using only the measured factors already available at a centre. Should all outliers be removed from the data set the user might expect as low as 0.5% standard uncertainty for factor prediction with as little as 8 data points.
     </p>
-
-
-    <p>If you have any issues or feedback please contact me at <a href="mailto:mail@simonbiggs.net">mail@simonbiggs.net</a>.</p>
 
     <h4>Instructions</h4>
     <h5>Overview</h5>

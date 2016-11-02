@@ -12,6 +12,15 @@ export class MachineSpecification {
   R50: number[]
   applicator: string[]
   ssd: number[]
+
+  constructor() {
+    this.machine = ""
+    this.makeAndModel = ""
+    this.energy = []
+    this.R50 = []
+    this.applicator = []
+    this.ssd = []
+  }
 }
 
 @Injectable()
@@ -123,11 +132,12 @@ export class MachineSpecificationsService {
     if (machineSpecification == null) {      
       this.currentSpecification = this.specifications[0]
       this.currentSettings.machine = this.machineList[0]
-      this.refreshCurrentSettings()
     }
     else {
       this.currentSpecification = machineSpecification
     }
+
+    this.refreshCurrentSettings()
 
     // console.warn(this.currentIndex)
     // console.warn(this.specifications)
@@ -143,7 +153,9 @@ export class MachineSpecificationsService {
         }
         else {
           if (this.currentSpecification[item].length > 0) {
-            this.currentSettings[item] = this.currentSpecification[item][0]
+            if (this.currentSpecification[item].indexOf(this.currentSettings[item]) == -1) {
+              this.currentSettings[item] = this.currentSpecification[item][0]
+            } 
           }
           else {
             this.currentSettings[item] = null
@@ -175,7 +187,6 @@ export class MachineSpecificationsService {
   changeMachine(swapToMachineID: string) {
     console.log('specifications-data.service changeMachine')
     this.currentSettings.machine = swapToMachineID
-    this.refreshCurrentSettings()
     this.updateCurrentSpecification()
   }
 }

@@ -5,6 +5,7 @@ import { ElectronApiService } from '../../services/server-api-services/electron-
 import { ModelData } from '../../services/data-services/model-data'
 import { DataPersistenceService } from '../../services/data-services/data-persistence.service'
 import { CurrentSettings } from '../../services/data-services/current-settings'
+import { ServerURLs } from '../../services/data-services/dexie.service'
 
 import { WidthLengthAreaInputComponent } from './width-length-area-input.component'
 
@@ -55,7 +56,15 @@ export class CreateModelComponent implements OnInit, OnDestroy{
   ngOnInit() {
     this.myTitleService.setTitle('Create Model')
 
-    this.modelURL = this.dataPersistenceService.loadServerUrl('model')
+    this.dataPersistenceService.loadServerUrl('model')
+    .then((serverUrl: ServerURLs) => {
+      if (serverUrl == null) {
+        this.modelURL = 'http://electronapi.simonbiggs.net/model'
+      }
+      else {
+        this.modelURL = serverUrl.url
+      } 
+    })
 
     this.updatePlotWidth()
 
@@ -65,10 +74,8 @@ export class CreateModelComponent implements OnInit, OnDestroy{
     this.plot_width = this.plotContainer.nativeElement.clientWidth
   }
 
-  currentMachineSettingsUpdated(newSettings: {}) {
-    for (let key of ['machine', 'energy', 'applicator', 'ssd']) {
-      this.currentSettings[key] = newSettings[key]
-    }
+  currentMachineSettingsUpdated(newSettings: CurrentSettings) {
+    this.currentSettings = newSettings
     this.loadMeasuredData()
     this.checkLengthSmallerThanWidth()
   }

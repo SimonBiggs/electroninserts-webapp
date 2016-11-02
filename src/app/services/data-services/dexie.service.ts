@@ -23,7 +23,7 @@ export class DexieDatabase extends Dexie {
   modelData: Dexie.Table<ModelDataLite, string>
   specifications: Dexie.Table<MachineSpecification, string>
   currentSettings: Dexie.Table<CurrentSettings, number>
-  parameterisationCache: Dexie.Table<Parameterisation, string>
+  parameterisationCache: Dexie.Table<Parameterisation, number>
   currentInsertData: Dexie.Table<InsertData, number>
   serverURLs: Dexie.Table<ServerURLs, string>
   dicomInsertList: Dexie.Table<InsertData, number>
@@ -34,14 +34,14 @@ export class DexieDatabase extends Dexie {
     // db.delete()
 
     db.version(1).stores({
-      pulledFromLocalStorage: 'id, pulledFromLocalStorage',
-      modelData: 'machineSettingsKey, measurement, model, predictions',
       specifications: 'machine, makeAndModel, energy, R50, applicator, ssd',
       currentSettings: 'id, machine, energy, applicator, ssd',
-      parameterisationCache: 'parameterisationKey, insert, width, length, circle, ellipse',
-      currentInsertData: 'id, machine, parameterisation, energy, applicator, ssd, measuredFactor',
+      currentInsertData: 'id, machine, parameterisation, energy, applicator, ssd, measuredFactor',      
+      modelData: 'machineSettingsKey, measurement, model, predictions',
+      dicomInsertList: 'id, machine, parameterisation, energy, applicator, ssd, measuredFactor',
       serverURLs: 'purpose, url',
-      dicomInsertList: 'id, machine, parameterisation, energy, applicator, ssd, measuredFactor'
+      parameterisationCache: 'id, insert, width, length, circle, ellipse',
+      pulledFromLocalStorage: 'id, pulledFromLocalStorage'
     })
 
     db.pulledFromLocalStorage.mapToClass(PulledFromLocalStorage)

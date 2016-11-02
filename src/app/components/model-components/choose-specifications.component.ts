@@ -13,8 +13,6 @@ export class ChooseSpecificationsComponent implements OnInit {
   @Output()
   settingsUpdated = new EventEmitter()
 
-  currentSettings: CurrentSettings
-
   constructor(
     private dataPersistenceService: DataPersistenceService,
     private machineSpecificationService: MachineSpecificationsService
@@ -24,42 +22,41 @@ export class ChooseSpecificationsComponent implements OnInit {
     console.log('choose-specifications.component ngOnInit')
     this.machineSpecificationService.loadData()
       .then(() => {
-        this.currentSettings = this.machineSpecificationService.currentSettings
-        this.settingsUpdated.emit(this.currentSettings)
+        this.settingsUpdated.emit(this.machineSpecificationService.currentSettings)
       })
   }
 
   updateMachineID(newCurrentMachine: string) {
     console.log('choose-specifications.component updateMachineID')
-    this.currentSettings.machine = newCurrentMachine
+    this.machineSpecificationService.currentSettings.machine = newCurrentMachine
     this.machineSpecificationService.updateCurrentSpecification()
     this.machineSpecificationService.refreshCurrentSettings()
 
-    this.dataPersistenceService.saveCurrentSettings(this.currentSettings)
-    this.settingsUpdated.emit(this.currentSettings)
+    this.dataPersistenceService.saveCurrentSettings(this.machineSpecificationService.currentSettings)
+    this.settingsUpdated.emit(this.machineSpecificationService.currentSettings)
   }
 
   updateEnergy(newCurrentEnergy: number) {
     console.log('choose-specifications.component updateEnergy')
-    this.currentSettings.energy = Number(newCurrentEnergy)
-    this.dataPersistenceService.saveCurrentSettings(this.currentSettings)
+    this.machineSpecificationService.currentSettings.energy = Number(newCurrentEnergy)
+    this.dataPersistenceService.saveCurrentSettings(this.machineSpecificationService.currentSettings)
 
-    this.settingsUpdated.emit(this.currentSettings)
+    this.settingsUpdated.emit(this.machineSpecificationService.currentSettings)
   }
 
   updateApplicator(newCurrentApplicator: string) {
     console.log('choose-specifications.component updateApplicator')
-    this.currentSettings.applicator = newCurrentApplicator
-    this.dataPersistenceService.saveCurrentSettings(this.currentSettings)
+    this.machineSpecificationService.currentSettings.applicator = newCurrentApplicator
+    this.dataPersistenceService.saveCurrentSettings(this.machineSpecificationService.currentSettings)
 
-    this.settingsUpdated.emit(this.currentSettings)
+    this.settingsUpdated.emit(this.machineSpecificationService.currentSettings)
   }
 
   updateSSD(newCurrentSSD: number) {
     console.log('choose-specifications.component updateSSD')
-    this.currentSettings.ssd = Number(newCurrentSSD)
-    this.dataPersistenceService.saveCurrentSettings(this.currentSettings)
+    this.machineSpecificationService.currentSettings.ssd = Number(newCurrentSSD)
+    this.dataPersistenceService.saveCurrentSettings(this.machineSpecificationService.currentSettings)
 
-    this.settingsUpdated.emit(this.currentSettings)
+    this.settingsUpdated.emit(this.machineSpecificationService.currentSettings)
   }
 }

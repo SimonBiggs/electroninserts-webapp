@@ -46,7 +46,10 @@ export class DicomComponent implements OnInit {
 
     this.reader.onload = () => this.onceFileIsLoaded();
     
-    this.insertList = this.dataPersistenceService.loadDicomInsertList()
+    this.dataPersistenceService.loadDicomInsertList()
+    .then((result) => {
+      this.insertList = result
+    })
 
     Module.print = this.sendDicomDumpToGlobalVariable;
     this.myTitleService.setTitle('Dicom');
@@ -179,8 +182,10 @@ export class DicomComponent implements OnInit {
     let dicomDict = this.convertDicomDumpToDict(dicomPrint);
 
     // console.log(dicomDict)
-
+    let i = 0
     this.insertList = [];
+
+    let promiseList: any[] = []
 
     let beamSequence = dicomDict["(300a,00b0)"];
     for (let beam of beamSequence) {
@@ -188,11 +193,13 @@ export class DicomComponent implements OnInit {
 
       if (temp != undefined) {
         let insertData = new InsertData()
+        insertData.id = i
+        i++
 
         let blockData = beam["(300a,00f4)"][0]["(300a,0106)"];
         insertData.parameterisation.insert = this.convertBlockDataToCoords(blockData)
         insertData.parameterisation.insertUpdated()
-        this.dataPersistenceService.loadParameterisationCache(insertData.parameterisation)
+        promiseList.push(this.dataPersistenceService.loadParameterisationCache(insertData.parameterisation))
 
         try {
           insertData.applicator = this.dicomPullString(
@@ -234,11 +241,17 @@ export class DicomComponent implements OnInit {
       }
 
     }
-    this.dataPersistenceService.saveDicomInsertList(this.insertList)
+    Promise.all(promiseList)
+    .then(() => {
+      this.dataPersistenceService.saveDicomInsertList(this.insertList)
+    })
   }
 
   sendToParameterisation(insertData: InsertData) {
+    insertData.id = 0
     this.dataPersistenceService.saveCurrentInsertData(insertData)
-    this.router.navigate(["/parameterise"])
+    .then(() => {
+      this.router.navigate(["/parameterise"])
+    })
   }
 }

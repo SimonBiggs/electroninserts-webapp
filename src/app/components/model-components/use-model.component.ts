@@ -125,14 +125,9 @@ export class UseModelComponent implements OnInit, OnDestroy, AfterViewInit {
     this.plot_width = this.plotContainer.nativeElement.clientWidth
   }
 
-  currentMachineSettingsUpdated(newSettings: {}) {
+  currentMachineSettingsUpdated(newSettings: CurrentSettings) {
     console.log('use-model.component currentMachineSettingsUpdated')
-    if (newSettings === undefined) {
-      throw new RangeError("New settings was undefined within use-model.component currentMachineSettingsUpdated")
-    } 
-    for (let key of ['machine', 'energy', 'applicator', 'ssd']) {
-      this.currentSettings[key] = newSettings[key]
-    }
+    this.currentSettings = newSettings
     this.loadMeasuredData()
   }
 

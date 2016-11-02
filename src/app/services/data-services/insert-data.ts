@@ -11,7 +11,7 @@ export class Coordinates {
 
 
 export class Parameterisation {
-  public parameterisationKey: string
+  public id: number
   public width: number
   public length: number
 
@@ -25,10 +25,20 @@ export class Parameterisation {
     this.ellipse = new Coordinates()
   }
 
+  hash(input: string) {
+    let hash = 0, i: number, chr: number, len: number
+    if (input.length === 0) return hash
+    for (i = 0, len = input.length; i < len; i++) {
+      chr   = input.charCodeAt(i)
+      hash  = ((hash << 5) - hash) + chr
+      hash |= 0 // Convert to 32bit integer
+    }
+    return hash
+  }
+
   insertUpdated() {
     if (this.insert != null) {
-      
-      this.parameterisationKey = (
+      this.id = this.hash(
         '{"x":' + JSON.stringify(this.insert.x) + ',' +
         '"y":' + JSON.stringify(this.insert.y) +
         '}')
@@ -40,7 +50,7 @@ export class Parameterisation {
   }
 
   reset() {
-    this.parameterisationKey = null
+    this.id = null
 
     for (let key of ['insert', 'circle', 'ellipse']) {
       this[key] = new Coordinates()
@@ -84,10 +94,19 @@ export class InsertData {
   }
 
   fillFromObject(object: {}) {
-    for (let key of ['machine', 'energy', 'applicator', 'ssd', 'measuredFactor']) {
-      this[key] = object[key]
+    if (object == null) {
+      this.reset()
     }
-    this.parameterisation.insert = object['parameterisation'].insert
-    this.parameterisation.insertUpdated()
+    else {
+      for (let key of ['machine', 'energy', 'applicator', 'ssd', 'measuredFactor']) {
+        this[key] = object[key]
+      }
+      this.parameterisation.insert = object['parameterisation'].insert
+      this.parameterisation.insertUpdated()
+      this.parameterisation.circle = object['parameterisation'].circle
+      this.parameterisation.ellipse = object['parameterisation'].ellipse
+      this.parameterisation.width = object['parameterisation'].width
+      this.parameterisation.length = object['parameterisation'].length
+    }
   }
 }
