@@ -192,6 +192,7 @@
 
     <h4>(Optional) Download this web app and run it locally</h4>
       The following commands will set up this web app to work on a fresh install of <a href="http://releases.ubuntu.com/16.04/">Ubuntu 16.04</a>:
+      <div style="overflow: auto">
       <pre><code class="bash">    sudo apt install git wget
     git clone --recursive \
         https://github.com/SimonBiggs/electroninserts-webapp.git \
@@ -212,6 +213,7 @@
     source activate electroninserts
 
     python run_webapp_locally.py</code></pre>
+    </div>
 
     At that point you will be able to access the web app locally at http://localhost:8000.
     Make sure the model and parameterisation servers point to http://localhost:5000/model, and http://localhost:5000/parameterise respectively.
