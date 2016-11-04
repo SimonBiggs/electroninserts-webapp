@@ -315,8 +315,7 @@ export class DataPersistenceService {
     }
   },
   "databaseContents": ` + this.jsonTransform(tableDumps) + `
-}
-    `
+}`
         // console.log(stringDump)
         return stringDump
       })
@@ -330,21 +329,23 @@ export class DataPersistenceService {
       promiseList.push(table.clear())
     })
 
-    Promise.all(promiseList)
+    return Promise.all(promiseList)
     .then(() => {
       pulledFromLocalStorage = {
         id: 0,
         pulledFromLocalStorage: true
       }
-      db.pulledFromLocalStorage.add(pulledFromLocalStorage)
+      return db.pulledFromLocalStorage.add(pulledFromLocalStorage)
     })
   }
 
   appendJsonToDatabase(object: {}) {
     console.log('data-persistence.service appendJsonToDatabase')
+    let promiseList: any[] = []
     let databaseContents = object['databaseContents']
     db.tables.forEach((table, i) => {
-      table.bulkPut(databaseContents[table.name])
+      promiseList.push(table.bulkPut(databaseContents[table.name]))
     })
+    return Promise.all(promiseList)
   }
 }

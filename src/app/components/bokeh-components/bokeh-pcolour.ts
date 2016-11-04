@@ -90,6 +90,12 @@ export class BokehPcolour implements OnInit {
         title: this.title, tools: this.tools,
         plot_width: this.plot_width, plot_height: this.plot_height
       });
+    
+    this.fig.xaxis.axis_label = 'Width (cm @ iso)'
+    this.fig.yaxis.axis_label = 'Length (cm @ iso)'
+
+    this.colour_bar.title = 'Insert Factor'
+    // console.log(this.colour_bar)
 
     this.pcolour_renderer = this.fig.rect(
       { field: 'x' }, { field: 'y' }, 0.1, 0.1, {

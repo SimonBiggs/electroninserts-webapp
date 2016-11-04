@@ -1,312 +1,202 @@
-<div itemscope itemtype="http://schema.org/SoftwareApplication" class="mdl-grid">
+<div class="mdl-grid">
   <div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet mdl-cell--6-col-phone">
     <h3 itemprop="name">Electron insert factor modelling</h3>
-    <p>
-      Tags: <span itemprop="applicationCategory">Medical physics, electron inserts, electron cutouts, Python, Angular2, Bokeh, spline modelling</span><br>
-      Last update: <span itemprop="datePublished" content="2016-10-18">2016-11-03</span><br>
-      Version: <span itemprop="softwareVersion">0.2.0-beta</span><br>
-      Operating system: <span itemprop="operatingSystem">Windows, Linux, Mac, Android, and iOS</span> <br>
-      Requirements: <span itemprop="requirements">A browser such as <a href="https://www.google.com.au/chrome/browser">Chrome</a> that supports <a href="http://caniuse.com/#feat=indexeddb">IndexedDB</a> browser database</span><br>
-      Developed by: <span itemprop="author" itemscope itemtype="http://schema.org/Person"><a itemprop="name" href="https://github.com/SimonBiggs">Simon Biggs</a></span>
-    </p>
 
-    <h4>Warning</h4>
-    <p>
-      This web app is currently under active development.  
-      On 3-Nov-2016 the underlying data structure of this web app underwent a refactor. This was to facilitate data importing and exporting.
-      Although I have put methods in place to transfer data across to the new format in a reasonable manner this may not have been successful.
-      If you suspect that your data has been corrupted during this process please empty your browser database with the 
-      <a routerLink="/storage" routerLinkActive="active">
-        storage component</a>.
-    </p>
-    <p>
-      If you find bugs, or have any usability suggestions please <a href="mailto:mail@simonbiggs.net">email me</a> so that I may make appropriate fixes and improvements.
-    </p>
     <h4>Description</h4>
     <p>
       This online web app is for the modelling of the portion of the electron output factor that is dependent on the shape of the shielding insert mounted within the applicator. This allows modelling insert factors using only the measured factors already available at a centre. Should all outliers be removed from the data set the user might expect as low as 0.5% standard uncertainty for factor prediction with as little as 8 data points.
     </p>
+    <p>
+      If you find bugs, or have any usability suggestions please <a href="mailto:mail@simonbiggs.net">email me</a> so that I may make appropriate fixes and improvements.
+    </p>
 
-    <h4>Instructions</h4>
-    <h5>Overview</h5>
-    <p>This web app is divided into four logical components:</p>
-      <ul>
-        <li>   
-          Defining your centre specific machine specifications within the   
-          <a routerLink="/specifications" routerLinkActive="active">
-            machine specifications component
-          </a>
-        </li>
-        <li>
-          Insert shape extraction from a dicom patient plan within the
-          <a routerLink="/dicom" routerLinkActive="active">
-            dicom component
-          </a>
-        </li>
-        <li>
-          Parameterise the insert shapes into equivalent widths and lengths within the
-          <a routerLink="/parameterise" routerLinkActive="active">
-            parameterisation component
-          </a>
-        </li>
-        <li>
-          Take at least 8 widths, lengths, and measured factors for a given machine, applicator, energy, ssd combination and create an empirical model within the
-          <a routerLink="/create-model" routerLinkActive="active">
-            model component
-          </a>
-        </li>
-      </ul>
-
-      <p>
-        All your model and machine data is saved on your local machine within your browser. 
-        Your progress will be saved as long as you do not clear your browser data.
-        In the future I plan to implement a data export and import feature, as well as the ability to sync models between browsers via a server.
-        Currently however the only place your web app data is being stored is on your local machine.
-      </p>
-
-       
-      
-      <h5>To demo</h5>
-      <p>
-        If you wish to simply demo this app these are the following steps you can take:
-      </p>
-      <ul>
-        <li>
-          Within the 
-          <a routerLink="/dicom" routerLinkActive="active">
-            dicom component 
-          </a>
-          download the demo dicom file, load it into the web app and see the insert shapes be pulled from the dicom file without any network traffic
-        </li>
-        <li>
-          Within the 
-          <a routerLink="/parameterise" routerLinkActive="active">
-            parameterise component
-          </a>
-          press the "Load Demo Data" button and then press the "Parameteterise Insert" button to see the parameterisation algorithim in action
-        </li>
-        <li>
-          Within the 
-          <a routerLink="/model" routerLinkActive="active">
-            model component
-          </a>
-          press the "Load Demo Data" button and then press the "Run Spline Model" to see the spline model being created. 
-          You can then either hover over the model, or tap on the model to view the relevant values.
-        </li>
-      </ul>
-
-      <h5>To implement in your centre</h5>
-      <p>
-        To implement this web app in your centre you need to do the following:
-      </p>
-      <ul>
-        <li>  
-          Specify the machine models and the corresponding applicators, energies, and ssds within the    
-          <a routerLink="/specifications" routerLinkActive="active">
-            machine specification component.
-          </a>
-        </li>
-        <li> 
-          Collate / measure your electron insert factor measuremens. These factors are to measured in accordance to TG 25.   
-        </li>
-        <li>
-          If the insert shapes are ellipses, you may directly input the ellipse widths and lengths as projected to the isocentre within the 
-          <a routerLink="/model" routerLinkActive="active">
-            model component.
-          </a>
-        </li>
-        <li>
-          If the insert shape is a generic shape or you know the x and y coordinates of your insert then determine the equivalent ellipse widths and lengths by inputting x and y coordinates as defined at isocentre within the 
-          <a routerLink="/parameterise" routerLinkActive="active">
-            parameterisation component.
-          </a>          
-        </li>
-        <li>
-          If the insert shape is defined within your planning system, export the patient plan to dicom and then read the insert coordinates from the dicom file using the
-          <a routerLink="/dicom" routerLinkActive="active">
-            dicom component.
-          </a>          
-        </li>
-        <li>
-          Once you have the corresponding equivalent ellipse widths and lengths for your measured factors these may be appended to the relevant machine configuration within the 
-          <a routerLink="/model" routerLinkActive="active">
-            model component
-          </a>
-        </li>
-        <li>
-          Whenever a machine configuration gets at least 8 data points you may press the "Run Spline Model" on the 
-          <a routerLink="/model" routerLinkActive="active">
-            model component
-          </a>
-          which will allow the prediction of insert factors for other widths and lengths.
-        </li>
-      </ul>
-
-      <h5>To use the web app after it has been implemented</h5>
-      <ul>
-        <li>
-          Export the patient plan to dicom and then read the insert coordinates from the dicom file using the
-          <a routerLink="/dicom" routerLinkActive="active">
-            dicom component.
-          </a>          
-        </li>
-        <li>
-          Press the "Parameterise Insert" button to determine the equivalent ellipse width and length
-        </li>
-        <li>
-          Press the "Predict Factor with Model" button to automatically change the machine configuration to that which matches your loaded insert
-        </li>
-        <li>
-          Hover your mouse over the relevant width and length within the model to predict your insert factor
-        </li>
-      </ul>
-
-  </div>
-  <div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet mdl-cell--6-col-phone">
-
-    <h4>Publications</h4>
+    <h4>Publication</h4>
     <!--<h6>Original paper</h6>-->
     <p>The paper detailing the algorithim and its validation:</p>
     <p>
       S. Biggs, M. Sobolewski, R. Murry, J. Kenny, Spline modelling electron insert factors using routine measurements. Physica Medica (2015), <a href="http://dx.doi.org/10.1016/j.ejmp.2015.11.002">doi:10.1016/j.ejmp.2015.11.002</a>.
     </p>
 
-    <!--<h6>EPSM2016 Poster</h6>
+
+    <h4>Web app structure</h4>
+    <p>This web app is divided into six logical components all of which can be accessed from the navigation menu. These are outlined below:</p>
+      <ul>
+        <li>
+          <a routerLink="/specifications" routerLinkActive="active">
+            Machine specifications component
+          </a>
+          <ul><li>Used to define you centre specific machine specifications.</li></ul>   
+          
+        </li>
+        <li>
+          <a routerLink="/dicom" routerLinkActive="active">
+            Dicom component
+          </a>
+          <ul><li>Used to extract patient insert shapes from Dicom files.</li></ul>
+        </li>
+        <li>
+          <a routerLink="/parameterise" routerLinkActive="active">
+            Parameterisation component
+          </a>
+          <ul><li>Used to parameterise insert shapes into equivalent ellipse widths and lengths for use within the empirical model.</li></ul>
+        </li>
+        <li>
+          <a routerLink="/create-model" routerLinkActive="active">
+            Model component
+          </a>
+          <ul><li>Use this to create the model once there are at least 8 measured factors for a given machine, applicator, energy, ssd combination.</li></ul>
+        </li>
+        <li>
+          <a routerLink="/use-model" routerLinkActive="active">
+            Use model component
+          </a>
+          <ul><li>Use this to quickly calculate small or large numbers of predicted factors.</li>
+            <li>Measured factors can be given here to batch evaluate the models ability to predict factors for validation purposes.</li></ul>          
+        </li>
+        <li>
+          <a routerLink="/database" routerLinkActive="active">
+            Database management component
+          </a>
+          <ul><li>Use this to transfer and backup the data within the local browser data.</li></ul>
+          
+        </li>
+      </ul>
+
+   
+  </div>
+  <div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet mdl-cell--6-col-phone">      
+
+
+    <h4>Implementation instructions</h4>
+    <p>
+      To implement this web app in your centre you need to do the following:
+    </p>
     <ul>
-      <li><a href="https://www.dropbox.com/s/09ij94rqc012ad8/ElectronInsertsWebAppPoster.jpg?dl=1">Low resolution</a></li>
-      <li><a href="https://www.dropbox.com/s/ga5e64echv255b8/ElectronsPoster.svg?dl=1">Original SVG file</a></li>
+      <li>  
+        Specify the machine models and the corresponding applicators, energies, and ssds within the    
+        <a routerLink="/specifications" routerLinkActive="active">
+          machine specification component.
+        </a>
+      </li>
+      <li> 
+        Collate / measure your electron insert factor measuremens. These factors are to measured in accordance to TG 25.   
+      </li>
+      <li>
+        Parameterising new insert shapes
+        <ul>
+          <li>
+            If the insert shapes are ellipses, you may directly input the ellipse widths and lengths as projected to the isocentre within the 
+            <a routerLink="/use-model" routerLinkActive="active">
+              model component.
+            </a>
+          </li>
+          <li>
+            If you can analytically determine the diameter of the largest fully encompassed circle of your insert shapes, and you can determine your insert area you may directly input widths and area within the 
+            <a routerLink="/use-model" routerLinkActive="active">
+              model component</a>.
+            For example, the diameter of the largest fully encompassed circle within a rectangle is the width of the rectangle, and the area of a rectangle is width x length.
+            That way if your data is made up of rectangles you may input widths and areas directly.
+          </li>
+          <li>
+            If you know the x and y coordinates of your insert then determine the equivalent ellipse widths and lengths by inputting x and y coordinates as defined at isocentre within the 
+            <a routerLink="/parameterise" routerLinkActive="active">
+              parameterisation component.
+            </a>          
+          </li>
+          <li>
+            If the insert shape is defined within your planning system, export the patient plan to dicom and then read the insert coordinates from the dicom file using the
+            <a routerLink="/dicom" routerLinkActive="active">
+              dicom component.
+            </a>          
+          </li>
+        </ul>
+      </li>
+      <li>
+        Once you have the corresponding equivalent ellipse widths and lengths for your measured factors these may be appended to the relevant machine configuration within the 
+        <a routerLink="/create-model" routerLinkActive="active">
+          model component
+        </a>
+      </li>
+      <li>
+        Whenever a machine configuration gets at least 8 data points you may press the "Run Spline Model" on the 
+        <a routerLink="/create-model" routerLinkActive="active">
+          model component
+        </a>
+        which will allow the prediction of insert factors for other widths and lengths.
+      </li>
+      <li>
+        The 
+        <a routerLink="/use-model" routerLinkActive="active">
+          use component
+        </a>
+        is specifically designed to aid you in validating your model with large batches of data. 
+        If you have a large data set of measurements you can include only 8 of these measurements within the model and then use the model to predict and compare the remaining insert shapes.
+        Once you are confident with the model you may then include the remaining shapes.
+      </li>
+      <li>
+        Once you are content with your model use the 
+        <a routerLink="/database" routerLinkActive="active">
+          database management component
+        </a>
+        to export and backup your data. This data can be placed on a shared drive for access by users who need to use the model.
+      </li>
+      <li>
+        If you need to have a consistent reliable interface you may wish to consider downloading a copy of this web app and serving it within your centre's intranet.
+        This can be achieved by following the relevant steps given within the 
+        <a routerLink="/details" fragment="locally" routerLinkActive="active">
+          further details component</a>.
+      </li>
+    </ul>
+
+    <h4>Demo Instructions</h4>
+    <p>
+      If you wish to simply demo this app these are the following steps you can take:
+    </p>
+    <ul>
+      <li>
+        Within the 
+        <a routerLink="/dicom" routerLinkActive="active">
+          dicom component 
+        </a>
+        download the demo dicom file, load it into the web app and see the insert shapes be pulled from the dicom file without any network traffic
+      </li>
+      <li>
+        Within the 
+        <a routerLink="/parameterise" routerLinkActive="active">
+          parameterise component
+        </a>
+        press the "Load Demo Data" button and then press the "Parameteterise Insert" button to see the parameterisation algorithim in action
+      </li>
+      <li>
+        Within the 
+        <a routerLink="/model" routerLinkActive="active">
+          model component
+        </a>
+        press the "Load Demo Data" button and then press the "Run Spline Model" to see the spline model being created. 
+        You can then either hover over the model, or tap on the model to view the relevant values.
+      </li>
+    </ul>
+
+    <!--<h4>Use instructions</h4>
+    <ul>
+      <li>
+        Export the patient plan to dicom and then read the insert coordinates from the dicom file using the
+        <a routerLink="/dicom" routerLinkActive="active">
+          dicom component.
+        </a>          
+      </li>
+      <li>
+        Press the "Parameterise Insert" button to determine the equivalent ellipse width and length
+      </li>
+      <li>
+        Press the "Predict Factor with Model" button to automatically change the machine configuration to that which matches your loaded insert
+      </li>
+      <li>
+        Hover your mouse over the relevant width and length within the model to predict your insert factor
+      </li>
     </ul>-->
 
-    <h4>Disclaimer</h4>
-    <p>
-      Any use of this web app or any of its code has you accepting the AGPL3+ license which includes no warranty that this code is fit for a particular purpose. Attempts have been made to make the code transparent and it is recommended that an experienced python programmer and physicist who understands the procedure outlined in the paper and the requirements of your centre identifies whether or not this method and code is fit for your use.</p>
 
-    <h4>Use of Google Analytics</h4>
-    <p>
-      To aid in quickly identifying bugs, user experience issues, and documenting app usage the Google Analytics service is employed. 
-      This collates and reports page views, button clicks, and demographic information based upon your IP address.
-      For more information on privacy regarding Google Analytics <a href="https://support.google.com/analytics/answer/6004245">click here.</a>
-      If you wish to opt-out of Google Analytics data collection please <a href="https://tools.google.com/dlpage/gaoptout">click here.</a>
-    </p>   
-
-
-    <h4>(Optional) Download this web app and run it locally</h4>
-      The following commands will set up this web app to work on a fresh install of <a href="http://releases.ubuntu.com/16.04/">Ubuntu 16.04</a>:
-      <div style="overflow: auto">
-        <pre><code class="bash">    sudo apt install git wget
-    git clone --recursive \
-        https://github.com/SimonBiggs/electroninserts-webapp.git \
-        --branch gh-pages
-    cd electroninserts-webapp
-
-    wget \
-        https://goo.gl/poeKlL \
-        -O miniconda.sh
-    chmod +x miniconda.sh
-    ./miniconda.sh -p $HOME/miniconda
-    export PATH=$HOME/miniconda/bin:$PATH
-
-    conda update conda
-    conda env create \
-        --name electroninserts python=3.5 \
-        --file ./server/electronfactor-server/conda-requirements.txt
-    source activate electroninserts
-
-    python run_webapp_locally.py</code></pre>
-      </div>
-
-      At that point you will be able to access the web app locally at http://localhost:8000.
-      Make sure the model and parameterisation servers point to http://localhost:5000/model, and http://localhost:5000/parameterise respectively.
-      You may also replace "localhost" with your IP to access this webapp from other computers on your network.
-
-
-
-
-    <h4>Source code</h4>
-    <p>
-      For the purpose of coding transparency and to enable the user to take responsibility for the code themselves any redistribution
-      or derivative works of this web app need to include the source code of any additions made and need to include a way
-      for users to easily access the source code of each of the components used or linked to.
-    </p>
-
-    <h5>Server Code</h5>
-
-    <h6>Base Electron Insert Factor Source Code</h6>
-    <p>
-      The python file which does the shape parameterisation and insert factor modelling which is used by the server is found here:
-      <a href="https://github.com/SimonBiggs/electronfactor-server/blob/master/electroninserts.py">
-              https://github.com/SimonBiggs/electronfactor-server/blob/master/electroninserts.py</a>
-    </p>
-
-    <h6>Tornado REST API</h6>
-    <p>
-      The Tornado REST API is found here:
-      <a href="https://github.com/SimonBiggs/electronfactor-server/blob/master/main.py">
-              https://github.com/SimonBiggs/electronfactor-server/blob/master/main.py</a>
-    </p>
-
-    <h6>Heroku App code</h6>
-    <p>
-      The code to make the heroku app is found here:
-      <a href="https://github.com/SimonBiggs/electronfactor-server">
-              https://github.com/SimonBiggs/electronfactor-server</a>
-    </p>
-
-    <h5>Web App Code</h5>
-    <p>
-      The source code for this web app is found here:
-      <a itemprop="downloadUrl" href="https://github.com/SimonBiggs/electroninserts-webapp">
-            https://github.com/SimonBiggs/electroninserts-webapp</a>
-    </p>
-
-    <h5>Libraries used</h5>
-    <h6>Bokehjs</h6>
-    <p>
-      The bokehjs library is used for plots. Documentation can be found here:
-      <a href="http://bokeh.pydata.org/en/latest/docs/user_guide/bokehjs.html#userguide-bokehjs">
-              http://bokeh.pydata.org/en/latest/docs/user_guide/bokehjs.html#userguide-bokehjs</a>
-    </p>
-    <p>
-      Source code can be found here:
-      <a href="https://github.com/bokeh/bokeh/tree/master/bokehjs">
-              https://github.com/bokeh/bokeh/tree/master/bokehjs</a>
-    </p>
-
-    <h6>dcmjs</h6>
-    <p>
-      The dcmjs library is used for reading dicom files within javascript. Website can be found here:
-      <a href="http://dcmjs.org/">
-              http://dcmjs.org/</a>
-    </p>
-    <p>
-      Source code can be found here:
-      <a href="https://github.com/commontk/dcmjs">
-              https://github.com/commontk/dcmjs</a>
-    </p>
-
-    <h6>Angular2</h6>
-    <p>
-      This interface was built using Angular2. Documentation can be found here:
-      <a href="https://angular.io/docs/ts/latest/">
-              https://angular.io/docs/ts/latest/</a>
-    </p>
-    <p>
-      Source code can be found here:
-      <a href="https://github.com/angular/angular">
-              https://github.com/angular/angular</a>
-    </p>
-    <h6>Remaining libraries</h6>
-    <p>
-      For all remaining libraries used please see the npm package.json file:
-      <a href="https://github.com/SimonBiggs/electroninserts-webapp/blob/master/package.json">
-              https://github.com/SimonBiggs/electroninserts-webapp/blob/master/package.json</a>
-    </p>
-    <p>
-      And the index file for various imports:
-      <a href="https://github.com/SimonBiggs/electroninserts-webapp/blob/master/src/public/index.html">
-              https://github.com/SimonBiggs/electroninserts-webapp/blob/master/src/public/index.html</a>
-    </p>
   </div>
-
 
 </div>

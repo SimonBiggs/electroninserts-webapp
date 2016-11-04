@@ -28,6 +28,8 @@ import { BokehCreateModelComponent } from './components/bokeh-components/bokeh-c
 import { BokehUseModelComponent } from './components/bokeh-components/bokeh-use-model.component'
 // Home components
 import { HomeComponent } from './components/home-components/home.component'
+// Further details components
+ import { FurtherDetailsComponent } from './components/further-details-components/further-details.component'
 // Speciation components
 import { SpecificationsComponent } from './components/specification-components/specifications.component'
 import { ChooseSpecificationsComponent } from './components/model-components/choose-specifications.component'
@@ -78,6 +80,7 @@ import { TitleService } from './services/utility-services/title.service'
   declarations: [
     AppComponent,
     ParameteriseComponent,
+    FurtherDetailsComponent,
     PlotComponent,
     PageNotFoundComponent,
     WidthLengthTableComponent,

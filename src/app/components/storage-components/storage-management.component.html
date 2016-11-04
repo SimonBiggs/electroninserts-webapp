@@ -1,56 +1,83 @@
 <div class="mdl-grid">
   <div class="mdl-cell mdl-cell--6-col mdl-cell--4-col-tablet mdl-cell--6-col-phone">
-    <h5>Storage management</h5>
+    <h5>Description</h5>
     <p>
-      This component is for the management of the data stored within this browser's database.
+      All of your model data is stored within an <a href="https://developer.mozilla.org/en/docs/Web/API/IndexedDB_API">IndexedDB</a> database within your browser.
+      This database is specific to your browser, computer, and this web address. This means that other websites nor other computers can access this data directly.
+      To use your data across a range of computers you need to export it to file, and then import it on the computers that need to use the data.
+    </p>
+    <p>
+      This component is for exporting, deleting, and adding data to and from this browser's database.
     </p>
 
-    <h5>Export browser database</h5>
     <p>
-      The following button will export the browser database to a .json file.
+      Internally this web app uses <a href="http://dexie.org/">Dexie.js</a> to access the database api.
+    </p>
+  </div>
+  <div class="mdl-cell mdl-cell--6-col mdl-cell--4-col-tablet mdl-cell--6-col-phone">
+    <h5>Export database to file</h5>
+    <p>
+      The following button will export the browser database to a .json file. Use this to either backup or transfer your data.
     </p>
     <button
-      mdl-button mdl-button-type="raised" 
+      mdl-button mdl-button-type="fab" 
       mdl-colored="primary" 
       mdl-ripple
       angulartics2On="click" angularticsEvent="Storage | Export browser database"
-      (click)="exportDataBase()">Export browser database
+      (click)="exportDataBase()"><img src="/webapp/lib/material/file_download.png">
     </button>
   </div>
   <div class="mdl-cell mdl-cell--6-col mdl-cell--4-col-tablet mdl-cell--6-col-phone">
-    <h5>Empty current database</h5>
+    <h5>Delete data from database</h5>
     <p>
-      The following button will wipe your browser database.
-      This is not reversable. The browser database will need to be restored from a prior .json file.
+      The following button will remove the data from your database. 
+      Use this if you wish to freshly import a new file or to start afresh.
     </p>
     <button
-      mdl-button mdl-button-type="raised" 
+      mdl-button mdl-button-type="fab" 
       mdl-colored="primary" 
       mdl-ripple
       angulartics2On="click" angularticsEvent="Storage | Empty current database"
-      [disabled]="false"
-      (click)="dataPersistenceService.emptyDatabase()">Empty browser database
+      [disabled]="emptyDataBaseString==databaseDump"
+      (click)="emptyDatabase()"><img src="/webapp/lib/material/delete_forever.png">
+    </button>
+    <button
+      mdl-button mdl-button-type="fab" 
+      mdl-colored="primary" 
+      mdl-ripple
+      angulartics2On="click" angularticsEvent="Storage | Empty current database"
+      [disabled]="tempSaveOfDatabaseDump==null || emptyDataBaseString!=databaseDump"
+      (click)="undoDataEmpty()"><img src="/webapp/lib/material/undo.png">
     </button>
 
   </div>
   <div class="mdl-cell mdl-cell--6-col mdl-cell--4-col-tablet mdl-cell--6-col-phone">
 
 
-    <h5>Append to database from file</h5>
+    <h5>Add data to database from file</h5>
     <p>
       The following button will append the contents of the given .json file to your browser database.
       If a key within your .json file matches that of your browser database then the database entry will be overwritten.
       This is not reversable.
     </p>
+
     <input type='file' (change)='openFile($event)'>
 
     <button      
-      mdl-button mdl-button-type="raised" 
+      mdl-button mdl-button-type="fab" 
       mdl-colored="primary" 
       mdl-ripple
       angulartics2On="click" angularticsEvent="Storage | Empty current database"
       [disabled]="fileJsonObject == null"
-      (click)="dataPersistenceService.appendJsonToDatabase(fileJsonObject)">Append file to database
+      (click)="appendJsonToDatabase(fileJsonObject)"><img src="/webapp/lib/material/file_upload.png">
     </button>
+  </div>
+
+  <div *ngIf="databaseDump != null" class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--6-col-phone">
+    <h5>Your current raw database file</h5>
+      <p>
+        Number of characters within database dump: {{databaseDump.length}} 
+      </p>
+      <div style="white-space: pre-wrap"><div #jsonCodeDisplay><code class="json">{{databaseDump}}</code></div>
   </div>
 </div>

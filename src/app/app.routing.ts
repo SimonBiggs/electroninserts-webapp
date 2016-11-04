@@ -12,6 +12,7 @@ import { UseModelComponent } from './components/model-components/use-model.compo
 import { StorageManagementComponent } from './components/storage-components/storage-management.component';
 import { SpecificationsComponent } from './components/specification-components/specifications.component';
 import { DicomComponent } from './components/dicom-components/dicom.component';
+import { FurtherDetailsComponent } from './components/further-details-components/further-details.component'
 
 
 const appRoutes: Routes = [
@@ -23,7 +24,15 @@ const appRoutes: Routes = [
     }
   },
   {
+    path: 'details',
+    component: FurtherDetailsComponent
+  },
+  {
     path: 'storage',
+    redirectTo: 'database'
+  },
+  {
+    path: 'database',
     component: StorageManagementComponent
   },
   {

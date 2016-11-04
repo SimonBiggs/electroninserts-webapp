@@ -1,0 +1,157 @@
+<div itemscope itemtype="http://schema.org/SoftwareApplication" class="mdl-grid">
+  <div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet mdl-cell--6-col-phone">
+    <h3 itemprop="name">Electron insert factor modelling</h3>
+    <p>
+      Tags: <span itemprop="applicationCategory">Medical physics, electron inserts, electron cutouts, Python, Angular2, Bokeh, spline modelling</span><br>
+      Last update: <span itemprop="datePublished" content="2016-10-18">2016-11-05</span><br>
+      Version: <span itemprop="softwareVersion">0.2.1-beta</span><br>
+      Operating systems: <span itemprop="operatingSystem">Windows, Linux, Mac, Android, and iOS</span> <br>
+      Requirements: <span itemprop="requirements">A browser such as <a href="https://www.google.com.au/chrome/browser">Chrome</a> that supports <a href="http://caniuse.com/#feat=indexeddb">IndexedDB</a> browser database</span><br>
+      Developed by: <span itemprop="author" itemscope itemtype="http://schema.org/Person"><a itemprop="name" href="https://github.com/SimonBiggs">Simon Biggs</a></span>
+    </p>
+
+    <h4>Disclaimer</h4>
+    <p>
+      Any use of this web app or any of its code has you accepting the AGPL3+ license which includes no warranty that this code is fit for a particular purpose. Attempts have been made to make the code transparent and it is recommended that an experienced python programmer and physicist who understands the procedure outlined in the paper and the requirements of your centre identifies whether or not this method and code is fit for your use.</p>
+
+    <h4>Use of Google Analytics</h4>
+    <p>
+      To aid in quickly identifying bugs, user experience issues, and documenting app usage the Google Analytics service is employed. 
+      This collates and reports page views, button clicks, and demographic information based upon your IP address.
+      For more information on privacy regarding Google Analytics <a href="https://support.google.com/analytics/answer/6004245">click here.</a>
+      If you wish to opt-out of Google Analytics data collection please <a href="https://tools.google.com/dlpage/gaoptout">click here.</a>
+    </p>   
+
+
+    <h4>(Optional) Download this web app and run it locally</h4>
+      The following commands will set up this web app to work on a fresh install of <a href="http://releases.ubuntu.com/16.04/">Ubuntu 16.04</a>:
+      <div style="overflow: auto" id="locally">
+        <pre><code class="bash">sudo apt install git wget
+git clone --recursive \
+    https://github.com/SimonBiggs/electroninserts-webapp.git \
+    --branch gh-pages
+cd electroninserts-webapp
+
+wget \
+    https://goo.gl/poeKlL \
+    -O miniconda.sh
+chmod +x miniconda.sh
+./miniconda.sh -p $HOME/miniconda
+export PATH=$HOME/miniconda/bin:$PATH
+
+conda update conda
+conda env create \
+    --name electroninserts python=3.5 \
+    --file ./server/electronfactor-server/conda-requirements.txt
+source activate electroninserts
+
+python run_webapp_locally.py</code></pre>
+      </div>
+
+      At that point you will be able to access the web app locally at http://localhost:8000.
+      Make sure the model and parameterisation servers point to http://localhost:5000/model, and http://localhost:5000/parameterise respectively.
+      You may also replace "localhost" with your IP to access this webapp from other computers on your network.
+
+  </div>
+  <div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet mdl-cell--6-col-phone">
+
+    <h4>Source code</h4>
+    <p>
+      For the purpose of coding transparency and to enable the user to take responsibility for the code themselves any redistribution
+      or derivative works of this web app need to include the source code of any additions made and need to include a way
+      for users to easily access the source code of each of the components used or linked to.
+    </p>
+
+    <h5>Server Code</h5>
+
+    <h6>Base Electron Insert Factor Source Code</h6>
+    <p>
+      The python file which does the shape parameterisation and insert factor modelling which is used by the server is found here:
+      <a href="https://github.com/SimonBiggs/electronfactor-server/blob/master/electroninserts.py">
+              https://github.com/SimonBiggs/electronfactor-server/blob/master/electroninserts.py</a>
+    </p>
+
+    <h6>Tornado REST API</h6>
+    <p>
+      The Tornado REST API is found here:
+      <a href="https://github.com/SimonBiggs/electronfactor-server/blob/master/main.py">
+              https://github.com/SimonBiggs/electronfactor-server/blob/master/main.py</a>
+    </p>
+
+    <h6>Heroku App code</h6>
+    <p>
+      The code to make the heroku app is found here:
+      <a href="https://github.com/SimonBiggs/electronfactor-server">
+              https://github.com/SimonBiggs/electronfactor-server</a>
+    </p>
+
+    <h5>Web App Code</h5>
+    <p>
+      The source code for this web app is found here:
+      <a itemprop="downloadUrl" href="https://github.com/SimonBiggs/electroninserts-webapp">
+            https://github.com/SimonBiggs/electroninserts-webapp</a>
+    </p>
+
+    <h5>Libraries used</h5>
+    <h6>Bokehjs</h6>
+    <p>
+      The bokehjs library is used for plots. Documentation can be found here:
+      <a href="http://bokeh.pydata.org/en/latest/docs/user_guide/bokehjs.html#userguide-bokehjs">
+              http://bokeh.pydata.org/en/latest/docs/user_guide/bokehjs.html#userguide-bokehjs</a>
+    </p>
+    <p>
+      Source code can be found here:
+      <a href="https://github.com/bokeh/bokeh/tree/master/bokehjs">
+              https://github.com/bokeh/bokeh/tree/master/bokehjs</a>
+    </p>
+
+    <h6>dcmjs</h6>
+    <p>
+      The dcmjs library is used for reading dicom files within javascript. Website can be found here:
+      <a href="http://dcmjs.org/">
+              http://dcmjs.org/</a>
+    </p>
+    <p>
+      Source code can be found here:
+      <a href="https://github.com/commontk/dcmjs">
+              https://github.com/commontk/dcmjs</a>
+    </p>
+
+    <h6>Angular2</h6>
+    <p>
+      This interface was built using Angular2. Documentation can be found here:
+      <a href="https://angular.io/docs/ts/latest/">
+              https://angular.io/docs/ts/latest/</a>
+    </p>
+    <p>
+      Source code can be found here:
+      <a href="https://github.com/angular/angular">
+              https://github.com/angular/angular</a>
+    </p>
+
+    <h6>Dexiejs</h6>
+    <p>
+      The browser database was interfaced with using Dexiejs. Documentation can be found here:
+      <a href="https://github.com/dfahlander/Dexie.js/wiki/API%20Reference">
+              https://github.com/dfahlander/Dexie.js/wiki/API%20Reference</a>
+    </p>
+    <p>
+      Source code can be found here:
+      <a href="https://github.com/dfahlander/Dexie.js">
+              https://github.com/dfahlander/Dexie.js</a>
+    </p>
+    <h6>Remaining libraries</h6>
+    <p>
+      For all remaining libraries used please see the npm package.json file:
+      <a href="https://github.com/SimonBiggs/electroninserts-webapp/blob/master/package.json">
+              https://github.com/SimonBiggs/electroninserts-webapp/blob/master/package.json</a>
+    </p>
+    <p>
+      And the index file for various imports:
+      <a href="https://github.com/SimonBiggs/electroninserts-webapp/blob/master/src/public/index.html">
+              https://github.com/SimonBiggs/electroninserts-webapp/blob/master/src/public/index.html</a>
+    </p>
+  </div>
+
+
+</div>
