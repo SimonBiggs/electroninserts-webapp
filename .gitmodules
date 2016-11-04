@@ -1,3 +1,4 @@
 [submodule "server/electronfactor-server"]
 	path = server/electronfactor-server
 	url = https://github.com/SimonBiggs/electronfactor-server
+	branch = master
