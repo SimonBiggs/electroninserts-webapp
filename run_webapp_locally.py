@@ -1,16 +1,22 @@
 import os
 from subprocess import call
 from multiprocessing import Process
-from http.server import HTTPServer, BaseHTTPRequestHandler
+
+import http.server
+import socketserver
+
 
 def run_api_server():
+    dir_path = os.path.dirname(os.path.realpath(__file__))
     call([
-        "python", os.path.join(os.getcwd(), 
+        "python", os.path.join(dir_path, 
         'server', 'electronfactor-server', 'main.py')])
 
-def run_http_server(server_class=HTTPServer, handler_class=BaseHTTPRequestHandler):
-    server_address = ('', 8000)
-    httpd = server_class(server_address, handler_class)
+
+def run_http_server():
+    PORT = 8000
+    Handler = http.server.SimpleHTTPRequestHandler
+    httpd = socketserver.TCPServer(("", PORT), Handler)
     httpd.serve_forever()
 
 
