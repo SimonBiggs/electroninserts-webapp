@@ -190,12 +190,33 @@
     </p>   
 
 
-    <h4>Steps required to freeze your own version of this web app</h4>
-      As I make improvements to this web app I will be updating this online version. 
-      You may desire to not have the web app you are using day to day change on you.
-      To achieve this you can create your own version of the server and your own version of the web app.
-      
-      For now this will require a bit of your own working out until I provide further instructions.
+    <h4>(Optional) Download this web app and run it locally</h4>
+      The following commands will set up this web app to work on a fresh install of <a href="http://releases.ubuntu.com/16.04/">Ubuntu 16.04</a>:
+      <pre><code class="bash">    sudo apt install git wget
+    git clone --recursive \
+        https://github.com/SimonBiggs/electroninserts-webapp.git \
+        --branch gh-pages
+    cd electroninserts-webapp
+
+    wget \
+        https://goo.gl/poeKlL \
+        -O miniconda.sh
+    chmod +x miniconda.sh
+    ./miniconda.sh -p $HOME/miniconda
+    export PATH=$HOME/miniconda/bin:$PATH
+
+    conda update conda
+    conda env create \
+        --name electroninserts python=3.5 \
+        --file ./server/electronfactor-server/conda-requirements.txt
+    source activate electroninserts
+
+    python run_webapp_locally.py</code></pre>
+
+    At that point you will be able to access the web app locally at http://localhost:8000.
+    Make sure the model and parameterisation servers point to http://localhost:5000/model, and http://localhost:5000/parameterise respectively.
+    You may also replace "localhost" with your IP to access this webapp from other computers on your network.
+
 
 
 
