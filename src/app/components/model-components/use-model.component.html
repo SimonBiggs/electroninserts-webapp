@@ -37,7 +37,7 @@
   </div>
 
   <div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet mdl-cell--6-col-phone" #plotContainer>
-    <div *ngIf="modelData.predictions.width.length > 0 && modelData.predictions.length.length > 0">
+    <div *ngIf="modelData.predictions.width.length > 0 && modelData.predictions.length.length > 0 && modelData.predictions.predictedFactor != null">
       <my-bokeh-use-model
         [title]="'Model Plot'"
         [scatter_x]="modelData.predictions.width"
@@ -65,15 +65,33 @@
     
   </div>
 
-  <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--6-col-phone">
-    <div *ngIf="modelData.predictions != null" style="overflow: auto">
+  <div *ngIf="modelData.predictions != null" class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--6-col-phone">
+    <div style="overflow: auto">
       <my-insert-table
         [width]="modelData.predictions.width"
         [length]="modelData.predictions.length"
         [area]="modelData.predictions.area"
         [predictedFactor]="modelData.predictions.predictedFactor"
         [measuredFactor]="modelData.predictions.measuredFactor"
+        [canBeAdded]="canBeSentToModel"
         (selectionChangedEvent)="selectionChanged($event)"></my-insert-table>
     </div>
+    <button *ngIf="selectionList != null"
+      mdl-button mdl-button-type="raised" 
+      mdl-colored="primary" 
+      mdl-ripple
+      angulartics2On="click" angularticsEvent="Use Model | Add selected factors onto model if able "
+      [disabled]="disableSendToModelButtons"
+      (click)="addSelectedFactorsToModel()">Add selected factors onto model if able           
+    </button>
+    <button *ngIf="selectionList != null"
+      mdl-button mdl-button-type="raised" 
+      mdl-colored="primary" 
+      mdl-ripple
+      angulartics2On="click" angularticsEvent="Use Model | Remove selected factors"
+      [disabled]="selectionList.indexOf(true) == -1"
+      (click)="removeSelectedFactors()">Remove selected factors
+    </button>
+
   </div>
 </div>

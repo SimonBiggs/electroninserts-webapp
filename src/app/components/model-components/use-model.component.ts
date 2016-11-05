@@ -26,6 +26,8 @@ export class UseModelComponent implements OnInit, OnDestroy, AfterViewInit {
   predictionDifference: number[] = []
   
   selectionList: boolean[]
+  canBeSentToModel: boolean[]
+  disableSendToModelButtons: boolean
 
   plot_width = 600
 
@@ -69,6 +71,12 @@ export class UseModelComponent implements OnInit, OnDestroy, AfterViewInit {
   selectionChanged(selectionList: boolean[]) {
     console.log('use-model.component selectionChanged')
     this.selectionList = selectionList
+    this.disableSendToModelButtons = true
+    for (let i in this.selectionList) {
+      if (this.selectionList[i] && this.canBeSentToModel[i]) {
+        this.disableSendToModelButtons = false
+      }
+    }
   }
 
   lookupFactor(width: number, length: number) {
@@ -148,6 +156,8 @@ export class UseModelComponent implements OnInit, OnDestroy, AfterViewInit {
       console.log('use-model.component loadMeasuredData this.dataPersistenceService.loadModelData(this.modelData, this.currentSettings) promise complete')   
       this.updateModelLookup()
       this.updatePredictedFactors()
+
+      this.checkAllIfCanBeAddedToModel()
       
       this.textboxInputs.triggerUpdate = true
     })
@@ -161,6 +171,79 @@ export class UseModelComponent implements OnInit, OnDestroy, AfterViewInit {
   onValidTextboxChange() {
     console.log('use-model.component onValidTextboxChange')                            
     this.updatePredictedFactors()
+    this.checkAllIfCanBeAddedToModel()
     this.saveModel()
+  }
+
+  checkIfCanAddToModel(width: number, length: number, measuredFactor: number) {
+    console.log('use-model.component checkIfCanAddToModel') 
+    if (width != null && length != null && measuredFactor != null) {
+      if (
+        this.modelData.measurement.width.indexOf(Number(width)) > -1 &&
+        this.modelData.measurement.length.indexOf(Number(length)) > -1 &&
+        this.modelData.measurement.measuredFactor.indexOf(Number(measuredFactor)) > -1 
+      ) {
+        return false
+      }
+      else if (
+        Number(width) == 0 || 
+        Number(length) == 0 ||
+        Number(measuredFactor) == 0
+      ) {
+        return false
+      }
+      else {
+        return true
+      }
+    }
+    else {
+      return false
+    }
+  }
+
+  checkAllIfCanBeAddedToModel() {
+    console.log('use-model.component checkAllIfCanBeAddedToModel')
+    this.canBeSentToModel = []
+    let width: number
+    let length: number
+    let measuredFactor: number
+    for (let i in this.modelData.predictions.width) {
+      width = this.modelData.predictions.width[i]
+      length = this.modelData.predictions.length[i]
+      measuredFactor = this.modelData.predictions.measuredFactor[i]
+      this.canBeSentToModel.push(this.checkIfCanAddToModel(
+        width, length, measuredFactor))
+    }
+  }
+
+
+  addSelectedFactorsToModel() {
+    console.log('use-model.component addSelectedFactorsToModel')
+    this.modelData.model.reset()
+    for (let i in this.selectionList) {
+      if (this.selectionList[i] && this.canBeSentToModel[i] ) {
+        for (let key of ['width', 'length', 'measuredFactor']) {
+          this.modelData.measurement[key].push(Number(this.modelData.predictions[key][i]))
+        }
+      }
+    }
+    this.checkAllIfCanBeAddedToModel()
+    this.saveModel()
+  }
+
+  removeSelectedFactors() {
+    console.log('use-model.component addSelectedFactorsToModel')
+    for (let i in this.selectionList) {
+      if (this.selectionList[i]) {
+        for (let key of ['width', 'length', 'area', 'measuredFactor']) {
+          this.modelData.predictions[key].splice(i, 1)
+        }
+      }
+    }
+    this.updatePredictedFactors()
+    this.checkAllIfCanBeAddedToModel()
+    this.saveModel()
+
+    this.textboxInputs.triggerUpdate = true
   }
 }

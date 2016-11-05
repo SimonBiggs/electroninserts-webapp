@@ -199,7 +199,7 @@ export class BokehPcolour implements OnInit {
         this.scatter_edge_colour = []
         for (let selection of this.selectionList) {
           if (selection) {
-            this.scatter_edge_colour.push('white')
+            this.scatter_edge_colour.push('gainsboro')
           }
           else {
             this.scatter_edge_colour.push('black')
