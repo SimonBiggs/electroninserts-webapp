@@ -28,7 +28,9 @@ export class BokehCreateModelComponent extends BokehPcolour implements AfterView
   @Input()
   pcolour_z: number[];
   @Input()
-  enabled: boolean = true;
+  enabled: boolean = true;  
+  @Input()
+  selectionList: boolean[]
 
   @ViewChild('bokehplot') bokehplot: any;
 

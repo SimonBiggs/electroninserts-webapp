@@ -46,6 +46,7 @@ import { WidthLengthAreaInputComponent } from './components/model-components/wid
 import { CreateModelComponent } from './components/model-components/create-model.component'
 import { UseModelComponent } from './components/model-components/use-model.component'
 import { InsertTableComponent } from './components/model-components/insert-table.component'
+import { CreateInsertTableComponent } from './components/model-components/create-insert-table.component'
 // Storage components
 import { StorageManagementComponent } from './components/storage-components/storage-management.component'
 // Misc components
@@ -99,7 +100,8 @@ import { TitleService } from './services/utility-services/title.service'
     ChooseSpecificationsComponent,
     WidthLengthAreaInputComponent,
     XYInputComponent,
-    InsertTableComponent
+    InsertTableComponent,
+    CreateInsertTableComponent
   ],
   providers: [
     ElectronApiService,

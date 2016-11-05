@@ -205,9 +205,9 @@ export class ParameteriseComponent implements OnInit, AfterViewInit, AfterConten
       console.log('parameterisation.component addMeasuredFactor this.dataPersistenceService.loadModelData(this.modelData, this.machineSettings) promise complete')
       this.modelData.model.reset()
 
-      this.modelData.measurement.width.push(Number(this.insertData.parameterisation.width))
-      this.modelData.measurement.length.push(Number(this.insertData.parameterisation.length))
-      this.modelData.measurement.measuredFactor.push(Number(measuredFactor))
+      this.modelData.measurement.width.unshift(Number(this.insertData.parameterisation.width))
+      this.modelData.measurement.length.unshift(Number(this.insertData.parameterisation.length))
+      this.modelData.measurement.measuredFactor.unshift(Number(measuredFactor))
 
       return this.dataPersistenceService.saveModelData(this.modelData, this.machineSettings)
     })
@@ -238,6 +238,9 @@ export class ParameteriseComponent implements OnInit, AfterViewInit, AfterConten
       this.modelData.predictions.length.unshift(this.insertData.parameterisation.length)
       if (this.insertData.measuredFactor != 0 && this.insertData.measuredFactor != null) {
         this.modelData.predictions.measuredFactor.unshift(this.insertData.measuredFactor)
+      }
+      else {
+        this.modelData.predictions.measuredFactor.unshift(null)
       }
 
       return this.dataPersistenceService.saveModelData(this.modelData, this.machineSettings)

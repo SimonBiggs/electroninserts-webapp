@@ -25,9 +25,9 @@ export class UseModelComponent implements OnInit, OnDestroy, AfterViewInit {
   modelLookup = {}
   predictionDifference: number[] = []
   
-  selectionList: boolean[]
-  canBeSentToModel: boolean[]
-  disableSendToModelButtons: boolean
+  selectionList: boolean[] = []
+  canBeSentToModel: boolean[] = []
+  disableSendToModelButtons: boolean = true
 
   plot_width = 600
 
@@ -136,7 +136,7 @@ export class UseModelComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   updatePlotWidth() {
-    console.log('use-model.component updatePlotWidth')            
+    console.log('use-model.component updatePlotWidth')   
     this.plot_width = this.plotContainer.nativeElement.clientWidth
   }
 
@@ -216,14 +216,31 @@ export class UseModelComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
+  moveSelectedFactorsToModel() {
+    console.log('use-model.component moveSelectedFactorsToModel')
+    this.modelData.model.reset()
+    for (let i = this.selectionList.length - 1; i > -1; i--) {
+      if (this.selectionList[i] && this.canBeSentToModel[i] ) {
+        for (let key of ['width', 'length', 'area', 'measuredFactor']) {
+          this.modelData.measurement[key].unshift(Number(this.modelData.predictions[key][i]))
+          this.modelData.predictions[key].splice(i, 1)
+        }
+      }
+    }
+    this.updatePredictedFactors()
+    this.checkAllIfCanBeAddedToModel()
+    this.saveModel()
+
+    this.textboxInputs.triggerUpdate = true
+  }
 
   addSelectedFactorsToModel() {
     console.log('use-model.component addSelectedFactorsToModel')
     this.modelData.model.reset()
-    for (let i in this.selectionList) {
+    for (let i = this.selectionList.length - 1; i > -1; i--) {
       if (this.selectionList[i] && this.canBeSentToModel[i] ) {
         for (let key of ['width', 'length', 'measuredFactor']) {
-          this.modelData.measurement[key].push(Number(this.modelData.predictions[key][i]))
+          this.modelData.measurement[key].unshift(Number(this.modelData.predictions[key][i]))
         }
       }
     }
@@ -233,7 +250,7 @@ export class UseModelComponent implements OnInit, OnDestroy, AfterViewInit {
 
   removeSelectedFactors() {
     console.log('use-model.component addSelectedFactorsToModel')
-    for (let i in this.selectionList) {
+    for (let i = this.selectionList.length - 1; i > -1; i--) {
       if (this.selectionList[i]) {
         for (let key of ['width', 'length', 'area', 'measuredFactor']) {
           this.modelData.predictions[key].splice(i, 1)

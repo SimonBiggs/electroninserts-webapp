@@ -65,23 +65,26 @@
     
   </div>
 
-  <div *ngIf="modelData.predictions != null" class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--6-col-phone">
-    <div style="overflow: auto">
-      <my-insert-table
-        [width]="modelData.predictions.width"
-        [length]="modelData.predictions.length"
-        [area]="modelData.predictions.area"
-        [predictedFactor]="modelData.predictions.predictedFactor"
-        [measuredFactor]="modelData.predictions.measuredFactor"
-        [canBeAdded]="canBeSentToModel"
-        (selectionChangedEvent)="selectionChanged($event)"></my-insert-table>
-    </div>
+
+
+  <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--6-col-phone">
+
+    <h5>Batch add or delete factors</h5>
+
+    <button *ngIf="selectionList != null"
+      mdl-button mdl-button-type="raised" 
+      mdl-colored="primary" 
+      mdl-ripple
+      angulartics2On="click" angularticsEvent="Use Model | Move selected factors onto model if able "
+      [disabled]="disableSendToModelButtons || currentSettings.machine == null || currentSettings.energy == null || currentSettings.energy == 0 || currentSettings.applicator == null || currentSettings.applicator == '' || currentSettings.ssd == null || currentSettings.ssd == 0"
+      (click)="moveSelectedFactorsToModel()">Move selected factors onto model if able 
+    </button>
     <button *ngIf="selectionList != null"
       mdl-button mdl-button-type="raised" 
       mdl-colored="primary" 
       mdl-ripple
       angulartics2On="click" angularticsEvent="Use Model | Add selected factors onto model if able "
-      [disabled]="disableSendToModelButtons"
+      [disabled]="disableSendToModelButtons || currentSettings.machine == null || currentSettings.energy == null || currentSettings.energy == 0 || currentSettings.applicator == null || currentSettings.applicator == '' || currentSettings.ssd == null || currentSettings.ssd == 0"
       (click)="addSelectedFactorsToModel()">Add selected factors onto model if able           
     </button>
     <button *ngIf="selectionList != null"
@@ -93,5 +96,15 @@
       (click)="removeSelectedFactors()">Remove selected factors
     </button>
 
+    <div style="overflow: auto">
+      <my-insert-table
+        [width]="modelData.predictions.width"
+        [length]="modelData.predictions.length"
+        [area]="modelData.predictions.area"
+        [predictedFactor]="modelData.predictions.predictedFactor"
+        [measuredFactor]="modelData.predictions.measuredFactor"
+        [canBeAdded]="canBeSentToModel"
+        (selectionChangedEvent)="selectionChanged($event)"></my-insert-table>
+    </div>
   </div>
 </div>

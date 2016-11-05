@@ -7,16 +7,13 @@ export interface ITableItem extends IMdlTableModelItem {
   length: number
   area: number
   measuredFactor: number
-  predictedFactor: number
-  difference: number
-  canBeAdded: boolean
 }
 
 @Component({
-  selector: 'my-insert-table',
+  selector: 'my-create-insert-table',
   templateUrl: './insert-table.component.html',
 })
-export class InsertTableComponent implements OnInit {
+export class CreateInsertTableComponent implements OnInit {
   @Input()
   width: number[]
   @Input()
@@ -25,10 +22,6 @@ export class InsertTableComponent implements OnInit {
   area: number[]
   @Input()
   measuredFactor: number[]
-  @Input()
-  predictedFactor: number[]
-  @Input()
-  canBeAdded: boolean[]
   @Output()
   selectionChangedEvent = new EventEmitter()
   
@@ -43,10 +36,7 @@ export class InsertTableComponent implements OnInit {
     {key:'width', name:'Width (cm)', sortable:true, numeric:true},
     {key:'length', name:'Length (cm)', sortable:true, numeric:true},
     {key:'area', name:'Area (cm^2)', sortable:true, numeric:true},
-    {key:'measuredFactor', name:'Measured Factor', sortable:true, numeric:true},
-    {key:'predictedFactor', name:'Predicted Factor', sortable:true, numeric:true},
-    {key:'difference', name:'Difference', sortable:true, numeric:true},
-    {key:'canBeAdded', name:'Able to add to model?'}
+    {key:'measuredFactor', name:'Measured Factor', sortable:true, numeric:true}
   ])
 
 
@@ -68,22 +58,19 @@ export class InsertTableComponent implements OnInit {
     this.tableData = [
       { 
         width: null, length: null, 
-        area: null, measuredFactor: null, 
-        predictedFactor: null, difference: null,
-        canBeAdded: null, selected: false
+        area: null, measuredFactor: null,
+        selected: false
       }
     ]
     for (let i in this.width) {
       this.tableData[i] = { 
         width: null, length: null, 
-        area: null, measuredFactor: null, 
-        predictedFactor: null, difference: null, 
-        canBeAdded: null, selected: false 
+        area: null, measuredFactor: null,
+        selected: false 
       }
-      for (let key of ['width', 'length', 'area', 'measuredFactor', 'predictedFactor', 'canBeAdded']) {
+      for (let key of ['width', 'length', 'area', 'measuredFactor']) {
         this.tableData[i][key] = this[key][i]
       }
-      this.tableData[i].difference = Math.round((this.predictedFactor[i] - this.measuredFactor[i])*1000)/1000
 
     }
     this.tableModel.data = this.tableData

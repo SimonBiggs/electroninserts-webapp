@@ -141,7 +141,8 @@
         [pcolour_y]="modelData.model.length"
         [pcolour_z]="modelData.model.predictedFactor"
         [plot_width]="plot_width"
-        [plot_height]="380">
+        [plot_height]="380"
+        [selectionList]="selectionList">
       </my-bokeh-create-model>
     </div>
     <div *ngIf="modelData.measurement.width.length == 0 || modelData.measurement.length.length == 0|| modelData.measurement.measuredFactor.length == 0">
@@ -167,7 +168,53 @@
       floating-label
       [(ngModel)]="modelURL"
       style="width:100%"></mdl-textfield>
+
+ 
+    
   </div>
 
+
+  <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--6-col-phone">  
+    <h5>Move factors to the use model component for model validation</h5>
+        <button *ngIf="selectionList != null"
+          mdl-button mdl-button-type="raised" 
+          mdl-colored="primary" 
+          mdl-ripple
+          angulartics2On="click" angularticsEvent="Create Model | Move selected factors to use model component"
+          [disabled]="selectionList.indexOf(true) == -1 || dataInFlight || currentSettings.machine == null || currentSettings.energy == null || currentSettings.energy == 0 || currentSettings.applicator == null || currentSettings.applicator == '' || currentSettings.ssd == null || currentSettings.ssd == 0"
+          (click)="moveSelectedFactorsToUseModel()">Move selected factors to use model component         
+        </button>
+        <button *ngIf="selectionList != null"
+          mdl-button mdl-button-type="raised" 
+          mdl-colored="primary" 
+          mdl-ripple
+          angulartics2On="click" angularticsEvent="Create Model | Remove selected factors"
+          [disabled]="selectionList.indexOf(true) == -1 || dataInFlight"
+          (click)="removeSelectedFactors()">Remove selected factors
+        </button>   
+        <button *ngIf="selectionList != null"
+          mdl-button mdl-button-type="raised" 
+          mdl-colored="primary" 
+          mdl-ripple
+          angulartics2On="click" angularticsEvent="Create Model | Randomly move shapes"
+          [disabled]="selectionList.length < convertToNumber(numberOfShapesToLeaveBehind) + 1 || dataInFlight || currentSettings.machine == null || currentSettings.energy == null || currentSettings.energy == 0 || currentSettings.applicator == null || currentSettings.applicator == '' || currentSettings.ssd == null || currentSettings.ssd == 0"
+          (click)="randomMove()">Randomly move all but {{numberOfShapesToLeaveBehind}} shapes to use model component
+        </button>
+        <mdl-textfield
+          type="number"
+          label="Number of shapes to leave behind after random move"
+          floating-label
+          [(ngModel)]="numberOfShapesToLeaveBehind"
+          style="width:100%"></mdl-textfield>
+        <div style="overflow: auto">
+          <my-create-insert-table
+            [width]="modelData.measurement.width"
+            [length]="modelData.measurement.length"
+            [area]="modelData.measurement.area"
+            [measuredFactor]="modelData.measurement.measuredFactor"
+            (selectionChangedEvent)="selectionChanged($event)"></my-create-insert-table>
+        </div>
+
+  </div>
 
 </div>

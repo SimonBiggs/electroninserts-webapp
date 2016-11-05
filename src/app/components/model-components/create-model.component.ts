@@ -21,7 +21,10 @@ export class CreateModelComponent implements OnInit, OnDestroy{
     measuredFactor: "Measured insert factor (as per TG 25)"
   }
 
-  textboxValid = true  
+  textboxValid = true 
+  numberOfShapesToLeaveBehind = 8 
+
+  selectionList: boolean[] = []
 
   lengthSmallerThanWidth: boolean = false
   
@@ -69,6 +72,81 @@ export class CreateModelComponent implements OnInit, OnDestroy{
     this.updatePlotWidth()
 
   }
+
+  selectionChanged(selectionList: boolean[]) {
+    this.selectionList = selectionList
+  }
+
+  shuffleArray(array: boolean[]) {
+    for (var i = array.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1))
+      var temp = array[i]
+      array[i] = array[j]
+      array[j] = temp
+    }
+    return array
+  }
+
+  convertToNumber(input: string) {
+    return Number(input)
+  }
+
+  randomMove() {
+    let randomSelection: boolean[] = []
+    for (let i in this.selectionList) {
+      if (Number(i) < Number(this.numberOfShapesToLeaveBehind)) {
+        randomSelection.push(false)
+      }
+      else {
+        randomSelection.push(true)
+      }
+    }
+    randomSelection = this.shuffleArray(randomSelection)
+    this.selectionList = randomSelection
+    this.moveSelectedFactorsToUseModel()
+  }
+
+  moveSelectedFactorsToUseModel() {
+    for (let i in this.selectionList) {
+      if (this.selectionList[i]) {
+        for (let key of ['width', 'length', 'measuredFactor']) {
+          this.modelData.predictions[key].unshift(Number(this.modelData.measurement[key][i]))
+        }
+      }
+    }
+    this.removeSelectedFactors()
+  }
+
+  removeSelectedFactors() {
+    this.modelData.model.reset()
+    for (let i = this.selectionList.length - 1; i > -1; i--) {
+      if (this.selectionList[i]) {
+        for (let key of ['width', 'length', 'area', 'measuredFactor']) {
+          this.modelData.measurement[key].splice(i, 1)
+        }
+      }
+    }
+    for (let key of ['width', 'length', 'area', 'measuredFactor']) {
+      this.modelData.measurement[key] = this.modelData.measurement[key].slice(0)
+    }
+    this.saveModel()
+    this.textboxInputs.triggerUpdate = true
+  }
+
+  // addSelectedFactorsToModel() {
+  //   console.log('use-model.component addSelectedFactorsToModel')
+  //   this.modelData.model.reset()
+  //   for (let i in this.selectionList) {
+  //     if (this.selectionList[i] && this.canBeSentToModel[i] ) {
+  //       for (let key of ['width', 'length', 'measuredFactor']) {
+  //         this.modelData.measurement[key].push(Number(this.modelData.predictions[key][i]))
+  //       }
+  //     }
+  //   }
+  //   this.checkAllIfCanBeAddedToModel()
+  //   this.saveModel()
+  // }
+
 
   updatePlotWidth() {
     this.plot_width = this.plotContainer.nativeElement.clientWidth
