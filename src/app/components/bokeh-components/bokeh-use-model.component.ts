@@ -62,7 +62,7 @@ export class BokehUseModelComponent extends BokehPcolour implements AfterViewIni
         this.scatter_hover_length.push((Math.round(y*10)/10).toFixed(1))
       }
     }
-    if (this.scatter_data.z != this.scatter_z) {
+    if (this.old_scatter_z != this.scatter_z) {
       this.scatter_hover_measured_factor = <string[]> []
       for (let z of this.scatter_z) {
         this.scatter_hover_measured_factor.push((Math.round(z*1000)/1000).toFixed(3))

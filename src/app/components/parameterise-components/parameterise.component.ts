@@ -240,7 +240,7 @@ export class ParameteriseComponent implements OnInit, AfterViewInit, AfterConten
         this.modelData.predictions.measuredFactor.unshift(this.insertData.measuredFactor)
       }
       else {
-        this.modelData.predictions.measuredFactor.unshift(null)
+        this.modelData.predictions.measuredFactor.unshift(NaN)
       }
 
       return this.dataPersistenceService.saveModelData(this.modelData, this.machineSettings)

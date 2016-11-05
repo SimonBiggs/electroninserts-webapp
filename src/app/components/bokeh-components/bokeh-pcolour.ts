@@ -41,7 +41,6 @@ export class BokehPcolour implements OnInit {
   scatter_data = {
     x: <number[]> [],
     y: <number[]> [],
-    z: <number[]> [],
     hover_width: <string[]> [],
     hover_length: <string[]> [],
     hover_area: <string[]> [],
@@ -139,7 +138,6 @@ export class BokehPcolour implements OnInit {
     this.scatter_data = {
       x: <number[]> this.scatter_x,
       y: <number[]> this.scatter_y,
-      z: <number[]> this.scatter_z,
       hover_width: <string[]> this.scatter_hover_width,
       hover_length: <string[]> this.scatter_hover_length,
       hover_area: <string[]> this.scatter_hover_area,
@@ -166,7 +164,27 @@ export class BokehPcolour implements OnInit {
   updateScatterColour() {
     console.log('bokeh-pcolour updateScatterColour')
     if (this.old_scatter_z != this.scatter_z || this.old_pcolour_z != this.pcolour_z) {
-      let allZ = this.scatter_z.concat(this.pcolour_z);
+      let scatter_z_edit: number[] = []
+      let pcolour_z_edit: number[] = []
+
+      for (let i = 0; i < this.scatter_z.length; i++) {
+        if (isNaN(Number(this.scatter_z[i])) || this.scatter_z[i] == null) {
+          scatter_z_edit.push(1)
+        }
+        else {
+          scatter_z_edit.push(this.scatter_z[i])
+        }
+      }
+      for (let i = 0; i < this.pcolour_z.length; i++) {
+        if (isNaN(Number(this.pcolour_z[i])) || this.pcolour_z[i] == null) {
+          pcolour_z_edit.push(1)
+        }
+        else {
+          pcolour_z_edit.push(this.pcolour_z[i])
+        }
+      }
+
+      let allZ = scatter_z_edit.concat(pcolour_z_edit);
       this.vmin = Math.min(...allZ);
       this.vmax = Math.max(...allZ);
 
@@ -174,8 +192,19 @@ export class BokehPcolour implements OnInit {
       this.colour_mapper.high = this.vmax
       this.colour_bar.color_mapper = this.colour_mapper
 
-      this.scatter_c = this.colour_mapper.v_compute(this.scatter_z)
-      this.pcolour_c = this.colour_mapper.v_compute(this.pcolour_z)
+      this.scatter_c = this.colour_mapper.v_compute(scatter_z_edit)
+      this.pcolour_c = this.colour_mapper.v_compute(pcolour_z_edit)
+
+      for (let i in this.scatter_z) {
+        if (isNaN(Number(this.scatter_z[i])) || this.scatter_z[i] == null) {
+          this.scatter_c[i] = '#ffffff'
+        }
+      }
+      for (let i in this.pcolour_z) {
+        if (isNaN(Number(this.pcolour_z[i])) || this.pcolour_z[i] == null) {
+          this.pcolour_c[i] = '#ffffff'
+        }
+      }
 
       this.scatter_data.c = this.scatter_c
       this.pcolour_data.c = this.pcolour_c
