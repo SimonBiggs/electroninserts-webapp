@@ -25,6 +25,8 @@ export class UseModelComponent implements OnInit, OnDestroy, AfterViewInit {
   modelLookup = {}
   predictionDifference: number[] = []
   
+  selectionList: boolean[]
+
   plot_width = 600
 
   @ViewChild('plotContainer') plotContainer: any
@@ -62,6 +64,11 @@ export class UseModelComponent implements OnInit, OnDestroy, AfterViewInit {
     console.log('use-model.component ngAfterViewInit')
     this.loadMeasuredData()
     this.updatePredictedFactors()
+  }
+
+  selectionChanged(selectionList: boolean[]) {
+    console.log('use-model.component selectionChanged')
+    this.selectionList = selectionList
   }
 
   lookupFactor(width: number, length: number) {

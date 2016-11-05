@@ -30,12 +30,14 @@
       [textboxLabels]=textboxLabels
       [triggerUpdate]=false
       (validTextBoxChange)=onValidTextboxChange()></my-width-length-area-input>
-    <p>Predicted factors: {{modelData.predictions.predictedFactor}}</p>
-    <p>Prediction minus measured: {{predictionDifference}}</p>
+    <!--<p>Predicted factors: {{modelData.predictions.predictedFactor}}</p>
+    <p>Prediction minus measured: {{predictionDifference}}</p>-->
+
+    
   </div>
 
   <div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet mdl-cell--6-col-phone" #plotContainer>
-    <div *ngIf="modelData.model.width.length > 0 && modelData.model.length.length > 0 && modelData.model.predictedFactor.length > 0">
+    <div *ngIf="modelData.predictions.width.length > 0 && modelData.predictions.length.length > 0">
       <my-bokeh-use-model
         [title]="'Model Plot'"
         [scatter_x]="modelData.predictions.width"
@@ -47,7 +49,8 @@
         [pcolour_y]="modelData.model.length"
         [pcolour_z]="modelData.model.predictedFactor"
         [plot_width]="plot_width"
-        [plot_height]="380">
+        [plot_height]="380"
+        [selectionList]="selectionList">
       </my-bokeh-use-model>
     </div>
     <div *ngIf="modelData.model.width.length == 0 || modelData.model.length.length == 0|| modelData.model.predictedFactor.length == 0">
@@ -58,6 +61,19 @@
           create model component.
         </a>
       </p>
+    </div>
+    
+  </div>
+
+  <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--6-col-phone">
+    <div *ngIf="modelData.predictions != null" style="overflow: auto">
+      <my-insert-table
+        [width]="modelData.predictions.width"
+        [length]="modelData.predictions.length"
+        [area]="modelData.predictions.area"
+        [predictedFactor]="modelData.predictions.predictedFactor"
+        [measuredFactor]="modelData.predictions.measuredFactor"
+        (selectionChangedEvent)="selectionChanged($event)"></my-insert-table>
     </div>
   </div>
 </div>

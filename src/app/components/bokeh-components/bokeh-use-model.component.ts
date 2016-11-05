@@ -32,6 +32,8 @@ export class BokehUseModelComponent extends BokehPcolour implements AfterViewIni
   @Input()
   predicted_factor: number[] = []
   @Input()
+  selectionList: boolean[]
+  @Input()
   area: number[] = []
 
   old_area: number[] = []
@@ -41,11 +43,13 @@ export class BokehUseModelComponent extends BokehPcolour implements AfterViewIni
 
 
   ngOnChanges() {
+    console.log('bokeh-use-model.component ngOnChanges')
     this.updateHoverData()
     this.runAllUpdates()
   }
 
   updateHoverData() {
+    console.log('bokeh-use-model.component updateHoverData')
     if (this.scatter_data.x != this.scatter_x) {
       this.scatter_hover_width = <string[]> []
       for (let x of this.scatter_x) {
@@ -93,6 +97,7 @@ export class BokehUseModelComponent extends BokehPcolour implements AfterViewIni
     // hover_predicted_factor: <string[]> [],
 
   ngAfterViewInit() {
+    console.log('bokeh-use-model.component ngAfterViewInit')
     let hover_tool = new Bokeh.HoverTool({
       tooltips: [
         ["Width", " @hover_width cm"],

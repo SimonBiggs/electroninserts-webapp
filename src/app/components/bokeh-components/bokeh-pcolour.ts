@@ -14,6 +14,10 @@ export class BokehPcolour implements OnInit {
   pcolour_z: number[];
   enabled: boolean = true;
 
+  selectionList: boolean[]
+  oldSelectionList: boolean[]
+  scatter_edge_colour: any = 'black'
+
   pcolour_hover_width: string[] = [];
   pcolour_hover_length: string[] = [];
   pcolour_hover_predicted_factor: string[] = [];
@@ -43,7 +47,8 @@ export class BokehPcolour implements OnInit {
     hover_area: <string[]> [],
     hover_measured_factor: <string[]> [],
     hover_predicted_factor: <string[]> [],
-    c: <string[]> []
+    c: <string[]> [],
+    edge_colour: <any> 'black'
   }
   scatter_source = new Bokeh.ColumnDataSource({
     data: this.scatter_data
@@ -82,10 +87,12 @@ export class BokehPcolour implements OnInit {
   })
 
   ngOnInit() {
+    console.log('bokeh-pcolour ngOnInit')
     this.figureInitialise()
   }
 
   figureInitialise() {
+    console.log('bokeh-pcolour figureInitialise')
     this.fig = this.plt.figure({
         title: this.title, tools: this.tools,
         plot_width: this.plot_width, plot_height: this.plot_height
@@ -107,7 +114,7 @@ export class BokehPcolour implements OnInit {
       { field: 'x' }, { field: 'y' }, {
         source: this.scatter_source,
         size: 15,
-        line_color: 'black',
+        line_color:  { field: 'edge_colour' },
         fill_color:  { field: 'c' },
         line_width: 2
     });
@@ -116,9 +123,11 @@ export class BokehPcolour implements OnInit {
   }
 
   runAllUpdates() {
+    console.log('bokeh-pcolour runAllUpdates')
     this.updateScatterData()
     this.updatePcolourData()
     this.updateScatterColour()
+    this.updateSelection()
 
     this.updateSourceData()
 
@@ -126,6 +135,7 @@ export class BokehPcolour implements OnInit {
   }
 
   updateScatterData() {
+    console.log('bokeh-pcolour updateScatterData')
     this.scatter_data = {
       x: <number[]> this.scatter_x,
       y: <number[]> this.scatter_y,
@@ -135,11 +145,13 @@ export class BokehPcolour implements OnInit {
       hover_area: <string[]> this.scatter_hover_area,
       hover_measured_factor: <string[]> this.scatter_hover_measured_factor,
       hover_predicted_factor: <string[]> this.scatter_hover_predicted_factor,
-      c: <string[]> this.scatter_c
+      c: <string[]> this.scatter_c,
+      edge_colour: this.scatter_edge_colour
     }
   }
 
   updatePcolourData() {
+    console.log('bokeh-pcolour updatePcolourData')
     this.pcolour_data = {
       x: <number[]> this.pcolour_x,
       y: <number[]> this.pcolour_y,
@@ -152,6 +164,7 @@ export class BokehPcolour implements OnInit {
   }
 
   updateScatterColour() {
+    console.log('bokeh-pcolour updateScatterColour')
     if (this.old_scatter_z != this.scatter_z || this.old_pcolour_z != this.pcolour_z) {
       let allZ = this.scatter_z.concat(this.pcolour_z);
       this.vmin = Math.min(...allZ);
@@ -179,7 +192,30 @@ export class BokehPcolour implements OnInit {
     }
   }
 
+  updateSelection() {
+    console.log('bokeh-pcolour updateSelection')
+    if (this.oldSelectionList != this.selectionList) {
+      if (this.selectionList != null) {
+        this.scatter_edge_colour = []
+        for (let selection of this.selectionList) {
+          if (selection) {
+            this.scatter_edge_colour.push('white')
+          }
+          else {
+            this.scatter_edge_colour.push('black')
+          }
+        }
+      }
+      else {
+        this.scatter_edge_colour = 'black'
+      }
+
+      this.scatter_data.edge_colour = this.scatter_edge_colour
+    }
+  }
+
   updateSourceData() {
+    console.log('bokeh-pcolour updateSourceData')
     if (this.scatter_source.data != this.scatter_data) {
       this.scatter_source.data = this.scatter_data;
     }
@@ -190,6 +226,7 @@ export class BokehPcolour implements OnInit {
   }
 
   updateFigureDimensions() {
+    console.log('bokeh-pcolour updateFigureDimensions')
     if (this.fig != null) {
       if (this.fig.width != this.plot_width) {
         if (this.plot_width < 200) {

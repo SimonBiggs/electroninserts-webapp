@@ -1,0 +1,6 @@
+<mdl-table-selectable mdl-shadow="2"
+    [table-model]="tableModel"
+    [table-model-selected]="selected"
+    (table-model-selectionChanged)="selectionChanged()">
+</mdl-table-selectable>
+<p>{{selectionList | json}}</p>

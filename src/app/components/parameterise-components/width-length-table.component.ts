@@ -4,7 +4,7 @@ import { MdlDefaultTableModel } from 'angular2-mdl';
 
 @Component({
   selector: 'my-width-length-table',
-  templateUrl: 'width-length-table.component.html',
+  templateUrl: '../misc-components/shared-table-template.html',
 })
 export class WidthLengthTableComponent implements OnInit {
   @Input()

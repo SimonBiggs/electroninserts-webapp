@@ -45,6 +45,7 @@ import { XYInputComponent } from './components/parameterise-components/x-y-input
 import { WidthLengthAreaInputComponent } from './components/model-components/width-length-area-input.component'
 import { CreateModelComponent } from './components/model-components/create-model.component'
 import { UseModelComponent } from './components/model-components/use-model.component'
+import { InsertTableComponent } from './components/model-components/insert-table.component'
 // Storage components
 import { StorageManagementComponent } from './components/storage-components/storage-management.component'
 // Misc components
@@ -97,7 +98,8 @@ import { TitleService } from './services/utility-services/title.service'
     BokehUseModelComponent,
     ChooseSpecificationsComponent,
     WidthLengthAreaInputComponent,
-    XYInputComponent
+    XYInputComponent,
+    InsertTableComponent
   ],
   providers: [
     ElectronApiService,
