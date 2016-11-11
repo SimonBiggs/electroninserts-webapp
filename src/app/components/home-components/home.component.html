@@ -4,7 +4,7 @@
 
     <h4>Disclaimer and Copyright</h4>
     <p>
-    Electron Insert Factor Empirical Modelling<br>   
+    Electron insert factor empirical modelling<br>   
     Copyright (C) 2015-2016  Simon Biggs<br>
     <br>
     This program is free software: you can redistribute it and/or modify
@@ -23,15 +23,21 @@
 
     <h4>Description</h4>
     <p>
-      This online web app is for the modelling of the portion of the electron output factor that is dependent on the shape of the shielding insert mounted within the applicator. This allows modelling insert factors using only the measured factors already available at a centre. Should all outliers be removed from the data set the user might expect as low as 0.5% standard uncertainty for factor prediction with as little as 8 data points.
+      This online web app is for the modelling of the electron insert factor. <b>It is not intended to be the basis upon which machine output is adjusted.</b> 
+      Should this model and your planning system disagree, any monitor unit adjustment should be based upon a subsequent direct measurement by a qualified medical physicist.</p>
+
+    <p>Any use of this webapp recognises that this program is automatically updated when I make changes. All changes are recorded within Github's version control. The logs of the changes to the web app can be accessed from <a href="https://github.com/SimonBiggs/electroninserts-webapp/commits/master">here</a>, changes to the modelling and parameterisation server are documented <a href="https://github.com/SimonBiggs/electronfactor-server/commits/master">here</a>. 
+    By using this software you assume the responsibility and risk of any changes this web app undergoes. On the <a routerLink="/details" routerLinkActive="active">
+            further details page</a> it is outlined how you may download a static version of this webapp if you wish to be in control of when the app updates.</p>
+    <p>For more information on this model and an overview for which scenarios it has been validated see the publication detailed below.
     </p>
     <p>
-      If you find bugs, or have any usability suggestions please <a href="mailto:mail@simonbiggs.net">email me</a> so that I may make appropriate fixes and improvements.
+      If you find bugs, have any suggestions, or simply wish to share your results from using this model please either submit an issue to the <a href="https://github.com/SimonBiggs/electroninserts-webapp/issues">Github version control system</a> or <a href="mailto:mail@simonbiggs.net">send me an email</a>.
     </p>
 
     <h4>Publication</h4>
     <!--<h6>Original paper</h6>-->
-    <p>The paper detailing the algorithim and its validation:</p>
+    <p>The paper detailing the algorithim and the samples for which it has been validated:</p>
     <p>
       S. Biggs, M. Sobolewski, R. Murry, J. Kenny, Spline modelling electron insert factors using routine measurements. Physica Medica (2015), <a href="http://dx.doi.org/10.1016/j.ejmp.2015.11.002">doi:10.1016/j.ejmp.2015.11.002</a>.
     </p>
