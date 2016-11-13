@@ -23,13 +23,17 @@
 
     <h4>Description</h4>
     <p>
-      This online web app is for the modelling of the electron insert factor. <b>It is not intended to be the basis upon which machine output is adjusted.</b> 
-      Should this model and your planning system disagree, any monitor unit adjustment should be based upon a subsequent direct measurement by a qualified medical physicist.</p>
+      This online web app is for the modelling of the electron insert factor. <b>It is not intended to be the basis upon which monitor units are adjusted.</b> 
+      Should this model and your planning system disagree any monitor unit adjustment should be based upon measurements under the general supervision of a qualified medical physicist.</p>
 
     <p>Any use of this webapp recognises that this program is automatically updated when I make changes. All changes are recorded within Github's version control. The logs of the changes to the web app can be accessed from <a href="https://github.com/SimonBiggs/electroninserts-webapp/commits/master">here</a>, changes to the modelling and parameterisation server are documented <a href="https://github.com/SimonBiggs/electronfactor-server/commits/master">here</a>. 
     By using this software you assume the responsibility and risk of any changes this web app undergoes. On the <a routerLink="/details" routerLinkActive="active">
             further details page</a> it is outlined how you may download a static version of this webapp if you wish to be in control of when the app updates.</p>
-    <p>For more information on this model and an overview for which scenarios it has been validated see the publication detailed below.
+    <p>For more information on this model and an overview for which scenarios it has been validated see the publication detailed below. 
+      Of note is it is suspected that when the long axis of an equivalent ellipse begins to contribute to the loss of lateral scatter the assumptions underpinning the shape parameterisation may no longer hold. The demo data available within the <a routerLink="/create-model" routerLinkActive="active">
+            create model component</a> was collected on an Elekta Agility at an energy of 12 MeV on a 10x10 cm applicator. The smallest width tested was 3.2 cm at isocentre.
+      For the remaining energies of 6, 9, 15, and 18 MeV the smallest width tested was 5 cm. 
+      If you are able to further validate this model please contact me so that I may provide more information on where this model has been shown to work and where it does not. 
     </p>
     <p>
       If you find bugs, have any suggestions, or simply wish to share your results from using this model please either submit an issue to the <a href="https://github.com/SimonBiggs/electroninserts-webapp/issues">Github version control system</a> or <a href="mailto:mail@simonbiggs.net">send me an email</a>.
@@ -43,7 +47,13 @@
     </p>
 
 
-    <h4>Web app structure</h4>
+  
+
+   
+  </div>
+  <div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet mdl-cell--6-col-phone">      
+
+  <h4>Web app structure</h4>
     <p>This web app is divided into six logical components all of which can be accessed from the navigation menu. These are outlined below:</p>
       <ul>
         <li>
@@ -86,10 +96,6 @@
           
         </li>
       </ul>
-
-   
-  </div>
-  <div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet mdl-cell--6-col-phone">      
 
     <h4>Demo Instructions</h4>
     <p>
