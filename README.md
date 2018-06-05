@@ -2,6 +2,13 @@
 
 The online web app is available at http://electrons.simonbiggs.net
 
+## Deprecation notice
+
+This appliaction is deprecated and no longer in use by the author. All future development of the electron model will be undergone within the pymedphys package:
+
+> https://github.com/CCA-Physics/pymedphys/blob/master/pymedphys/level1/electronfactors.py
+
+
 ## Description
 
 This online web app is for the modelling of the portion of the electron output factor that is dependent on the shape of the shielding insert mounted within the applicator. This allows modelling insert factors using only the measured factors already available at a centre. Should all outliers be removed from the data set the user might expect as low as 0.5% standard uncertainty for factor prediction with as little as 8 data points.
