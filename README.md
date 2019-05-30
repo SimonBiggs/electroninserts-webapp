@@ -6,7 +6,7 @@ The online web app is available at http://electrons.simonbiggs.net
 
 This application is deprecated and no longer in use by the author. All future development of the electron model will be undergone within the pymedphys package:
 
-> https://github.com/CCA-Physics/pymedphys/blob/master/pymedphys/level1/electronfactors.py
+> https://github.com/pymedphys/pymedphys/
 
 
 ## Description
